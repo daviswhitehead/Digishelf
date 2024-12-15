@@ -29,6 +29,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-around",
-    alignItems: "flex-start",
+    alignItems: "stretch",
   },
 });
