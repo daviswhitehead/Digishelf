@@ -30,10 +30,10 @@ const BookCard = ({ book }) => {
 
 const styles = StyleSheet.create({
   bookCard: {
-    width: 300,
+    width: 250,
     borderRadius: 8,
     overflow: "hidden",
-    marginVertical: 10,
+    margin: 10,
     shadowColor: shadowColor,
     shadowOpacity: 0.2,
     shadowOffset: { width: 0, height: 2 },
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
   },
   coverImage: {
     width: "100%",
-    height: 400,
+    height: 320,
     resizeMode: "contain",
   },
   detailsContainer: {

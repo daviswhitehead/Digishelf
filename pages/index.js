@@ -26,6 +26,9 @@ const styles = StyleSheet.create({
     backgroundColor: backgroundColor,
   },
   list: {
-    alignItems: "center",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-around",
+    alignItems: "flex-start",
   },
 });
