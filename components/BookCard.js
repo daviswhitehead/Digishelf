@@ -5,8 +5,15 @@ import Rating from "./Rating";
 import Review from "./Review";
 
 const BookCard = ({ book }) => {
+  const [height, setHeight] = React.useState(0);
+  const onLayout = (event) => {
+    const { height } = event.nativeEvent.layout;
+    setHeight(height);
+    event.target.style.gridRowEnd = `span ${Math.ceil(height / 10)}`;
+  };
+
   return (
-    <View style={styles.bookCard}>
+    <View style={styles.bookCard} onLayout={onLayout}>
       {/* Book Cover */}
       <Image
         source={{ uri: book.coverImage }}
