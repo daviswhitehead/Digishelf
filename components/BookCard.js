@@ -1,22 +1,38 @@
-import React from "react";
-import { View, StyleSheet, Image, Text } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, StyleSheet, Image } from "react-native";
 import Rating from "./Rating";
 import Review from "./Review";
+import { shadowColor } from "../utils/colors";
 
-const BookCard = ({ book }) => {
+const BookCard = ({ book, cardWidth }) => {
+  const [imageHeight, setImageHeight] = useState(0);
+
+  useEffect(() => {
+    // Retrieve image dimensions and calculate dynamic height
+    Image.getSize(book.coverImage, (width, height) => {
+      const dynamicHeight = (height / width) * cardWidth;
+      setImageHeight(dynamicHeight);
+    });
+  }, [book.coverImage]);
+
   return (
-    <View style={styles.bookCard}>
-      {/* Book Cover */}
-      <Image
-        source={{ uri: book.coverImage }}
-        style={styles.coverImage}
-        resizeMode="cover" // Ensures proper aspect ratio
-      />
+    <View
+      style={[
+        styles.bookCard,
+        { width: cardWidth, backgroundColor: book.dominantColor || "#f8f8f8" },
+      ]}
+    >
+      {/* Image Container with Padding */}
+      <View style={styles.imageContainer}>
+        <Image
+          source={{ uri: book.coverImage }}
+          style={[styles.coverImage, { height: imageHeight }]}
+          resizeMode="cover"
+        />
+      </View>
 
       {/* Book Details */}
       <View style={styles.detailsContainer}>
-        <Text style={styles.title}>{book.title}</Text>
-        <Text style={styles.author}>{book.author}</Text>
         <Rating rating={book.rating} />
         <Review review={book.review} />
       </View>
@@ -26,32 +42,24 @@ const BookCard = ({ book }) => {
 
 const styles = StyleSheet.create({
   bookCard: {
-    marginBottom: 10,
-    borderRadius: 8,
+    borderRadius: 5,
     overflow: "hidden",
-    backgroundColor: "#fff",
+    marginBottom: 10,
+    shadowColor: shadowColor,
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 1 },
+    shadowRadius: 4,
     elevation: 3,
-    shadowColor: "#000",
-    shadowOpacity: 0.2,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 5,
+  },
+  imageContainer: {
+    padding: 3, // Adds spacing around the image
   },
   coverImage: {
-    width: "100%",
-    height: 200, // Fixed height for the image
+    width: "100%", // Fills the container width
+    borderRadius: 5, // Slight border radius for the image
   },
   detailsContainer: {
     padding: 10,
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 5,
-  },
-  author: {
-    fontSize: 14,
-    color: "#555",
-    marginBottom: 5,
   },
 });
 

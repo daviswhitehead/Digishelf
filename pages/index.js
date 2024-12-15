@@ -1,5 +1,5 @@
 import React from "react";
-import { View, ScrollView, StyleSheet } from "react-native";
+import { View, ScrollView, StyleSheet, Dimensions } from "react-native";
 import books from "../data/booksWithColors.json";
 import BookCard from "../components/BookCard";
 
@@ -15,6 +15,9 @@ const splitIntoColumns = (data, numColumns) => {
 };
 
 export default function Home() {
+  const screenWidth = Dimensions.get("window").width;
+  const cardWidth = (screenWidth - 20 * (NUM_COLUMNS + 1)) / NUM_COLUMNS;
+
   const columns = splitIntoColumns(books, NUM_COLUMNS);
 
   return (
@@ -23,7 +26,7 @@ export default function Home() {
         {columns.map((column, index) => (
           <View key={index} style={styles.column}>
             {column.map((book) => (
-              <BookCard key={book.id} book={book} />
+              <BookCard key={book.id} book={book} cardWidth={cardWidth} />
             ))}
           </View>
         ))}
