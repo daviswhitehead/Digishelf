@@ -1,47 +1,47 @@
 import React from "react";
-import { View, FlatList, StyleSheet } from "react-native";
+import { View, ScrollView, StyleSheet } from "react-native";
 import books from "../data/booksWithColors.json";
 import BookCard from "../components/BookCard";
-import { backgroundColor } from "../utils/colors";
+
+const NUM_COLUMNS = 5;
+
+// Helper to split data into columns
+const splitIntoColumns = (data, numColumns) => {
+  const columns = Array.from({ length: numColumns }, () => []);
+  data.forEach((item, index) => {
+    columns[index % numColumns].push(item);
+  });
+  return columns;
+};
 
 export default function Home() {
-  const renderItem = ({ item }) => <BookCard book={item} />;
+  const columns = splitIntoColumns(books, NUM_COLUMNS);
 
   return (
-    <View style={styles.container}>
-      {/* <FlatList
-        data={books}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={renderItem}
-        contentContainerStyle={styles.list}
-      /> */}
-      <View style={styles.grid}>
-        {books.map((book) => (
-          <BookCard key={book.id} book={book} />
+    <ScrollView contentContainerStyle={styles.container}>
+      <View style={styles.row}>
+        {columns.map((column, index) => (
+          <View key={index} style={styles.column}>
+            {column.map((book) => (
+              <BookCard key={book.id} book={book} />
+            ))}
+          </View>
         ))}
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: backgroundColor,
+    padding: 10,
   },
-  list: {
+  row: {
     flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-around",
-    alignItems: "stretch",
+    justifyContent: "space-between",
   },
-  grid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, 250px)",
-    gap: "20px",
-    justifyContent: "center",
-    gridAutoFlow: "dense",
-    gridAutoRows: "10px",
+  column: {
+    flex: 1,
+    marginHorizontal: 5,
   },
 });

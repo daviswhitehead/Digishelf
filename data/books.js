@@ -6,7 +6,7 @@ const books = [
     coverImage: "https://m.media-amazon.com/images/I/71+1CgqvXSL.jpg",
     rating: 4,
     review:
-      "Overall, I thought this book was a little overhyped, but I enjoyed learning about person 1 and person 2...",
+      "Overall, I thought this book was a little overhyped, but I enjoyed learning about person 1 and person 2. Overall, I thought this book was a little overhyped, but I enjoyed learning about person 1 and person 2. Overall, I thought this book was a little overhyped, but I enjoyed learning about person 1 and person 2...",
   },
   {
     id: 2,
@@ -23,7 +23,7 @@ const books = [
     author: "Cal Newport",
     coverImage: "https://m.media-amazon.com/images/I/91nujEwIpYL.jpg",
     rating: 4.5,
-    review: "A valuable guide to focusing deeply in a distracted world.",
+    review: "A valuable guide.",
   },
   {
     id: 4,
@@ -32,7 +32,8 @@ const books = [
     coverImage:
       "https://m.media-amazon.com/images/I/61BFOf9Ap-L._AC_UF1000,1000_QL80_.jpg",
     rating: 4,
-    review: "A modern classic on startup strategy and iterative development.",
+    review:
+      "A modern classic on startup strategy and iterative development. A modern classic on startup strategy and iterative development.",
   },
   {
     id: 5,

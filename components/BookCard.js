@@ -1,33 +1,22 @@
 import React from "react";
-import { View, StyleSheet, Image } from "react-native";
-import { shadowColor } from "../utils/colors";
+import { View, StyleSheet, Image, Text } from "react-native";
 import Rating from "./Rating";
 import Review from "./Review";
 
 const BookCard = ({ book }) => {
-  const [height, setHeight] = React.useState(0);
-  const onLayout = (event) => {
-    const { height } = event.nativeEvent.layout;
-    setHeight(height);
-    event.target.style.gridRowEnd = `span ${Math.ceil(height / 10)}`;
-  };
-
   return (
-    <View style={styles.bookCard} onLayout={onLayout}>
+    <View style={styles.bookCard}>
       {/* Book Cover */}
       <Image
         source={{ uri: book.coverImage }}
         style={styles.coverImage}
-        resizeMode="contain"
+        resizeMode="cover" // Ensures proper aspect ratio
       />
 
       {/* Book Details */}
-      <View
-        style={[
-          styles.detailsContainer,
-          { backgroundColor: book.dominantColor },
-        ]}
-      >
+      <View style={styles.detailsContainer}>
+        <Text style={styles.title}>{book.title}</Text>
+        <Text style={styles.author}>{book.author}</Text>
         <Rating rating={book.rating} />
         <Review review={book.review} />
       </View>
@@ -37,23 +26,32 @@ const BookCard = ({ book }) => {
 
 const styles = StyleSheet.create({
   bookCard: {
-    width: 250,
+    marginBottom: 10,
     borderRadius: 8,
     overflow: "hidden",
-    margin: 10,
-    shadowColor: shadowColor,
+    backgroundColor: "#fff",
+    elevation: 3,
+    shadowColor: "#000",
     shadowOpacity: 0.2,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 5,
   },
   coverImage: {
     width: "100%",
-    height: 320,
-    resizeMode: "contain",
+    height: 200, // Fixed height for the image
   },
   detailsContainer: {
-    padding: 15,
-    flexGrow: 1,
+    padding: 10,
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 5,
+  },
+  author: {
+    fontSize: 14,
+    color: "#555",
+    marginBottom: 5,
   },
 });
 

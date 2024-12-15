@@ -1,6 +1,6 @@
 const Vibrant = require("node-vibrant");
 const fs = require("fs");
-const books = require("./data/books"); // Assuming your books data is in `data/books.js`
+const books = require("../data/books"); // Assuming your books data is in `data/books.js`
 
 const getDominantColor = async (imageUrl) => {
   try {
