@@ -31,7 +31,6 @@ const BookCard = ({ book }) => {
 const styles = StyleSheet.create({
   bookCard: {
     width: 250,
-    height: 500,
     borderRadius: 8,
     overflow: "hidden",
     margin: 10,
@@ -47,8 +46,7 @@ const styles = StyleSheet.create({
   },
   detailsContainer: {
     padding: 15,
-    flex: 1,
-    overflow: "scroll",
+    flexGrow: 1,
   },
 });
 
