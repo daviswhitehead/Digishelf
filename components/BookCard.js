@@ -1,5 +1,8 @@
 import React from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, StyleSheet, Image } from "react-native";
+import { shadowColor } from "../utils/colors";
+import Rating from "./Rating";
+import Review from "./Review";
 
 const BookCard = ({ book }) => {
   return (
@@ -18,9 +21,8 @@ const BookCard = ({ book }) => {
           { backgroundColor: book.dominantColor },
         ]}
       >
-        <Text style={styles.title}>{book.title}</Text>
-        <Text style={styles.author}>{book.author}</Text>
-        {/* Additional Book Details */}
+        <Rating rating={book.rating} />
+        <Review review={book.review} />
       </View>
     </View>
   );
@@ -32,7 +34,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     overflow: "hidden",
     marginVertical: 10,
-    shadowColor: "#000",
+    shadowColor: shadowColor,
     shadowOpacity: 0.2,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 5,
@@ -44,17 +46,6 @@ const styles = StyleSheet.create({
   },
   detailsContainer: {
     padding: 15,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#ffffff",
-    marginBottom: 5,
-  },
-  author: {
-    fontSize: 16,
-    color: "#e0e0e0",
-    marginBottom: 8,
   },
 });
 
