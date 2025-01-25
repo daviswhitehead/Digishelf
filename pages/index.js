@@ -1,11 +1,10 @@
 import React from "react";
-import { View, ScrollView, StyleSheet, Dimensions } from "react-native";
+import { View, ScrollView, StyleSheet } from "react-native";
+import { useResponsive } from "../utils/useResponsive";
+import { getResponsiveValues, calculateTotalWidth } from "../utils/layoutUtils";
 import books from "../data/booksWithColors.json";
 import BookCard from "../components/BookCard";
 
-const NUM_COLUMNS = 5;
-
-// Helper to split data into columns
 const splitIntoColumns = (data, numColumns) => {
   const columns = Array.from({ length: numColumns }, () => []);
   data.forEach((item, index) => {
@@ -15,21 +14,33 @@ const splitIntoColumns = (data, numColumns) => {
 };
 
 export default function Home() {
-  const screenWidth = Dimensions.get("window").width;
-  const cardWidth = (screenWidth - 20 * (NUM_COLUMNS + 1)) / NUM_COLUMNS;
-
-  const columns = splitIntoColumns(books, NUM_COLUMNS);
+  const { width, isMobile, isTablet } = useResponsive();
+  const { columns: numColumns, cardWidth, margin } = getResponsiveValues(width, isMobile, isTablet);
+  
+  const columns = splitIntoColumns(books, numColumns);
+  const totalWidth = calculateTotalWidth(numColumns, cardWidth, margin);
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.row}>
-        {columns.map((column, index) => (
-          <View key={index} style={styles.column}>
-            {column.map((book) => (
-              <BookCard key={book.id} book={book} cardWidth={cardWidth} />
+    <ScrollView>
+      <View style={styles.container}>
+        <View style={[
+          styles.contentContainer,
+          { 
+            maxWidth: totalWidth,
+            marginHorizontal: 'auto',
+            paddingHorizontal: margin,
+          }
+        ]}>
+          <View style={[styles.row, { gap: margin }]}>
+            {columns.map((column, index) => (
+              <View key={index} style={styles.column}>
+                {column.map((book) => (
+                  <BookCard key={book.id} book={book} />
+                ))}
+              </View>
             ))}
           </View>
-        ))}
+        </View>
       </View>
     </ScrollView>
   );
@@ -37,14 +48,16 @@ export default function Home() {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 10,
+    flex: 1,
+  },
+  contentContainer: {
+    width: '100%',
   },
   row: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "center",
   },
   column: {
     flex: 1,
-    marginHorizontal: 5,
   },
 });
