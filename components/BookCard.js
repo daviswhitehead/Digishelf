@@ -1,25 +1,34 @@
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Image } from "react-native";
+import { useResponsive } from "../utils/useResponsive";
+import { getResponsiveValues } from "../utils/layoutUtils";
+import { SPACING } from "../constants/layout";
 import Rating from "./Rating";
 import Review from "./Review";
 import { shadowColor } from "../utils/colors";
 
-const BookCard = ({ book, cardWidth }) => {
+const BookCard = ({ book }) => {
+  const { width, isMobile } = useResponsive();
   const [imageHeight, setImageHeight] = useState(0);
+  
+  const { cardWidth, margin } = getResponsiveValues(width, isMobile);
 
   useEffect(() => {
-    // Retrieve image dimensions and calculate dynamic height
-    Image.getSize(book.coverImage, (width, height) => {
-      const dynamicHeight = (height / width) * cardWidth;
+    Image.getSize(book.coverImage, (imgWidth, height) => {
+      const dynamicHeight = (height / imgWidth) * cardWidth;
       setImageHeight(dynamicHeight);
     });
-  }, [book.coverImage]);
+  }, [book.coverImage, cardWidth]);
 
   return (
     <View
       style={[
         styles.bookCard,
-        { width: cardWidth, backgroundColor: book.dominantColor || "#f8f8f8" },
+        { 
+          width: cardWidth,
+          backgroundColor: book.dominantColor || "#f8f8f8",
+          marginBottom: margin,
+        },
       ]}
     >
       {/* Image Container with Padding */}
@@ -44,7 +53,6 @@ const styles = StyleSheet.create({
   bookCard: {
     borderRadius: 5,
     overflow: "hidden",
-    marginBottom: 10,
     shadowColor: shadowColor,
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 1 },
@@ -52,14 +60,14 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   imageContainer: {
-    padding: 3, // Adds spacing around the image
+    padding: SPACING.IMAGE_PADDING,
   },
   coverImage: {
     width: "100%", // Fills the container width
     borderRadius: 5, // Slight border radius for the image
   },
   detailsContainer: {
-    padding: 10,
+    padding: SPACING.CARD_PADDING,
   },
 });
 
