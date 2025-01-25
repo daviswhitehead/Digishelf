@@ -6,7 +6,7 @@
     "coverImage": "https://m.media-amazon.com/images/I/71+1CgqvXSL.jpg",
     "rating": 4,
     "review": "Overall, I thought this book was a little overhyped, but I enjoyed learning about person 1 and person 2. Overall, I thought this book was a little overhyped, but I enjoyed learning about person 1 and person 2. Overall, I thought this book was a little overhyped, but I enjoyed learning about person 1 and person 2...",
-    "dominantColor": "#b8cd37"
+    "dominantColor": "#bace3d"
   },
   {
     "id": 2,
@@ -15,7 +15,7 @@
     "coverImage": "https://m.media-amazon.com/images/I/81ANaVZk5LL.jpg",
     "rating": 5,
     "review": "One of the best books on building habits and making small improvements in daily life...",
-    "dominantColor": "#dd8524"
+    "dominantColor": "#dc9546"
   },
   {
     "id": 3,
@@ -24,7 +24,7 @@
     "coverImage": "https://m.media-amazon.com/images/I/91nujEwIpYL.jpg",
     "rating": 4.5,
     "review": "A valuable guide.",
-    "dominantColor": "#fac225"
+    "dominantColor": "#fbc424"
   },
   {
     "id": 4,
@@ -64,119 +64,1802 @@
   },
   {
     "id": 8,
-    "title": "The Power of Habit",
-    "author": "Charles Duhigg",
-    "coverImage": "https://example.com/cover8.jpg",
+    "title": "The Silent Garden of Success",
+    "author": "Lisa Rodriguez",
+    "coverImage": "https://picsum.photos/seed/8/300/400",
     "rating": 4,
-    "review": "An insightful look at how habits shape our lives and how to change them.",
+    "review": "An insightful journey into the complexities of human potential and achievement.",
     "dominantColor": "#a69b68"
   },
   {
     "id": 9,
-    "title": "Grit: The Power of Passion and Perseverance",
-    "author": "Angela Duckworth",
-    "coverImage": "https://example.com/cover9.jpg",
-    "rating": 4.5,
-    "review": "An exploration of the importance of persistence in achieving success.",
+    "title": "The Lost Theory of Leadership",
+    "author": "Sarah Brown",
+    "coverImage": "https://picsum.photos/seed/9/300/400",
+    "rating": 4.9,
+    "review": "A thought-provoking analysis of contemporary issues and future possibilities.",
     "dominantColor": "#a69b68"
   },
   {
     "id": 10,
-    "title": "Man's Search for Meaning",
-    "author": "Viktor E. Frankl",
-    "coverImage": "https://example.com/cover10.jpg",
-    "rating": 5,
-    "review": "A moving account of finding purpose and resilience in adversity.",
+    "title": "The Quantum Pattern of Growth",
+    "author": "Michael Brown",
+    "coverImage": "https://picsum.photos/seed/10/300/400",
+    "rating": 3.6,
+    "review": "A revolutionary approach to understanding and achieving excellence.",
     "dominantColor": "#a69b68"
   },
   {
     "id": 11,
-    "title": "The Alchemist",
-    "author": "Paulo Coelho",
-    "coverImage": "https://example.com/cover11.jpg",
-    "rating": 4.5,
-    "review": "A magical journey of following one's dreams and finding fulfillment.",
+    "title": "The Future Theory of Vision",
+    "author": "Sarah Jones",
+    "coverImage": "https://picsum.photos/seed/11/300/400",
+    "rating": 4.9,
+    "review": "A groundbreaking exploration of modern challenges and innovative solutions.",
     "dominantColor": "#a69b68"
   },
   {
     "id": 12,
-    "title": "The 7 Habits of Highly Effective People",
-    "author": "Stephen R. Covey",
-    "coverImage": "https://example.com/cover12.jpg",
-    "rating": 4,
-    "review": "A timeless guide to personal and professional effectiveness.",
+    "title": "The Modern Path of Change",
+    "author": "Maria Davis",
+    "coverImage": "https://picsum.photos/seed/12/300/400",
+    "rating": 4.5,
+    "review": "A thought-provoking analysis of contemporary issues and future possibilities.",
     "dominantColor": "#a69b68"
   },
   {
     "id": 13,
-    "title": "The Four Agreements",
-    "author": "Don Miguel Ruiz",
-    "coverImage": "https://example.com/cover13.jpg",
-    "rating": 4.5,
-    "review": "A simple yet profound guide to personal freedom and happiness.",
+    "title": "The Silent Journey of Change",
+    "author": "Maria Miller",
+    "coverImage": "https://picsum.photos/seed/13/300/400",
+    "rating": 3.1,
+    "review": "A practical guide filled with actionable strategies and valuable insights.",
     "dominantColor": "#a69b68"
   },
   {
     "id": 14,
-    "title": "Start with Why",
-    "author": "Simon Sinek",
-    "coverImage": "https://example.com/cover14.jpg",
-    "rating": 4,
-    "review": "A compelling argument for leading with purpose and clarity.",
+    "title": "The Digital Journey of Purpose",
+    "author": "Anna Smith",
+    "coverImage": "https://picsum.photos/seed/14/300/400",
+    "rating": 4.1,
+    "review": "An engaging examination of success principles and personal development.",
     "dominantColor": "#a69b68"
   },
   {
     "id": 15,
-    "title": "Becoming",
-    "author": "Michelle Obama",
-    "coverImage": "https://example.com/cover15.jpg",
-    "rating": 5,
-    "review": "An inspiring memoir of resilience, family, and finding one's voice.",
+    "title": "The Quantum Symphony of Growth",
+    "author": "James Davis",
+    "coverImage": "https://picsum.photos/seed/15/300/400",
+    "rating": 4.6,
+    "review": "An essential resource for anyone seeking to maximize their potential.",
     "dominantColor": "#a69b68"
   },
   {
     "id": 16,
-    "title": "The Subtle Art of Not Giving a F*ck",
-    "author": "Mark Manson",
-    "coverImage": "https://example.com/cover16.jpg",
-    "rating": 3.5,
-    "review": "A candid approach to embracing limitations and focusing on what matters.",
+    "title": "The Eternal Path of Purpose",
+    "author": "Robert Brown",
+    "coverImage": "https://picsum.photos/seed/16/300/400",
+    "rating": 4.3,
+    "review": "An engaging examination of success principles and personal development.",
     "dominantColor": "#a69b68"
   },
   {
     "id": 17,
-    "title": "Dare to Lead",
-    "author": "Brené Brown",
-    "coverImage": "https://example.com/cover17.jpg",
-    "rating": 4.5,
-    "review": "An empowering book on leadership and the courage to be vulnerable.",
+    "title": "The Hidden Legacy of Vision",
+    "author": "Lisa Williams",
+    "coverImage": "https://picsum.photos/seed/17/300/400",
+    "rating": 5,
+    "review": "A groundbreaking exploration of modern challenges and innovative solutions.",
     "dominantColor": "#a69b68"
   },
   {
     "id": 18,
-    "title": "The Happiness Project",
-    "author": "Gretchen Rubin",
-    "coverImage": "https://example.com/cover18.jpg",
-    "rating": 4,
-    "review": "A practical guide to improving happiness through small changes.",
+    "title": "The Silent Legacy of Change",
+    "author": "Michael Miller",
+    "coverImage": "https://picsum.photos/seed/18/300/400",
+    "rating": 3.7,
+    "review": "A compelling narrative that challenges conventional wisdom and inspires change.",
     "dominantColor": "#a69b68"
   },
   {
     "id": 19,
-    "title": "Outliers: The Story of Success",
-    "author": "Malcolm Gladwell",
-    "coverImage": "https://example.com/cover19.jpg",
-    "rating": 4,
-    "review": "An analysis of the factors that contribute to high levels of success.",
+    "title": "The Infinite Legacy of Change",
+    "author": "Emma Miller",
+    "coverImage": "https://picsum.photos/seed/19/300/400",
+    "rating": 4.4,
+    "review": "An insightful journey into the complexities of human potential and achievement.",
     "dominantColor": "#a69b68"
   },
   {
     "id": 20,
-    "title": "Mindset: The New Psychology of Success",
-    "author": "Carol S. Dweck",
-    "coverImage": "https://example.com/cover20.jpg",
+    "title": "The Silent Secret of Leadership",
+    "author": "James Jones",
+    "coverImage": "https://picsum.photos/seed/20/300/400",
+    "rating": 4.8,
+    "review": "An essential resource for anyone seeking to maximize their potential.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 21,
+    "title": "The Infinite Path of Leadership",
+    "author": "James Miller",
+    "coverImage": "https://picsum.photos/seed/21/300/400",
+    "rating": 4.6,
+    "review": "An insightful journey into the complexities of human potential and achievement.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 22,
+    "title": "The Infinite Theory of Vision",
+    "author": "Sarah Williams",
+    "coverImage": "https://picsum.photos/seed/22/300/400",
+    "rating": 4,
+    "review": "An essential resource for anyone seeking to maximize their potential.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 23,
+    "title": "The Eternal Garden of Change",
+    "author": "Sarah Davis",
+    "coverImage": "https://picsum.photos/seed/23/300/400",
+    "rating": 3.6,
+    "review": "A thought-provoking analysis of contemporary issues and future possibilities.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 24,
+    "title": "The Infinite Garden of Innovation",
+    "author": "Emma Martinez",
+    "coverImage": "https://picsum.photos/seed/24/300/400",
+    "rating": 3.7,
+    "review": "A compelling narrative that challenges conventional wisdom and inspires change.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 25,
+    "title": "The Digital Pattern of Wisdom",
+    "author": "Lisa Martinez",
+    "coverImage": "https://picsum.photos/seed/25/300/400",
+    "rating": 3.7,
+    "review": "A revolutionary approach to understanding and achieving excellence.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 26,
+    "title": "The Ancient Secret of Change",
+    "author": "Anna Williams",
+    "coverImage": "https://picsum.photos/seed/26/300/400",
+    "rating": 3.3,
+    "review": "A thought-provoking analysis of contemporary issues and future possibilities.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 27,
+    "title": "The Infinite Path of Growth",
+    "author": "Robert Miller",
+    "coverImage": "https://picsum.photos/seed/27/300/400",
+    "rating": 4.4,
+    "review": "A practical guide filled with actionable strategies and valuable insights.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 28,
+    "title": "The Silent Garden of Purpose",
+    "author": "John Martinez",
+    "coverImage": "https://picsum.photos/seed/28/300/400",
+    "rating": 4.1,
+    "review": "A thought-provoking analysis of contemporary issues and future possibilities.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 29,
+    "title": "The Eternal Pattern of Vision",
+    "author": "Robert Martinez",
+    "coverImage": "https://picsum.photos/seed/29/300/400",
+    "rating": 4.2,
+    "review": "An insightful journey into the complexities of human potential and achievement.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 30,
+    "title": "The Lost Mind of Purpose",
+    "author": "John Miller",
+    "coverImage": "https://picsum.photos/seed/30/300/400",
+    "rating": 3.1,
+    "review": "An essential resource for anyone seeking to maximize their potential.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 31,
+    "title": "The Hidden Secret of Success",
+    "author": "Lisa Williams",
+    "coverImage": "https://picsum.photos/seed/31/300/400",
+    "rating": 3.8,
+    "review": "A comprehensive framework for personal and professional growth.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 32,
+    "title": "The Eternal Code of Mastery",
+    "author": "David Martinez",
+    "coverImage": "https://picsum.photos/seed/32/300/400",
+    "rating": 3.4,
+    "review": "A revolutionary approach to understanding and achieving excellence.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 33,
+    "title": "The Quantum Theory of Strategy",
+    "author": "Emma Rodriguez",
+    "coverImage": "https://picsum.photos/seed/33/300/400",
+    "rating": 3.7,
+    "review": "An engaging examination of success principles and personal development.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 34,
+    "title": "The Hidden Pattern of Success",
+    "author": "Lisa Martinez",
+    "coverImage": "https://picsum.photos/seed/34/300/400",
+    "rating": 4,
+    "review": "A compelling narrative that challenges conventional wisdom and inspires change.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 35,
+    "title": "The Quantum Journey of Success",
+    "author": "Sarah Johnson",
+    "coverImage": "https://picsum.photos/seed/35/300/400",
+    "rating": 4.7,
+    "review": "An essential resource for anyone seeking to maximize their potential.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 36,
+    "title": "The Silent Mind of Strategy",
+    "author": "James Martinez",
+    "coverImage": "https://picsum.photos/seed/36/300/400",
+    "rating": 3.1,
+    "review": "A revolutionary approach to understanding and achieving excellence.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 37,
+    "title": "The Future Legacy of Success",
+    "author": "David Jones",
+    "coverImage": "https://picsum.photos/seed/37/300/400",
+    "rating": 3.4,
+    "review": "A thought-provoking analysis of contemporary issues and future possibilities.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 38,
+    "title": "The Silent Code of Change",
+    "author": "Michael Williams",
+    "coverImage": "https://picsum.photos/seed/38/300/400",
+    "rating": 4.8,
+    "review": "A thought-provoking analysis of contemporary issues and future possibilities.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 39,
+    "title": "The Future Pattern of Mastery",
+    "author": "David Martinez",
+    "coverImage": "https://picsum.photos/seed/39/300/400",
+    "rating": 4.3,
+    "review": "A masterful blend of research, storytelling, and practical application.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 40,
+    "title": "The Quantum Symphony of Change",
+    "author": "Michael Johnson",
+    "coverImage": "https://picsum.photos/seed/40/300/400",
+    "rating": 4.2,
+    "review": "A groundbreaking exploration of modern challenges and innovative solutions.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 41,
+    "title": "The Silent Garden of Strategy",
+    "author": "James Brown",
+    "coverImage": "https://picsum.photos/seed/41/300/400",
+    "rating": 3.9,
+    "review": "A comprehensive framework for personal and professional growth.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 42,
+    "title": "The Ancient Code of Success",
+    "author": "James Smith",
+    "coverImage": "https://picsum.photos/seed/42/300/400",
+    "rating": 3.6,
+    "review": "An insightful journey into the complexities of human potential and achievement.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 43,
+    "title": "The Modern Path of Growth",
+    "author": "Michael Martinez",
+    "coverImage": "https://picsum.photos/seed/43/300/400",
+    "rating": 4.3,
+    "review": "A masterful blend of research, storytelling, and practical application.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 44,
+    "title": "The Digital Code of Wisdom",
+    "author": "James Martinez",
+    "coverImage": "https://picsum.photos/seed/44/300/400",
+    "rating": 3.7,
+    "review": "A masterful blend of research, storytelling, and practical application.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 45,
+    "title": "The Future Theory of Leadership",
+    "author": "Sarah Davis",
+    "coverImage": "https://picsum.photos/seed/45/300/400",
+    "rating": 4.6,
+    "review": "A masterful blend of research, storytelling, and practical application.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 46,
+    "title": "The Modern Secret of Wisdom",
+    "author": "Sarah Rodriguez",
+    "coverImage": "https://picsum.photos/seed/46/300/400",
     "rating": 4.5,
-    "review": "A powerful exploration of how mindset shapes our lives and achievements.",
+    "review": "A thought-provoking analysis of contemporary issues and future possibilities.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 47,
+    "title": "The Digital Journey of Leadership",
+    "author": "Emma Johnson",
+    "coverImage": "https://picsum.photos/seed/47/300/400",
+    "rating": 4.8,
+    "review": "An essential resource for anyone seeking to maximize their potential.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 48,
+    "title": "The Hidden Journey of Wisdom",
+    "author": "Sarah Brown",
+    "coverImage": "https://picsum.photos/seed/48/300/400",
+    "rating": 3.2,
+    "review": "A groundbreaking exploration of modern challenges and innovative solutions.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 49,
+    "title": "The Digital Garden of Purpose",
+    "author": "Lisa Johnson",
+    "coverImage": "https://picsum.photos/seed/49/300/400",
+    "rating": 3.5,
+    "review": "An engaging examination of success principles and personal development.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 50,
+    "title": "The Future Mind of Innovation",
+    "author": "John Smith",
+    "coverImage": "https://picsum.photos/seed/50/300/400",
+    "rating": 3.5,
+    "review": "A masterful blend of research, storytelling, and practical application.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 51,
+    "title": "The Lost Code of Growth",
+    "author": "John Williams",
+    "coverImage": "https://picsum.photos/seed/51/300/400",
+    "rating": 3.1,
+    "review": "An engaging examination of success principles and personal development.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 52,
+    "title": "The Quantum Code of Leadership",
+    "author": "Robert Davis",
+    "coverImage": "https://picsum.photos/seed/52/300/400",
+    "rating": 3.7,
+    "review": "A compelling narrative that challenges conventional wisdom and inspires change.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 53,
+    "title": "The Infinite Secret of Change",
+    "author": "Sarah Garcia",
+    "coverImage": "https://picsum.photos/seed/53/300/400",
+    "rating": 4.1,
+    "review": "An engaging examination of success principles and personal development.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 54,
+    "title": "The Hidden Mind of Change",
+    "author": "Maria Davis",
+    "coverImage": "https://picsum.photos/seed/54/300/400",
+    "rating": 4.5,
+    "review": "A practical guide filled with actionable strategies and valuable insights.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 55,
+    "title": "The Eternal Mind of Mastery",
+    "author": "Lisa Miller",
+    "coverImage": "https://picsum.photos/seed/55/300/400",
+    "rating": 3.7,
+    "review": "A comprehensive framework for personal and professional growth.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 56,
+    "title": "The Ancient Garden of Success",
+    "author": "Anna Martinez",
+    "coverImage": "https://picsum.photos/seed/56/300/400",
+    "rating": 4.3,
+    "review": "An essential resource for anyone seeking to maximize their potential.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 57,
+    "title": "The Hidden Secret of Wisdom",
+    "author": "Robert Miller",
+    "coverImage": "https://picsum.photos/seed/57/300/400",
+    "rating": 3.2,
+    "review": "A groundbreaking exploration of modern challenges and innovative solutions.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 58,
+    "title": "The Infinite Mind of Success",
+    "author": "James Jones",
+    "coverImage": "https://picsum.photos/seed/58/300/400",
+    "rating": 3.6,
+    "review": "A practical guide filled with actionable strategies and valuable insights.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 59,
+    "title": "The Infinite Code of Innovation",
+    "author": "James Smith",
+    "coverImage": "https://picsum.photos/seed/59/300/400",
+    "rating": 3.5,
+    "review": "A masterful blend of research, storytelling, and practical application.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 60,
+    "title": "The Eternal Mind of Leadership",
+    "author": "Maria Smith",
+    "coverImage": "https://picsum.photos/seed/60/300/400",
+    "rating": 4.7,
+    "review": "An essential resource for anyone seeking to maximize their potential.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 61,
+    "title": "The Infinite Garden of Purpose",
+    "author": "Sarah Martinez",
+    "coverImage": "https://picsum.photos/seed/61/300/400",
+    "rating": 4.3,
+    "review": "A revolutionary approach to understanding and achieving excellence.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 62,
+    "title": "The Lost Mind of Purpose",
+    "author": "John Martinez",
+    "coverImage": "https://picsum.photos/seed/62/300/400",
+    "rating": 4.8,
+    "review": "A revolutionary approach to understanding and achieving excellence.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 63,
+    "title": "The Eternal Legacy of Strategy",
+    "author": "John Martinez",
+    "coverImage": "https://picsum.photos/seed/63/300/400",
+    "rating": 4,
+    "review": "A comprehensive framework for personal and professional growth.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 64,
+    "title": "The Modern Secret of Success",
+    "author": "John Brown",
+    "coverImage": "https://picsum.photos/seed/64/300/400",
+    "rating": 5,
+    "review": "An essential resource for anyone seeking to maximize their potential.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 65,
+    "title": "The Ancient Legacy of Strategy",
+    "author": "James Rodriguez",
+    "coverImage": "https://picsum.photos/seed/65/300/400",
+    "rating": 3.2,
+    "review": "A revolutionary approach to understanding and achieving excellence.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 66,
+    "title": "The Ancient Symphony of Change",
+    "author": "Michael Davis",
+    "coverImage": "https://picsum.photos/seed/66/300/400",
+    "rating": 3.7,
+    "review": "An engaging examination of success principles and personal development.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 67,
+    "title": "The Hidden Legacy of Innovation",
+    "author": "Michael Miller",
+    "coverImage": "https://picsum.photos/seed/67/300/400",
+    "rating": 4.9,
+    "review": "An insightful journey into the complexities of human potential and achievement.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 68,
+    "title": "The Modern Journey of Innovation",
+    "author": "Robert Miller",
+    "coverImage": "https://picsum.photos/seed/68/300/400",
+    "rating": 4.3,
+    "review": "A groundbreaking exploration of modern challenges and innovative solutions.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 69,
+    "title": "The Future Legacy of Vision",
+    "author": "Lisa Jones",
+    "coverImage": "https://picsum.photos/seed/69/300/400",
+    "rating": 3.4,
+    "review": "A groundbreaking exploration of modern challenges and innovative solutions.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 70,
+    "title": "The Lost Symphony of Growth",
+    "author": "Robert Martinez",
+    "coverImage": "https://picsum.photos/seed/70/300/400",
+    "rating": 3.8,
+    "review": "A thought-provoking analysis of contemporary issues and future possibilities.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 71,
+    "title": "The Quantum Path of Vision",
+    "author": "Michael Williams",
+    "coverImage": "https://picsum.photos/seed/71/300/400",
+    "rating": 4.3,
+    "review": "An engaging examination of success principles and personal development.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 72,
+    "title": "The Lost Secret of Change",
+    "author": "Robert Williams",
+    "coverImage": "https://picsum.photos/seed/72/300/400",
+    "rating": 4.6,
+    "review": "An insightful journey into the complexities of human potential and achievement.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 73,
+    "title": "The Quantum Mind of Vision",
+    "author": "Maria Rodriguez",
+    "coverImage": "https://picsum.photos/seed/73/300/400",
+    "rating": 3.7,
+    "review": "A comprehensive framework for personal and professional growth.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 74,
+    "title": "The Lost Path of Innovation",
+    "author": "James Rodriguez",
+    "coverImage": "https://picsum.photos/seed/74/300/400",
+    "rating": 4.2,
+    "review": "A practical guide filled with actionable strategies and valuable insights.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 75,
+    "title": "The Silent Mind of Strategy",
+    "author": "Robert Garcia",
+    "coverImage": "https://picsum.photos/seed/75/300/400",
+    "rating": 3.1,
+    "review": "A thought-provoking analysis of contemporary issues and future possibilities.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 76,
+    "title": "The Ancient Journey of Leadership",
+    "author": "Emma Smith",
+    "coverImage": "https://picsum.photos/seed/76/300/400",
+    "rating": 4,
+    "review": "A practical guide filled with actionable strategies and valuable insights.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 77,
+    "title": "The Modern Garden of Vision",
+    "author": "Michael Smith",
+    "coverImage": "https://picsum.photos/seed/77/300/400",
+    "rating": 4.4,
+    "review": "A thought-provoking analysis of contemporary issues and future possibilities.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 78,
+    "title": "The Silent Pattern of Mastery",
+    "author": "Lisa Miller",
+    "coverImage": "https://picsum.photos/seed/78/300/400",
+    "rating": 4.8,
+    "review": "A masterful blend of research, storytelling, and practical application.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 79,
+    "title": "The Modern Code of Innovation",
+    "author": "James Martinez",
+    "coverImage": "https://picsum.photos/seed/79/300/400",
+    "rating": 4.7,
+    "review": "An insightful journey into the complexities of human potential and achievement.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 80,
+    "title": "The Digital Pattern of Wisdom",
+    "author": "Sarah Jones",
+    "coverImage": "https://picsum.photos/seed/80/300/400",
+    "rating": 3.7,
+    "review": "A revolutionary approach to understanding and achieving excellence.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 81,
+    "title": "The Ancient Legacy of Change",
+    "author": "Emma Jones",
+    "coverImage": "https://picsum.photos/seed/81/300/400",
+    "rating": 3.6,
+    "review": "An engaging examination of success principles and personal development.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 82,
+    "title": "The Modern Pattern of Wisdom",
+    "author": "Robert Johnson",
+    "coverImage": "https://picsum.photos/seed/82/300/400",
+    "rating": 4.9,
+    "review": "A thought-provoking analysis of contemporary issues and future possibilities.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 83,
+    "title": "The Lost Secret of Purpose",
+    "author": "Sarah Martinez",
+    "coverImage": "https://picsum.photos/seed/83/300/400",
+    "rating": 4.6,
+    "review": "An essential resource for anyone seeking to maximize their potential.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 84,
+    "title": "The Lost Pattern of Vision",
+    "author": "David Garcia",
+    "coverImage": "https://picsum.photos/seed/84/300/400",
+    "rating": 4.4,
+    "review": "A practical guide filled with actionable strategies and valuable insights.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 85,
+    "title": "The Eternal Secret of Wisdom",
+    "author": "Robert Martinez",
+    "coverImage": "https://picsum.photos/seed/85/300/400",
+    "rating": 4.1,
+    "review": "A comprehensive framework for personal and professional growth.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 86,
+    "title": "The Hidden Theory of Innovation",
+    "author": "Emma Johnson",
+    "coverImage": "https://picsum.photos/seed/86/300/400",
+    "rating": 3.3,
+    "review": "A revolutionary approach to understanding and achieving excellence.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 87,
+    "title": "The Silent Code of Innovation",
+    "author": "Lisa Miller",
+    "coverImage": "https://picsum.photos/seed/87/300/400",
+    "rating": 3.6,
+    "review": "A revolutionary approach to understanding and achieving excellence.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 88,
+    "title": "The Quantum Code of Change",
+    "author": "Maria Martinez",
+    "coverImage": "https://picsum.photos/seed/88/300/400",
+    "rating": 5,
+    "review": "A comprehensive framework for personal and professional growth.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 89,
+    "title": "The Silent Garden of Change",
+    "author": "David Williams",
+    "coverImage": "https://picsum.photos/seed/89/300/400",
+    "rating": 3.2,
+    "review": "A practical guide filled with actionable strategies and valuable insights.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 90,
+    "title": "The Modern Mind of Vision",
+    "author": "Sarah Davis",
+    "coverImage": "https://picsum.photos/seed/90/300/400",
+    "rating": 3,
+    "review": "An insightful journey into the complexities of human potential and achievement.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 91,
+    "title": "The Future Symphony of Purpose",
+    "author": "James Jones",
+    "coverImage": "https://picsum.photos/seed/91/300/400",
+    "rating": 4.3,
+    "review": "A thought-provoking analysis of contemporary issues and future possibilities.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 92,
+    "title": "The Modern Legacy of Leadership",
+    "author": "Emma Davis",
+    "coverImage": "https://picsum.photos/seed/92/300/400",
+    "rating": 4.5,
+    "review": "A compelling narrative that challenges conventional wisdom and inspires change.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 93,
+    "title": "The Digital Theory of Innovation",
+    "author": "Sarah Smith",
+    "coverImage": "https://picsum.photos/seed/93/300/400",
+    "rating": 4,
+    "review": "A compelling narrative that challenges conventional wisdom and inspires change.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 94,
+    "title": "The Ancient Garden of Growth",
+    "author": "David Williams",
+    "coverImage": "https://picsum.photos/seed/94/300/400",
+    "rating": 3.6,
+    "review": "A groundbreaking exploration of modern challenges and innovative solutions.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 95,
+    "title": "The Quantum Symphony of Growth",
+    "author": "David Brown",
+    "coverImage": "https://picsum.photos/seed/95/300/400",
+    "rating": 4.6,
+    "review": "A masterful blend of research, storytelling, and practical application.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 96,
+    "title": "The Modern Secret of Wisdom",
+    "author": "Anna Garcia",
+    "coverImage": "https://picsum.photos/seed/96/300/400",
+    "rating": 3.4,
+    "review": "An essential resource for anyone seeking to maximize their potential.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 97,
+    "title": "The Lost Symphony of Wisdom",
+    "author": "Robert Garcia",
+    "coverImage": "https://picsum.photos/seed/97/300/400",
+    "rating": 3.5,
+    "review": "A practical guide filled with actionable strategies and valuable insights.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 98,
+    "title": "The Hidden Path of Success",
+    "author": "Lisa Brown",
+    "coverImage": "https://picsum.photos/seed/98/300/400",
+    "rating": 3.6,
+    "review": "A masterful blend of research, storytelling, and practical application.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 99,
+    "title": "The Future Theory of Leadership",
+    "author": "Robert Johnson",
+    "coverImage": "https://picsum.photos/seed/99/300/400",
+    "rating": 3.3,
+    "review": "A thought-provoking analysis of contemporary issues and future possibilities.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 100,
+    "title": "The Quantum Garden of Vision",
+    "author": "Emma Jones",
+    "coverImage": "https://picsum.photos/seed/100/300/400",
+    "rating": 4.4,
+    "review": "A thought-provoking analysis of contemporary issues and future possibilities.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 101,
+    "title": "The Quantum Mind of Innovation",
+    "author": "John Johnson",
+    "coverImage": "https://picsum.photos/seed/101/300/400",
+    "rating": 4.6,
+    "review": "A masterful blend of research, storytelling, and practical application.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 102,
+    "title": "The Modern Theory of Strategy",
+    "author": "Lisa Garcia",
+    "coverImage": "https://picsum.photos/seed/102/300/400",
+    "rating": 4.5,
+    "review": "An essential resource for anyone seeking to maximize their potential.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 103,
+    "title": "The Modern Legacy of Growth",
+    "author": "Sarah Miller",
+    "coverImage": "https://picsum.photos/seed/103/300/400",
+    "rating": 4.9,
+    "review": "A compelling narrative that challenges conventional wisdom and inspires change.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 104,
+    "title": "The Infinite Pattern of Vision",
+    "author": "David Brown",
+    "coverImage": "https://picsum.photos/seed/104/300/400",
+    "rating": 3.7,
+    "review": "An engaging examination of success principles and personal development.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 105,
+    "title": "The Future Path of Growth",
+    "author": "Sarah Garcia",
+    "coverImage": "https://picsum.photos/seed/105/300/400",
+    "rating": 3.8,
+    "review": "A revolutionary approach to understanding and achieving excellence.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 106,
+    "title": "The Hidden Secret of Vision",
+    "author": "John Johnson",
+    "coverImage": "https://picsum.photos/seed/106/300/400",
+    "rating": 4.6,
+    "review": "A masterful blend of research, storytelling, and practical application.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 107,
+    "title": "The Silent Theory of Change",
+    "author": "Anna Johnson",
+    "coverImage": "https://picsum.photos/seed/107/300/400",
+    "rating": 4.3,
+    "review": "A groundbreaking exploration of modern challenges and innovative solutions.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 108,
+    "title": "The Future Secret of Wisdom",
+    "author": "John Martinez",
+    "coverImage": "https://picsum.photos/seed/108/300/400",
+    "rating": 4.7,
+    "review": "An essential resource for anyone seeking to maximize their potential.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 109,
+    "title": "The Modern Garden of Vision",
+    "author": "Sarah Miller",
+    "coverImage": "https://picsum.photos/seed/109/300/400",
+    "rating": 4.9,
+    "review": "A groundbreaking exploration of modern challenges and innovative solutions.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 110,
+    "title": "The Digital Path of Leadership",
+    "author": "Lisa Brown",
+    "coverImage": "https://picsum.photos/seed/110/300/400",
+    "rating": 3.5,
+    "review": "A groundbreaking exploration of modern challenges and innovative solutions.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 111,
+    "title": "The Ancient Secret of Innovation",
+    "author": "John Miller",
+    "coverImage": "https://picsum.photos/seed/111/300/400",
+    "rating": 4.2,
+    "review": "A revolutionary approach to understanding and achieving excellence.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 112,
+    "title": "The Hidden Code of Purpose",
+    "author": "John Williams",
+    "coverImage": "https://picsum.photos/seed/112/300/400",
+    "rating": 3.3,
+    "review": "An insightful journey into the complexities of human potential and achievement.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 113,
+    "title": "The Lost Symphony of Strategy",
+    "author": "Anna Rodriguez",
+    "coverImage": "https://picsum.photos/seed/113/300/400",
+    "rating": 3.2,
+    "review": "A practical guide filled with actionable strategies and valuable insights.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 114,
+    "title": "The Infinite Theory of Strategy",
+    "author": "David Jones",
+    "coverImage": "https://picsum.photos/seed/114/300/400",
+    "rating": 4.3,
+    "review": "A practical guide filled with actionable strategies and valuable insights.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 115,
+    "title": "The Lost Legacy of Wisdom",
+    "author": "David Brown",
+    "coverImage": "https://picsum.photos/seed/115/300/400",
+    "rating": 4.6,
+    "review": "An insightful journey into the complexities of human potential and achievement.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 116,
+    "title": "The Future Theory of Vision",
+    "author": "Michael Smith",
+    "coverImage": "https://picsum.photos/seed/116/300/400",
+    "rating": 3.4,
+    "review": "An insightful journey into the complexities of human potential and achievement.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 117,
+    "title": "The Silent Journey of Strategy",
+    "author": "Maria Johnson",
+    "coverImage": "https://picsum.photos/seed/117/300/400",
+    "rating": 4,
+    "review": "A practical guide filled with actionable strategies and valuable insights.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 118,
+    "title": "The Quantum Mind of Vision",
+    "author": "Robert Rodriguez",
+    "coverImage": "https://picsum.photos/seed/118/300/400",
+    "rating": 4,
+    "review": "A practical guide filled with actionable strategies and valuable insights.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 119,
+    "title": "The Ancient Mind of Leadership",
+    "author": "James Johnson",
+    "coverImage": "https://picsum.photos/seed/119/300/400",
+    "rating": 4.7,
+    "review": "A thought-provoking analysis of contemporary issues and future possibilities.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 120,
+    "title": "The Silent Symphony of Innovation",
+    "author": "Emma Williams",
+    "coverImage": "https://picsum.photos/seed/120/300/400",
+    "rating": 4.4,
+    "review": "A practical guide filled with actionable strategies and valuable insights.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 121,
+    "title": "The Silent Code of Growth",
+    "author": "David Johnson",
+    "coverImage": "https://picsum.photos/seed/121/300/400",
+    "rating": 4.1,
+    "review": "A revolutionary approach to understanding and achieving excellence.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 122,
+    "title": "The Future Secret of Vision",
+    "author": "Robert Williams",
+    "coverImage": "https://picsum.photos/seed/122/300/400",
+    "rating": 3,
+    "review": "A revolutionary approach to understanding and achieving excellence.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 123,
+    "title": "The Quantum Garden of Innovation",
+    "author": "Lisa Rodriguez",
+    "coverImage": "https://picsum.photos/seed/123/300/400",
+    "rating": 4.5,
+    "review": "An insightful journey into the complexities of human potential and achievement.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 124,
+    "title": "The Infinite Theory of Strategy",
+    "author": "Lisa Smith",
+    "coverImage": "https://picsum.photos/seed/124/300/400",
+    "rating": 3,
+    "review": "A revolutionary approach to understanding and achieving excellence.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 125,
+    "title": "The Digital Path of Purpose",
+    "author": "Robert Johnson",
+    "coverImage": "https://picsum.photos/seed/125/300/400",
+    "rating": 4.3,
+    "review": "A masterful blend of research, storytelling, and practical application.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 126,
+    "title": "The Digital Code of Vision",
+    "author": "John Martinez",
+    "coverImage": "https://picsum.photos/seed/126/300/400",
+    "rating": 4.9,
+    "review": "An insightful journey into the complexities of human potential and achievement.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 127,
+    "title": "The Quantum Code of Vision",
+    "author": "David Smith",
+    "coverImage": "https://picsum.photos/seed/127/300/400",
+    "rating": 4.5,
+    "review": "An engaging examination of success principles and personal development.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 128,
+    "title": "The Silent Garden of Strategy",
+    "author": "Lisa Martinez",
+    "coverImage": "https://picsum.photos/seed/128/300/400",
+    "rating": 3.7,
+    "review": "A revolutionary approach to understanding and achieving excellence.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 129,
+    "title": "The Infinite Code of Wisdom",
+    "author": "Anna Smith",
+    "coverImage": "https://picsum.photos/seed/129/300/400",
+    "rating": 3.3,
+    "review": "An engaging examination of success principles and personal development.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 130,
+    "title": "The Quantum Legacy of Growth",
+    "author": "Emma Smith",
+    "coverImage": "https://picsum.photos/seed/130/300/400",
+    "rating": 4.4,
+    "review": "A masterful blend of research, storytelling, and practical application.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 131,
+    "title": "The Quantum Garden of Growth",
+    "author": "David Miller",
+    "coverImage": "https://picsum.photos/seed/131/300/400",
+    "rating": 3.2,
+    "review": "A masterful blend of research, storytelling, and practical application.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 132,
+    "title": "The Hidden Mind of Vision",
+    "author": "Michael Smith",
+    "coverImage": "https://picsum.photos/seed/132/300/400",
+    "rating": 3.1,
+    "review": "A compelling narrative that challenges conventional wisdom and inspires change.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 133,
+    "title": "The Digital Garden of Growth",
+    "author": "Emma Johnson",
+    "coverImage": "https://picsum.photos/seed/133/300/400",
+    "rating": 3.9,
+    "review": "A revolutionary approach to understanding and achieving excellence.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 134,
+    "title": "The Eternal Garden of Vision",
+    "author": "James Smith",
+    "coverImage": "https://picsum.photos/seed/134/300/400",
+    "rating": 3.1,
+    "review": "A practical guide filled with actionable strategies and valuable insights.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 135,
+    "title": "The Ancient Theory of Wisdom",
+    "author": "David Rodriguez",
+    "coverImage": "https://picsum.photos/seed/135/300/400",
+    "rating": 3.6,
+    "review": "A comprehensive framework for personal and professional growth.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 136,
+    "title": "The Digital Pattern of Mastery",
+    "author": "Sarah Johnson",
+    "coverImage": "https://picsum.photos/seed/136/300/400",
+    "rating": 4.4,
+    "review": "A thought-provoking analysis of contemporary issues and future possibilities.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 137,
+    "title": "The Quantum Symphony of Strategy",
+    "author": "David Johnson",
+    "coverImage": "https://picsum.photos/seed/137/300/400",
+    "rating": 4.3,
+    "review": "An essential resource for anyone seeking to maximize their potential.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 138,
+    "title": "The Ancient Code of Leadership",
+    "author": "James Martinez",
+    "coverImage": "https://picsum.photos/seed/138/300/400",
+    "rating": 3.7,
+    "review": "A thought-provoking analysis of contemporary issues and future possibilities.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 139,
+    "title": "The Eternal Legacy of Wisdom",
+    "author": "David Martinez",
+    "coverImage": "https://picsum.photos/seed/139/300/400",
+    "rating": 3.7,
+    "review": "An engaging examination of success principles and personal development.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 140,
+    "title": "The Hidden Journey of Purpose",
+    "author": "James Miller",
+    "coverImage": "https://picsum.photos/seed/140/300/400",
+    "rating": 3.4,
+    "review": "A comprehensive framework for personal and professional growth.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 141,
+    "title": "The Eternal Secret of Change",
+    "author": "Lisa Brown",
+    "coverImage": "https://picsum.photos/seed/141/300/400",
+    "rating": 4.5,
+    "review": "An insightful journey into the complexities of human potential and achievement.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 142,
+    "title": "The Hidden Code of Purpose",
+    "author": "James Jones",
+    "coverImage": "https://picsum.photos/seed/142/300/400",
+    "rating": 3.6,
+    "review": "A compelling narrative that challenges conventional wisdom and inspires change.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 143,
+    "title": "The Digital Journey of Strategy",
+    "author": "James Brown",
+    "coverImage": "https://picsum.photos/seed/143/300/400",
+    "rating": 3.4,
+    "review": "An engaging examination of success principles and personal development.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 144,
+    "title": "The Future Code of Strategy",
+    "author": "Maria Johnson",
+    "coverImage": "https://picsum.photos/seed/144/300/400",
+    "rating": 3.7,
+    "review": "A thought-provoking analysis of contemporary issues and future possibilities.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 145,
+    "title": "The Digital Symphony of Innovation",
+    "author": "Anna Garcia",
+    "coverImage": "https://picsum.photos/seed/145/300/400",
+    "rating": 3.9,
+    "review": "A revolutionary approach to understanding and achieving excellence.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 146,
+    "title": "The Digital Journey of Growth",
+    "author": "Robert Williams",
+    "coverImage": "https://picsum.photos/seed/146/300/400",
+    "rating": 4.1,
+    "review": "An essential resource for anyone seeking to maximize their potential.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 147,
+    "title": "The Eternal Theory of Wisdom",
+    "author": "Maria Johnson",
+    "coverImage": "https://picsum.photos/seed/147/300/400",
+    "rating": 3,
+    "review": "A masterful blend of research, storytelling, and practical application.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 148,
+    "title": "The Modern Code of Innovation",
+    "author": "James Brown",
+    "coverImage": "https://picsum.photos/seed/148/300/400",
+    "rating": 4.4,
+    "review": "A thought-provoking analysis of contemporary issues and future possibilities.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 149,
+    "title": "The Digital Garden of Wisdom",
+    "author": "Emma Johnson",
+    "coverImage": "https://picsum.photos/seed/149/300/400",
+    "rating": 3.4,
+    "review": "A comprehensive framework for personal and professional growth.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 150,
+    "title": "The Future Mind of Wisdom",
+    "author": "David Rodriguez",
+    "coverImage": "https://picsum.photos/seed/150/300/400",
+    "rating": 5,
+    "review": "An insightful journey into the complexities of human potential and achievement.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 151,
+    "title": "The Quantum Theory of Vision",
+    "author": "Maria Martinez",
+    "coverImage": "https://picsum.photos/seed/151/300/400",
+    "rating": 4.6,
+    "review": "A compelling narrative that challenges conventional wisdom and inspires change.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 152,
+    "title": "The Silent Journey of Mastery",
+    "author": "Maria Johnson",
+    "coverImage": "https://picsum.photos/seed/152/300/400",
+    "rating": 4.3,
+    "review": "A comprehensive framework for personal and professional growth.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 153,
+    "title": "The Infinite Pattern of Strategy",
+    "author": "James Rodriguez",
+    "coverImage": "https://picsum.photos/seed/153/300/400",
+    "rating": 4.7,
+    "review": "A thought-provoking analysis of contemporary issues and future possibilities.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 154,
+    "title": "The Infinite Mind of Vision",
+    "author": "Anna Smith",
+    "coverImage": "https://picsum.photos/seed/154/300/400",
+    "rating": 4.2,
+    "review": "An insightful journey into the complexities of human potential and achievement.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 155,
+    "title": "The Eternal Mind of Wisdom",
+    "author": "John Davis",
+    "coverImage": "https://picsum.photos/seed/155/300/400",
+    "rating": 4.3,
+    "review": "A practical guide filled with actionable strategies and valuable insights.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 156,
+    "title": "The Eternal Pattern of Vision",
+    "author": "James Miller",
+    "coverImage": "https://picsum.photos/seed/156/300/400",
+    "rating": 3.1,
+    "review": "An engaging examination of success principles and personal development.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 157,
+    "title": "The Future Theory of Change",
+    "author": "Emma Smith",
+    "coverImage": "https://picsum.photos/seed/157/300/400",
+    "rating": 4.8,
+    "review": "A thought-provoking analysis of contemporary issues and future possibilities.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 158,
+    "title": "The Infinite Legacy of Wisdom",
+    "author": "Emma Williams",
+    "coverImage": "https://picsum.photos/seed/158/300/400",
+    "rating": 4.1,
+    "review": "A masterful blend of research, storytelling, and practical application.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 159,
+    "title": "The Lost Path of Purpose",
+    "author": "John Brown",
+    "coverImage": "https://picsum.photos/seed/159/300/400",
+    "rating": 4,
+    "review": "A masterful blend of research, storytelling, and practical application.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 160,
+    "title": "The Lost Secret of Leadership",
+    "author": "Maria Rodriguez",
+    "coverImage": "https://picsum.photos/seed/160/300/400",
+    "rating": 3.4,
+    "review": "A revolutionary approach to understanding and achieving excellence.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 161,
+    "title": "The Silent Path of Success",
+    "author": "David Miller",
+    "coverImage": "https://picsum.photos/seed/161/300/400",
+    "rating": 3.3,
+    "review": "A compelling narrative that challenges conventional wisdom and inspires change.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 162,
+    "title": "The Hidden Code of Mastery",
+    "author": "David Jones",
+    "coverImage": "https://picsum.photos/seed/162/300/400",
+    "rating": 4.1,
+    "review": "A masterful blend of research, storytelling, and practical application.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 163,
+    "title": "The Ancient Mind of Mastery",
+    "author": "James Johnson",
+    "coverImage": "https://picsum.photos/seed/163/300/400",
+    "rating": 3.8,
+    "review": "A comprehensive framework for personal and professional growth.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 164,
+    "title": "The Ancient Pattern of Innovation",
+    "author": "Sarah Davis",
+    "coverImage": "https://picsum.photos/seed/164/300/400",
+    "rating": 3.8,
+    "review": "A comprehensive framework for personal and professional growth.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 165,
+    "title": "The Silent Legacy of Leadership",
+    "author": "Michael Johnson",
+    "coverImage": "https://picsum.photos/seed/165/300/400",
+    "rating": 3.2,
+    "review": "A groundbreaking exploration of modern challenges and innovative solutions.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 166,
+    "title": "The Quantum Theory of Growth",
+    "author": "Emma Garcia",
+    "coverImage": "https://picsum.photos/seed/166/300/400",
+    "rating": 4.6,
+    "review": "A compelling narrative that challenges conventional wisdom and inspires change.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 167,
+    "title": "The Silent Legacy of Purpose",
+    "author": "Robert Williams",
+    "coverImage": "https://picsum.photos/seed/167/300/400",
+    "rating": 3.7,
+    "review": "An engaging examination of success principles and personal development.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 168,
+    "title": "The Eternal Path of Change",
+    "author": "Sarah Johnson",
+    "coverImage": "https://picsum.photos/seed/168/300/400",
+    "rating": 4.6,
+    "review": "A thought-provoking analysis of contemporary issues and future possibilities.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 169,
+    "title": "The Quantum Legacy of Growth",
+    "author": "Maria Williams",
+    "coverImage": "https://picsum.photos/seed/169/300/400",
+    "rating": 4.5,
+    "review": "An essential resource for anyone seeking to maximize their potential.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 170,
+    "title": "The Ancient Symphony of Success",
+    "author": "Lisa Rodriguez",
+    "coverImage": "https://picsum.photos/seed/170/300/400",
+    "rating": 3.3,
+    "review": "A thought-provoking analysis of contemporary issues and future possibilities.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 171,
+    "title": "The Modern Path of Vision",
+    "author": "Robert Williams",
+    "coverImage": "https://picsum.photos/seed/171/300/400",
+    "rating": 4.3,
+    "review": "A practical guide filled with actionable strategies and valuable insights.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 172,
+    "title": "The Hidden Path of Leadership",
+    "author": "John Davis",
+    "coverImage": "https://picsum.photos/seed/172/300/400",
+    "rating": 4.4,
+    "review": "A compelling narrative that challenges conventional wisdom and inspires change.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 173,
+    "title": "The Ancient Symphony of Growth",
+    "author": "Emma Brown",
+    "coverImage": "https://picsum.photos/seed/173/300/400",
+    "rating": 3.7,
+    "review": "An insightful journey into the complexities of human potential and achievement.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 174,
+    "title": "The Digital Legacy of Purpose",
+    "author": "Emma Williams",
+    "coverImage": "https://picsum.photos/seed/174/300/400",
+    "rating": 4.1,
+    "review": "An engaging examination of success principles and personal development.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 175,
+    "title": "The Lost Mind of Strategy",
+    "author": "John Williams",
+    "coverImage": "https://picsum.photos/seed/175/300/400",
+    "rating": 4.4,
+    "review": "A thought-provoking analysis of contemporary issues and future possibilities.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 176,
+    "title": "The Eternal Path of Vision",
+    "author": "Anna Miller",
+    "coverImage": "https://picsum.photos/seed/176/300/400",
+    "rating": 4,
+    "review": "A practical guide filled with actionable strategies and valuable insights.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 177,
+    "title": "The Infinite Theory of Change",
+    "author": "James Brown",
+    "coverImage": "https://picsum.photos/seed/177/300/400",
+    "rating": 4,
+    "review": "A groundbreaking exploration of modern challenges and innovative solutions.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 178,
+    "title": "The Infinite Theory of Innovation",
+    "author": "John Williams",
+    "coverImage": "https://picsum.photos/seed/178/300/400",
+    "rating": 4.9,
+    "review": "An insightful journey into the complexities of human potential and achievement.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 179,
+    "title": "The Modern Secret of Purpose",
+    "author": "Robert Martinez",
+    "coverImage": "https://picsum.photos/seed/179/300/400",
+    "rating": 4.8,
+    "review": "A compelling narrative that challenges conventional wisdom and inspires change.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 180,
+    "title": "The Silent Legacy of Growth",
+    "author": "Michael Smith",
+    "coverImage": "https://picsum.photos/seed/180/300/400",
+    "rating": 4.1,
+    "review": "An essential resource for anyone seeking to maximize their potential.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 181,
+    "title": "The Digital Path of Mastery",
+    "author": "James Brown",
+    "coverImage": "https://picsum.photos/seed/181/300/400",
+    "rating": 4.6,
+    "review": "A groundbreaking exploration of modern challenges and innovative solutions.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 182,
+    "title": "The Digital Secret of Strategy",
+    "author": "Emma Jones",
+    "coverImage": "https://picsum.photos/seed/182/300/400",
+    "rating": 4.1,
+    "review": "A masterful blend of research, storytelling, and practical application.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 183,
+    "title": "The Eternal Symphony of Leadership",
+    "author": "Emma Martinez",
+    "coverImage": "https://picsum.photos/seed/183/300/400",
+    "rating": 3.4,
+    "review": "A practical guide filled with actionable strategies and valuable insights.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 184,
+    "title": "The Lost Symphony of Innovation",
+    "author": "John Rodriguez",
+    "coverImage": "https://picsum.photos/seed/184/300/400",
+    "rating": 3.7,
+    "review": "An engaging examination of success principles and personal development.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 185,
+    "title": "The Ancient Garden of Success",
+    "author": "Sarah Jones",
+    "coverImage": "https://picsum.photos/seed/185/300/400",
+    "rating": 4.6,
+    "review": "A masterful blend of research, storytelling, and practical application.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 186,
+    "title": "The Eternal Pattern of Change",
+    "author": "John Williams",
+    "coverImage": "https://picsum.photos/seed/186/300/400",
+    "rating": 4.6,
+    "review": "An essential resource for anyone seeking to maximize their potential.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 187,
+    "title": "The Quantum Theory of Purpose",
+    "author": "Robert Davis",
+    "coverImage": "https://picsum.photos/seed/187/300/400",
+    "rating": 4.7,
+    "review": "A revolutionary approach to understanding and achieving excellence.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 188,
+    "title": "The Eternal Code of Purpose",
+    "author": "David Rodriguez",
+    "coverImage": "https://picsum.photos/seed/188/300/400",
+    "rating": 4.2,
+    "review": "A comprehensive framework for personal and professional growth.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 189,
+    "title": "The Digital Pattern of Leadership",
+    "author": "James Garcia",
+    "coverImage": "https://picsum.photos/seed/189/300/400",
+    "rating": 3.3,
+    "review": "An engaging examination of success principles and personal development.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 190,
+    "title": "The Future Journey of Purpose",
+    "author": "Michael Brown",
+    "coverImage": "https://picsum.photos/seed/190/300/400",
+    "rating": 4.7,
+    "review": "A revolutionary approach to understanding and achieving excellence.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 191,
+    "title": "The Infinite Journey of Growth",
+    "author": "David Brown",
+    "coverImage": "https://picsum.photos/seed/191/300/400",
+    "rating": 3.1,
+    "review": "A masterful blend of research, storytelling, and practical application.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 192,
+    "title": "The Eternal Symphony of Growth",
+    "author": "David Garcia",
+    "coverImage": "https://picsum.photos/seed/192/300/400",
+    "rating": 4.5,
+    "review": "A compelling narrative that challenges conventional wisdom and inspires change.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 193,
+    "title": "The Hidden Garden of Success",
+    "author": "Emma Smith",
+    "coverImage": "https://picsum.photos/seed/193/300/400",
+    "rating": 4.3,
+    "review": "An engaging examination of success principles and personal development.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 194,
+    "title": "The Lost Symphony of Change",
+    "author": "John Davis",
+    "coverImage": "https://picsum.photos/seed/194/300/400",
+    "rating": 4.5,
+    "review": "A revolutionary approach to understanding and achieving excellence.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 195,
+    "title": "The Eternal Garden of Purpose",
+    "author": "Sarah Martinez",
+    "coverImage": "https://picsum.photos/seed/195/300/400",
+    "rating": 3.1,
+    "review": "A masterful blend of research, storytelling, and practical application.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 196,
+    "title": "The Hidden Path of Wisdom",
+    "author": "Sarah Martinez",
+    "coverImage": "https://picsum.photos/seed/196/300/400",
+    "rating": 4,
+    "review": "A groundbreaking exploration of modern challenges and innovative solutions.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 197,
+    "title": "The Ancient Pattern of Success",
+    "author": "Sarah Johnson",
+    "coverImage": "https://picsum.photos/seed/197/300/400",
+    "rating": 3.5,
+    "review": "An engaging examination of success principles and personal development.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 198,
+    "title": "The Ancient Mind of Wisdom",
+    "author": "Emma Williams",
+    "coverImage": "https://picsum.photos/seed/198/300/400",
+    "rating": 4.9,
+    "review": "A practical guide filled with actionable strategies and valuable insights.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 199,
+    "title": "The Future Legacy of Innovation",
+    "author": "James Garcia",
+    "coverImage": "https://picsum.photos/seed/199/300/400",
+    "rating": 3.8,
+    "review": "An engaging examination of success principles and personal development.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 200,
+    "title": "The Silent Symphony of Vision",
+    "author": "Sarah Williams",
+    "coverImage": "https://picsum.photos/seed/200/300/400",
+    "rating": 3.4,
+    "review": "A compelling narrative that challenges conventional wisdom and inspires change.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 201,
+    "title": "The Future Legacy of Success",
+    "author": "David Garcia",
+    "coverImage": "https://picsum.photos/seed/201/300/400",
+    "rating": 4.8,
+    "review": "An engaging examination of success principles and personal development.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 202,
+    "title": "The Hidden Secret of Growth",
+    "author": "Emma Miller",
+    "coverImage": "https://picsum.photos/seed/202/300/400",
+    "rating": 3.9,
+    "review": "A thought-provoking analysis of contemporary issues and future possibilities.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 203,
+    "title": "The Lost Theory of Vision",
+    "author": "Sarah Garcia",
+    "coverImage": "https://picsum.photos/seed/203/300/400",
+    "rating": 3.8,
+    "review": "A thought-provoking analysis of contemporary issues and future possibilities.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 204,
+    "title": "The Ancient Path of Strategy",
+    "author": "Maria Miller",
+    "coverImage": "https://picsum.photos/seed/204/300/400",
+    "rating": 4.2,
+    "review": "A groundbreaking exploration of modern challenges and innovative solutions.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 205,
+    "title": "The Digital Code of Success",
+    "author": "Lisa Davis",
+    "coverImage": "https://picsum.photos/seed/205/300/400",
+    "rating": 4,
+    "review": "An insightful journey into the complexities of human potential and achievement.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 206,
+    "title": "The Ancient Symphony of Change",
+    "author": "Lisa Brown",
+    "coverImage": "https://picsum.photos/seed/206/300/400",
+    "rating": 4,
+    "review": "A masterful blend of research, storytelling, and practical application.",
+    "dominantColor": "#a69b68"
+  },
+  {
+    "id": 207,
+    "title": "The Silent Theory of Leadership",
+    "author": "James Williams",
+    "coverImage": "https://picsum.photos/seed/207/300/400",
+    "rating": 3.7,
+    "review": "An engaging examination of success principles and personal development.",
     "dominantColor": "#a69b68"
   }
 ]

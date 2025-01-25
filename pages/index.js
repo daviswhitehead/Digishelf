@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, ScrollView, StyleSheet } from "react-native";
 import { useResponsive } from "../utils/useResponsive";
 import { getResponsiveValues, calculateTotalWidth } from "../utils/layoutUtils";
 import books from "../data/booksWithColors.json";
 import BookCard from "../components/BookCard";
+import ListHeader from "../components/ListHeader";
 
 const splitIntoColumns = (data, numColumns) => {
   const columns = Array.from({ length: numColumns }, () => []);
@@ -14,15 +15,25 @@ const splitIntoColumns = (data, numColumns) => {
 };
 
 export default function Home() {
+  const [isPlaying, setIsPlaying] = useState(false);
   const { width, isMobile, isTablet } = useResponsive();
   const { columns: numColumns, cardWidth, margin } = getResponsiveValues(width, isMobile, isTablet);
   
   const columns = splitIntoColumns(books, numColumns);
   const totalWidth = calculateTotalWidth(numColumns, cardWidth, margin);
 
+  const handlePlayPausePress = () => {
+    setIsPlaying(!isPlaying);
+  };
+
   return (
-    <ScrollView>
-      <View style={styles.container}>
+    <View style={styles.container}>
+      <ListHeader
+        title="Read Books"
+        isPlaying={isPlaying}
+        onPlayPausePress={handlePlayPausePress}
+      />
+      <ScrollView>
         <View style={[
           styles.contentContainer,
           { 
@@ -41,17 +52,19 @@ export default function Home() {
             ))}
           </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    position: 'relative', // Ensure absolute positioning works correctly
   },
   contentContainer: {
     width: '100%',
+    paddingTop: 80, // Add space for the header
   },
   row: {
     flexDirection: "row",

@@ -63,118 +63,57 @@ const books = [
     rating: 5,
     review: "A thought-provoking exploration of the history of our species.",
   },
-  {
-    id: 8,
-    title: "The Power of Habit",
-    author: "Charles Duhigg",
-    coverImage: "https://example.com/cover8.jpg",
-    rating: 4,
-    review:
-      "An insightful look at how habits shape our lives and how to change them.",
-  },
-  {
-    id: 9,
-    title: "Grit: The Power of Passion and Perseverance",
-    author: "Angela Duckworth",
-    coverImage: "https://example.com/cover9.jpg",
-    rating: 4.5,
-    review:
-      "An exploration of the importance of persistence in achieving success.",
-  },
-  {
-    id: 10,
-    title: "Man's Search for Meaning",
-    author: "Viktor E. Frankl",
-    coverImage: "https://example.com/cover10.jpg",
-    rating: 5,
-    review: "A moving account of finding purpose and resilience in adversity.",
-  },
-  {
-    id: 11,
-    title: "The Alchemist",
-    author: "Paulo Coelho",
-    coverImage: "https://example.com/cover11.jpg",
-    rating: 4.5,
-    review:
-      "A magical journey of following one's dreams and finding fulfillment.",
-  },
-  {
-    id: 12,
-    title: "The 7 Habits of Highly Effective People",
-    author: "Stephen R. Covey",
-    coverImage: "https://example.com/cover12.jpg",
-    rating: 4,
-    review: "A timeless guide to personal and professional effectiveness.",
-  },
-  {
-    id: 13,
-    title: "The Four Agreements",
-    author: "Don Miguel Ruiz",
-    coverImage: "https://example.com/cover13.jpg",
-    rating: 4.5,
-    review: "A simple yet profound guide to personal freedom and happiness.",
-  },
-  {
-    id: 14,
-    title: "Start with Why",
-    author: "Simon Sinek",
-    coverImage: "https://example.com/cover14.jpg",
-    rating: 4,
-    review: "A compelling argument for leading with purpose and clarity.",
-  },
-  {
-    id: 15,
-    title: "Becoming",
-    author: "Michelle Obama",
-    coverImage: "https://example.com/cover15.jpg",
-    rating: 5,
-    review:
-      "An inspiring memoir of resilience, family, and finding one's voice.",
-  },
-  {
-    id: 16,
-    title: "The Subtle Art of Not Giving a F*ck",
-    author: "Mark Manson",
-    coverImage: "https://example.com/cover16.jpg",
-    rating: 3.5,
-    review:
-      "A candid approach to embracing limitations and focusing on what matters.",
-  },
-  {
-    id: 17,
-    title: "Dare to Lead",
-    author: "Brené Brown",
-    coverImage: "https://example.com/cover17.jpg",
-    rating: 4.5,
-    review:
-      "An empowering book on leadership and the courage to be vulnerable.",
-  },
-  {
-    id: 18,
-    title: "The Happiness Project",
-    author: "Gretchen Rubin",
-    coverImage: "https://example.com/cover18.jpg",
-    rating: 4,
-    review: "A practical guide to improving happiness through small changes.",
-  },
-  {
-    id: 19,
-    title: "Outliers: The Story of Success",
-    author: "Malcolm Gladwell",
-    coverImage: "https://example.com/cover19.jpg",
-    rating: 4,
-    review:
-      "An analysis of the factors that contribute to high levels of success.",
-  },
-  {
-    id: 20,
-    title: "Mindset: The New Psychology of Success",
-    author: "Carol S. Dweck",
-    coverImage: "https://example.com/cover20.jpg",
-    rating: 4.5,
-    review:
-      "A powerful exploration of how mindset shapes our lives and achievements.",
-  },
 ];
 
-module.exports = books;
+// ... existing books array ...
+
+// Add 200 more books
+const additionalBooks = Array.from({ length: 200 }, (_, index) => ({
+  id: books.length + index + 1,
+  title: `The ${getRandomTitle()}`,
+  author: getRandomAuthor(),
+  coverImage: `https://picsum.photos/seed/${books.length + index + 1}/300/400`,
+  rating: Number((Math.random() * 2 + 3).toFixed(1)), // Random rating between 3.0-5.0
+  review: getRandomReview(),
+}));
+
+// Helper functions for generating random content
+function getRandomTitle() {
+  const adjectives = ['Hidden', 'Lost', 'Infinite', 'Silent', 'Quantum', 'Digital', 'Ancient', 'Modern', 'Future', 'Eternal'];
+  const nouns = ['Path', 'Mind', 'Journey', 'Secret', 'Code', 'Legacy', 'Pattern', 'Theory', 'Garden', 'Symphony'];
+  const themes = ['Success', 'Innovation', 'Leadership', 'Wisdom', 'Growth', 'Change', 'Purpose', 'Vision', 'Strategy', 'Mastery'];
+  
+  return `${adjectives[Math.floor(Math.random() * adjectives.length)]} ${
+    nouns[Math.floor(Math.random() * nouns.length)]} of ${
+    themes[Math.floor(Math.random() * themes.length)]}`;
+}
+
+function getRandomAuthor() {
+  const firstNames = ['James', 'Emma', 'Michael', 'Sarah', 'David', 'Lisa', 'Robert', 'Maria', 'John', 'Anna'];
+  const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez'];
+  
+  return `${firstNames[Math.floor(Math.random() * firstNames.length)]} ${
+    lastNames[Math.floor(Math.random() * lastNames.length)]}`;
+}
+
+function getRandomReview() {
+  const reviews = [
+    "A groundbreaking exploration of modern challenges and innovative solutions.",
+    "An insightful journey into the complexities of human potential and achievement.",
+    "A compelling narrative that challenges conventional wisdom and inspires change.",
+    "A practical guide filled with actionable strategies and valuable insights.",
+    "A thought-provoking analysis of contemporary issues and future possibilities.",
+    "An engaging examination of success principles and personal development.",
+    "A masterful blend of research, storytelling, and practical application.",
+    "A revolutionary approach to understanding and achieving excellence.",
+    "A comprehensive framework for personal and professional growth.",
+    "An essential resource for anyone seeking to maximize their potential."
+  ];
+  
+  return reviews[Math.floor(Math.random() * reviews.length)];
+}
+
+// Combine existing and new books
+const allBooks = [...books, ...additionalBooks];
+
+module.exports = { books, additionalBooks, allBooks }; // Export all arrays
