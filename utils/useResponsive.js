@@ -1,39 +1,41 @@
 import { useState, useEffect } from 'react';
 import { useWindowDimensions } from 'react-native';
 
+export const breakpoints = {
+  mobile: 768,
+  tablet: 1024,
+  desktop: 1280
+};
+
 export const useResponsive = () => {
-  // Initialize with default values for server-side rendering
-  const [width, setWidth] = useState(1024); // Default desktop width
+  const [width, setWidth] = useState(undefined);
   const [isMounted, setIsMounted] = useState(false);
-  
-  const windowDimensions = useWindowDimensions();
 
   useEffect(() => {
-    setWidth(windowDimensions.width);
+    const handleResize = () => setWidth(window.innerWidth);
+    
+    setWidth(window.innerWidth);
     setIsMounted(true);
-  }, [windowDimensions.width]);
+    window.addEventListener('resize', handleResize);
+    
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
-  // Return default values during server-side rendering
-  if (!isMounted) {
+  if (!isMounted || typeof width === 'undefined') {
     return {
-      width: 1024,
+      width: 0,
       isMobile: false,
       isTablet: false,
-      isDesktop: true
+      isDesktop: false,
+      isLoading: true
     };
   }
 
   return {
     width,
-    isMobile: width < 768,
-    isTablet: width >= 768 && width < 1024,
-    isDesktop: width >= 1024
+    isMobile: width < breakpoints.mobile,
+    isTablet: width >= breakpoints.mobile && width < breakpoints.tablet,
+    isDesktop: width >= breakpoints.tablet,
+    isLoading: false
   };
-};
-
-// Breakpoint constants for consistent usage
-export const breakpoints = {
-  mobile: 768,
-  tablet: 1024,
-  desktop: 1280
 }; 

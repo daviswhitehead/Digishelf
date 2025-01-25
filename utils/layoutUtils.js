@@ -1,47 +1,43 @@
-import { CARD_DIMENSIONS, SPACING, COLUMNS } from '../constants/layout';
+import { CARD_DIMENSIONS, SPACING } from '../constants/layout';
+import { breakpoints } from '../utils/useResponsive';
 
-export const getResponsiveValues = (width, isMobile, isTablet) => {
-  // Get breakpoint-specific card width bounds
-  const { minWidth, maxWidth } = isMobile 
-    ? CARD_DIMENSIONS.MOBILE
-    : isTablet 
-    ? CARD_DIMENSIONS.TABLET 
-    : CARD_DIMENSIONS.DESKTOP;
+const getCardDimensionsForWidth = (windowWidth) => {
+  if (windowWidth < breakpoints.mobile) return CARD_DIMENSIONS.MOBILE;
+  if (windowWidth < breakpoints.tablet) return CARD_DIMENSIONS.TABLET;
+  return CARD_DIMENSIONS.DESKTOP;
+};
 
-  // Base margin calculation
-  const margin = Math.min(
-    isMobile ? SPACING.MOBILE_MARGIN : SPACING.DESKTOP_MARGIN,
-    SPACING.MAX_MARGIN
-  );
+const calculateAvailableWidth = (windowWidth, margin) => {
+  return windowWidth - (margin * 2);
+};
 
-  // Calculate maximum possible columns that could fit with minimum width
-  const maxPossibleColumns = Math.floor((width - margin) / (minWidth + margin));
+const calculateMaxColumns = (availableWidth, minCardWidth, margin) => {
+  return Math.floor(availableWidth / (minCardWidth + margin));
+};
+
+const constrainCardWidth = (calculatedWidth, { minWidth, maxWidth }) => {
+  return Math.max(minWidth, Math.min(calculatedWidth, maxWidth));
+};
+
+export const getResponsiveValues = (windowWidth) => {
+  const margin = SPACING.MAX_MARGIN;
+  const cardDimensions = getCardDimensionsForWidth(windowWidth);
   
-  // Determine actual number of columns based on device and constraints
-  const columns = isMobile 
-    ? COLUMNS.MOBILE 
-    : isTablet 
-    ? COLUMNS.TABLET 
-    : Math.min(
-        Math.max(COLUMNS.MIN_DESKTOP, maxPossibleColumns),
-        COLUMNS.MAX_DESKTOP || maxPossibleColumns
-      );
-
-  // Calculate card width ensuring it stays within bounds
-  const availableWidth = width - (margin * (columns + 1));
-  const calculatedWidth = availableWidth / columns;
-  const cardWidth = Math.min(
-    Math.max(calculatedWidth, minWidth),
-    maxWidth
-  );
+  const availableWidth = calculateAvailableWidth(windowWidth, margin);
+  const maxPossibleColumns = calculateMaxColumns(availableWidth, cardDimensions.minWidth, margin);
+  const columns = Math.max(1, maxPossibleColumns);
+  
+  const totalGapSpace = margin * (columns - 1);
+  const cardWidth = Math.floor((availableWidth - totalGapSpace) / columns);
+  const finalCardWidth = constrainCardWidth(cardWidth, cardDimensions);
 
   return {
-    margin,
     columns,
-    cardWidth,
+    cardWidth: finalCardWidth,
+    margin,
   };
 };
 
-export const calculateTotalWidth = (columns, cardWidth, margin) => {
-  return (cardWidth * columns) + (margin * (columns + 1));
+export const calculateTotalWidth = (numColumns, cardWidth, margin) => {
+  return cardWidth * numColumns + margin * (numColumns - 1);
 }; 

@@ -16,35 +16,26 @@ const splitIntoColumns = (data, numColumns) => {
 
 export default function Home() {
   const [isPlaying, setIsPlaying] = useState(false);
-  const { width, isMobile, isTablet } = useResponsive();
-  const { columns: numColumns, cardWidth, margin } = getResponsiveValues(width, isMobile, isTablet);
+  const { width, isLoading } = useResponsive();
   
+  if (isLoading) return null; // Or a loading spinner component
+  
+  const { columns: numColumns, cardWidth, margin } = getResponsiveValues(width);
   const columns = splitIntoColumns(books, numColumns);
   const totalWidth = calculateTotalWidth(numColumns, cardWidth, margin);
-
-  const handlePlayPausePress = () => {
-    setIsPlaying(!isPlaying);
-  };
 
   return (
     <View style={styles.container}>
       <ListHeader
         title="Read Books"
         isPlaying={isPlaying}
-        onPlayPausePress={handlePlayPausePress}
+        onPlayPausePress={() => setIsPlaying(!isPlaying)}
       />
       <ScrollView>
-        <View style={[
-          styles.contentContainer,
-          { 
-            maxWidth: totalWidth,
-            marginHorizontal: 'auto',
-            paddingHorizontal: margin,
-          }
-        ]}>
+        <View style={[styles.contentContainer, { maxWidth: totalWidth, marginHorizontal: 'auto' }]}>
           <View style={[styles.row, { gap: margin }]}>
             {columns.map((column, index) => (
-              <View key={index} style={styles.column}>
+              <View key={index} style={[styles.column, { width: cardWidth }]}>
                 {column.map((book) => (
                   <BookCard key={book.id} book={book} />
                 ))}
@@ -60,17 +51,19 @@ export default function Home() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    position: 'relative', // Ensure absolute positioning works correctly
+    position: 'relative',
+    marginVertical: 20,
   },
   contentContainer: {
     width: '100%',
-    paddingTop: 80, // Add space for the header
+    paddingHorizontal: 20,
   },
   row: {
     flexDirection: "row",
     justifyContent: "center",
+    flexWrap: 'nowrap',
   },
   column: {
-    flex: 1,
+    flexShrink: 0,
   },
 });

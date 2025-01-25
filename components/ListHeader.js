@@ -27,9 +27,9 @@ const ListHeader = ({ title, isPlaying, onPlayPausePress }) => {
 
 const styles = StyleSheet.create({
   container: {
-    position: 'absolute',
-    top: 16,
-    left: 16,
+    position: 'fixed',
+    top: 20,
+    left: 20,
     zIndex: 1000,
   },
   contentContainer: {

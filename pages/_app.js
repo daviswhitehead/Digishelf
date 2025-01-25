@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { AppRegistry } from 'react-native';
+import { AppRegistry, View, StyleSheet } from 'react-native';
 
 // Import the icon font loader only on client side
 function loadIconFont() {
@@ -13,8 +13,20 @@ function App({ Component, pageProps }) {
     loadIconFont();
   }, []);
 
-  return <Component {...pageProps} />;
+  return (
+    <View style={styles.root}>
+      <Component {...pageProps} />
+    </View>
+  );
 }
+
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: '#000000',
+    minHeight: '100vh', // Ensure full viewport height
+  },
+});
 
 // Register your app
 if (typeof window !== 'undefined') {
