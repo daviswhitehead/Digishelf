@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 const ListHeader = ({ title, isPlaying, onPlayPausePress }) => {
   return (
     <View style={styles.container}>
+      <View style={[styles.background, { height: '100%' }]} />
       <View style={styles.contentContainer}>
         <Text style={styles.title}>{title}</Text>
         <Pressable
@@ -31,19 +32,31 @@ const styles = StyleSheet.create({
     top: 20,
     left: 20,
     zIndex: 1000,
+    
+    height: 'auto',
+  },
+  background: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#000000',
+    opacity: 0.8,
+    clipPath: 'polygon(0 0, 100% 0, 85% 100%, 0 100%)',
   },
   contentContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.75)',
-    borderRadius: 8,
-    padding: 12,
+    borderRadius: 2,
+    padding: 20,
+    marginRight: 10,
   },
   title: {
     color: '#FFFFFF',
     fontSize: 24,
     fontWeight: 'bold',
-    marginRight: 12,
+    marginRight: 10,
+    whiteSpace: 'nowrap',
   },
   iconButton: {
     width: 36,
