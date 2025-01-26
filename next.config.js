@@ -2,6 +2,7 @@ const withTM = require("next-transpile-modules")([
   "react-native-web",
   "@mindinventory/react-native-stagger-view",
   "react-native-paper",
+  "react-native-vector-icons",
 ]);
 
 module.exports = withTM({
@@ -19,6 +20,14 @@ module.exports = withTM({
       ".tsx",
       ".ts",
     ];
+
+    // Add loader for react-native-vector-icons
+    config.module.rules.push({
+      test: /\.ttf$/,
+      loader: 'url-loader', // or directly file-loader
+      include: /node_modules\/react-native-vector-icons/,
+    });
+
     return config;
   },
   // Enable responsive image optimization

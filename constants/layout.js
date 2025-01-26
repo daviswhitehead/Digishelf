@@ -20,10 +20,3 @@ export const SPACING = {
   CARD_PADDING: 10,
   IMAGE_PADDING: 3,
 };
-
-export const COLUMNS = {
-  MOBILE: 2,
-  TABLET: 3,
-  MIN_DESKTOP: 4,
-  MAX_DESKTOP: 6,
-}; 

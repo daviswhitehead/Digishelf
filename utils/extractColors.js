@@ -1,20 +1,38 @@
 const Vibrant = require("node-vibrant");
 const fs = require("fs");
-const books = require("../data/books"); // Assuming your books data is in `data/books.js`
+const { allBooks } = require("../data/books"); // Update to destructure allBooks
 
-const getDominantColor = async (imageUrl) => {
+const getDominantColor = async (imageUrl, retries = 0) => {
   try {
-    const palette = await Vibrant.from(imageUrl).getPalette();
-    return palette.Vibrant.hex; // Use the Vibrant color; adjust as needed
+    // Add a small timeout between retries
+    if (retries < 3) {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+    
+    const palette = await Vibrant.from(imageUrl)
+      .quality(1)
+      .maxColorCount(32)
+      .getPalette();
+      
+    if (!palette.Vibrant) {
+      throw new Error('No vibrant color found');
+    }
+    
+    return palette.Vibrant.hex;
   } catch (error) {
+    if (retries > 0) {
+      console.log(`Retrying color extraction for ${imageUrl}... (${retries} attempts left)`);
+      return getDominantColor(imageUrl, retries - 1);
+    }
     console.error(`Failed to get color for ${imageUrl}:`, error);
-    return "#a69b68"; // Fallback color if extraction fails
+    return "#a69b68"; // Fallback color
   }
 };
 
 const extractColors = async () => {
   const updatedBooks = [];
-  for (const book of books) {
+  for (const book of allBooks) {
+    console.log(`Processing book: ${book.title}`);
     const color = await getDominantColor(book.coverImage);
     updatedBooks.push({ ...book, dominantColor: color });
   }
@@ -29,4 +47,4 @@ const extractColors = async () => {
   );
 };
 
-extractColors();
+extractColors().catch(console.error);
