@@ -1,11 +1,16 @@
-import React, { useState } from "react";
-import { View, StyleSheet } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, StyleSheet, Text } from "react-native";
 import { useResponsive } from "../utils/useResponsive";
 import { getResponsiveValues, calculateTotalWidth } from "../utils/layoutUtils";
 import { useAutoScroll } from "../hooks/useAutoScroll";
 import books from "../data/booksWithColors.json";
 import BookCard from "../components/BookCard";
 import ListHeader from "../components/ListHeader";
+import QRCodeComponent from '../components/QRCode';
+import { usePageUrl } from '../hooks/usePageUrl';
+
+
+
 
 const splitIntoColumns = (data, numColumns) => {
   const columns = Array.from({ length: numColumns }, () => []);
@@ -30,6 +35,13 @@ const BookGrid = ({ columns, cardWidth, margin }) => (
 export default function Home() {
   const [isPlaying, setIsPlaying] = useState(false);
   const { width, isLoading } = useResponsive();
+  const [currentUrl, setCurrentUrl] = useState('');
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setCurrentUrl(window.location.href);
+    }
+  }, []);
   
   useAutoScroll(isPlaying);
 
@@ -39,6 +51,7 @@ export default function Home() {
   const columns = splitIntoColumns(books, numColumns);
   const totalWidth = calculateTotalWidth(numColumns, cardWidth, margin);
 
+
   return (
     <View style={styles.container}>
       <ListHeader
@@ -46,6 +59,9 @@ export default function Home() {
         isPlaying={isPlaying}
         onPlayPausePress={() => setIsPlaying(!isPlaying)}
       />
+      
+      <QRCodeComponent url={currentUrl} />
+      
       <View style={[styles.contentContainer, { maxWidth: totalWidth, marginHorizontal: 'auto' }]}>
         <BookGrid columns={columns} cardWidth={cardWidth} margin={margin} />
       </View>
@@ -72,5 +88,10 @@ const styles = StyleSheet.create({
   },
   column: {
     flexShrink: 0,
+  },
+  url: {
+    color: '#FFFFFF',
+    padding: 20,
+    fontSize: 14,
   },
 });
