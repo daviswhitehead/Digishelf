@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
     "start": "next start",
+    "build": "expo build:web",
+    "deploy": "npm run build && firebase deploy",
     "colors": "node ./utils/extractColors.js"
   },
   "keywords": [],
