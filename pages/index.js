@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { View, ScrollView, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { useResponsive } from "../utils/useResponsive";
 import { getResponsiveValues, calculateTotalWidth } from "../utils/layoutUtils";
+import { useAutoScroll } from "../hooks/useAutoScroll";
 import books from "../data/booksWithColors.json";
 import BookCard from "../components/BookCard";
 import ListHeader from "../components/ListHeader";
@@ -14,12 +15,26 @@ const splitIntoColumns = (data, numColumns) => {
   return columns;
 };
 
+const BookGrid = ({ columns, cardWidth, margin }) => (
+  <View style={[styles.row, { gap: margin }]}>
+    {columns.map((column, index) => (
+      <View key={index} style={[styles.column, { width: cardWidth }]}>
+        {column.map((book) => (
+          <BookCard key={book.id} book={book} />
+        ))}
+      </View>
+    ))}
+  </View>
+);
+
 export default function Home() {
   const [isPlaying, setIsPlaying] = useState(false);
   const { width, isLoading } = useResponsive();
   
-  if (isLoading) return null; // Or a loading spinner component
-  
+  useAutoScroll(isPlaying);
+
+  if (isLoading) return null;
+
   const { columns: numColumns, cardWidth, margin } = getResponsiveValues(width);
   const columns = splitIntoColumns(books, numColumns);
   const totalWidth = calculateTotalWidth(numColumns, cardWidth, margin);
@@ -31,19 +46,9 @@ export default function Home() {
         isPlaying={isPlaying}
         onPlayPausePress={() => setIsPlaying(!isPlaying)}
       />
-      <ScrollView>
-        <View style={[styles.contentContainer, { maxWidth: totalWidth, marginHorizontal: 'auto' }]}>
-          <View style={[styles.row, { gap: margin }]}>
-            {columns.map((column, index) => (
-              <View key={index} style={[styles.column, { width: cardWidth }]}>
-                {column.map((book) => (
-                  <BookCard key={book.id} book={book} />
-                ))}
-              </View>
-            ))}
-          </View>
-        </View>
-      </ScrollView>
+      <View style={[styles.contentContainer, { maxWidth: totalWidth, marginHorizontal: 'auto' }]}>
+        <BookGrid columns={columns} cardWidth={cardWidth} margin={margin} />
+      </View>
     </View>
   );
 }
@@ -53,6 +58,8 @@ const styles = StyleSheet.create({
     flex: 1,
     position: 'relative',
     marginVertical: 20,
+    backgroundColor: '#000000',
+    minHeight: '100vh',
   },
   contentContainer: {
     width: '100%',
