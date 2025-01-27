@@ -10,16 +10,15 @@ const ListHeader = ({ title, isPlaying, onPlayPausePress }) => {
         <Text style={styles.title}>{title}</Text>
         <Pressable
           onPress={onPlayPausePress}
-          style={({ pressed }) => [
-            styles.iconButton,
-            pressed && styles.iconButtonPressed,
-          ]}
+          style={styles.iconButton}
         >
-          <Icon
-            name={isPlaying ? 'pause-outline' : 'play-outline'}
-            size={20}
-            color="#FFFFFF"
-          />
+          {({ pressed }) => (
+            <Icon
+              name={isPlaying ? 'pause-outline' : 'play-outline'}
+              size={20}
+              color={pressed ? "#808080" : "#000000"}
+            />
+          )}
         </Pressable>
       </View>
     </View>
@@ -32,7 +31,6 @@ const styles = StyleSheet.create({
     top: 20,
     left: 20,
     zIndex: 1000,
-    
     height: 'auto',
   },
   background: {
@@ -40,7 +38,7 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    backgroundColor: '#000000',
+    backgroundColor: 'white',
     opacity: 0.8,
     clipPath: 'polygon(0 0, 100% 0, 85% 100%, 0 100%)',
   },
@@ -48,26 +46,25 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderRadius: 2,
-    padding: 20,
-    marginRight: 20,
+    padding: 10,
+    marginRight: 10,
   },
   title: {
-    color: '#FFFFFF',
+    color: 'black',
     fontSize: 24,
     fontWeight: 'bold',
-    marginRight: 10,
+    marginRight: 5,
     whiteSpace: 'nowrap',
   },
   iconButton: {
     width: 36,
     height: 36,
-    borderRadius: 18,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderRadius: 2,
     justifyContent: 'center',
     alignItems: 'center',
   },
   iconButtonPressed: {
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    backgroundColor: 'gray',
   },
 });
 
