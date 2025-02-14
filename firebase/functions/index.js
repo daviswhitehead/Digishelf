@@ -17,8 +17,10 @@ function translateRating(ratingText) {
 
   return ratingMap[ratingText.toLowerCase()] || null; // Default to 0 stars if not found
 }
+
 // get larger label photos
 // get full text of a review
+// paginate through the whole list
 
 exports.getBooks = functions.https.onRequest(async (req, res) => {
   console.log("Scraping Goodreads...");
