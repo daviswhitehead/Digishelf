@@ -21,6 +21,8 @@ function translateRating(ratingText) {
 // get larger label photos
 // get full text of a review
 // paginate through the whole list
+// fix new line issues `Iron Flame\n        (The Empyrean, #2)",` and `"review\n            None"`
+// add url to goodreads to dataset
 
 exports.getBooks = functions.https.onRequest(async (req, res) => {
   console.log("Scraping Goodreads...");
