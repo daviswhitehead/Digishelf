@@ -5,8 +5,12 @@ const fs = require("fs");
 const path = require("path");
 
 // TO DO
-// Translate "really liked it" to number of stars
+// get larger label photos
+// get full text of a review
+// paginate through the whole list
+
 function translateRating(ratingText) {
+  // Translate "really liked it" to number of stars
   const ratingMap = {
     "did not like it": 1,
     "it was ok": 2,
@@ -17,15 +21,18 @@ function translateRating(ratingText) {
 
   return ratingMap[ratingText.toLowerCase()] || null; // Default to 0 stars if not found
 }
+function cleanNewLines(s) {
+  // Remove newlines and extra spaces
+  return s.replace(/\n\s+/g, " ");
+}
+function writeHTML(html) {
+  const filePath = path.join(__dirname, "goodreads.html");
 
-// get larger label photos
-// get full text of a review
-// paginate through the whole list
-// fix new line issues `Iron Flame\n        (The Empyrean, #2)",` and `"review\n            None"`
-// add url to goodreads to dataset
+  fs.writeFileSync(filePath, html, "utf8");
+  console.log(`HTML saved to ${filePath}`);
+}
 
 exports.getBooks = functions.https.onRequest(async (req, res) => {
-  console.log("Scraping Goodreads...");
   try {
     // Replace with your Goodreads "read" shelf URL:
     // https://www.goodreads.com/review/list/61851004-davis-whitehead?ref=nav_mybooks&shelf=read
@@ -35,75 +42,49 @@ exports.getBooks = functions.https.onRequest(async (req, res) => {
     // Fetch the HTML from the Goodreads page
     const { data: html } = await axios.get(url);
     console.log("Fetched HTML");
-    // const filePath = path.join(__dirname, "goodreads.html");
 
-    // fs.writeFileSync(filePath, html, "utf8");
-    // console.log(`HTML saved to ${filePath}`);
+    // writeHTML(html);
 
     // Load the HTML into Cheerio for parsing
     const $ = cheerio.load(html);
     const books = [];
 
-    // Inspect the HTML structure on Goodreads to find the right selectors.
-    // The following selectors are illustrative
-    // you may need to adjust them based on the current page structure.
+    // Loop through each book review on the page
     $("tr.bookalike.review").each((i, elem) => {
-      //   const coverImage = $(elem).find("td.field.cover a img").attr("src");
       const coverImage = $(elem).find("td.field.cover img").attr("src");
-
-      //   const title = $(elem)
-      //     .find("td.field.title div.value a.bookTitle span")
-      //     .text()
-      //     .trim();
-      let title = $(elem).find("td.field.title a").text().trim();
-
-      //   const author = $(elem)
-      //     .find("td.field.author div.value a.authorName span")
-      //     .text()
-      //     .trim();
-      let author = $(elem).find("td.field.author a").first().text().trim();
-
-      // The rating might be stored as a title attribute
-      // on a star span or similar.
-      //   const rating =
-      //     $(elem)
-      //       .find("td.field.rating div.value span.staticStars")
-      //       .attr("title") || null;
-      let rating =
+      const title = $(elem).find("td.field.title a").text().trim();
+      const author = $(elem).find("td.field.author a").first().text().trim();
+      const rating =
         $(elem).find("td.field.rating span.staticStars").attr("title") || null;
-      const translatedRating = rating ? translateRating(rating) : null;
-
-      // Reviews might be nested deeper;
-      // adjust the selector based on what you see in the HTML.
-      //   const review =
-      //     $(elem)
-      //       .find("td.field.review div.value span.readable span")
-      //       .last() // In case there are multiple spans (short vs. full review)
-      //       .text()
-      //       .trim() || null;
-      // Review: look for a span whose id starts with "freeTextContainer" inside the "review" field.
       let review = $(elem)
         .find('td.field.review span[id^="freeTextContainer"]')
         .text()
         .trim();
+
       // If no review text is found, fallback to the full text (if present)
       if (!review) {
         review = $(elem).find("td.field.review").text().trim();
       }
 
+      let detailsURL = $(elem).find("td.field.title a").attr("href") || null;
+      if (detailsURL && detailsURL.indexOf("http") !== 0) {
+        detailsURL = "https://www.goodreads.com" + detailsURL;
+      }
+
       books.push({
         coverImage,
-        title,
+        title: cleanNewLines(title),
         author,
-        translatedRating,
-        review,
+        detailsURL,
+        rating: rating ? translateRating(rating) : null,
+        review: cleanNewLines(review),
       });
     });
 
     // Return the scraped data as JSON
     res.status(200).json(books);
   } catch (error) {
-    console.error("Error scraping Goodreads:", error);
-    res.status(500).send("Error scraping data");
+    console.error("Error:", error);
+    res.status(500).send("Error: getBooks");
   }
 });
