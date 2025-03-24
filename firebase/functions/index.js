@@ -1,8 +1,13 @@
 const functions = require("firebase-functions");
+const admin = require("firebase-admin");
+admin.initializeApp(); // uses default credentials in Cloud Functions
 const axios = require("axios");
 const cheerio = require("cheerio");
 // const fs = require("fs");
 // const path = require("path");
+
+// TO DO
+// Get the primary color of each coverImage
 
 /**
  * Translates a textual rating into a numerical star rating.
@@ -149,10 +154,28 @@ exports.getGoodreadsShelf = functions.https.onRequest(async (req, res) => {
       // 1-second delay to reduce chance of rate-limiting
       await new Promise((resolve) => setTimeout(resolve, 1000));
     }
-    console.log(`Total books scraped: ${allBooks.length}`);
-    res.status(200).json(allBooks);
+
+    // 1) Connect to Firestore
+    const db = admin.firestore();
+
+    // 2) Use a batch write
+    const batch = db.batch();
+
+    allBooks.forEach((book) => {
+      // Create a new document reference
+      // e.g. 'myGoodreadsBooks' is your collection name
+      const docRef = db.collection("myGoodreadsBooks").doc();
+      // Add the book data to the batch
+      batch.set(docRef, book);
+    });
+
+    // 3) Commit the batch
+    await batch.commit();
+
+    console.log(`Saved ${allBooks.length} books to Firestore.`);
+    return res.status(200).json(allBooks);
   } catch (error) {
     console.error("Error:", error);
-    res.status(500).send("Error: getBooks");
+    return res.status(500).send("Error: getBooks");
   }
 });
