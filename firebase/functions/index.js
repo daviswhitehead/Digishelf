@@ -12,7 +12,7 @@ exports.onIntegrationWrite = onDocumentWritten(
     document: "integrations/{integrationId}",
     region: "us-central1", // or your preferred region
     memory: "512MiB", // optional
-    timeoutSeconds: 60, // optional
+    timeoutSeconds: 540, // optional
   },
   async (event) => {
     const integrationId = event.params.integrationId;
@@ -55,5 +55,29 @@ exports.onIntegrationWrite = onDocumentWritten(
         );
       }
     }
+  }
+);
+
+exports.onShelfWrite = onDocumentWritten(
+  {
+    document: "shelves/{shelfId}",
+    region: "us-central1", // or your preferred region
+    memory: "512MiB", // optional
+    timeoutSeconds: 540, // optional
+  },
+  async (event) => {
+    // to do
+  }
+);
+
+exports.onItemWrite = onDocumentWritten(
+  {
+    document: "items/{itemId}",
+    region: "us-central1", // or your preferred region
+    memory: "512MiB", // optional
+    timeoutSeconds: 540, // optional
+  },
+  async (event) => {
+    // to do
   }
 );

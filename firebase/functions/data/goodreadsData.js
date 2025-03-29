@@ -1,9 +1,6 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
-// const { writeHTML } = require("../utils/writeHTML");
-
-// TO DO
-// Get the primary color of each coverImage
+const { getDominantColor } = require("../utils/getColors");
 
 /**
  * Translates a textual rating into a numerical star rating.
@@ -63,57 +60,62 @@ async function getPageItems(baseURL, pageNumber) {
   const pageURL = baseURL + `&page=${pageNumber}`;
   const { data: html } = await axios.get(pageURL);
   const $ = cheerio.load(html);
-  // writeHTML(html);
 
-  const books = [];
-  // Loop through each book review on the page
-  $("tr.bookalike.review").each((i, elem) => {
-    // --- Cover image ---
-    let coverImage = $(elem).find("td.field.cover img").attr("src");
-    // Remove the size specifier to get a larger image.
-    // (like ._SY75_ or ._SX50_)
-    if (coverImage) {
-      coverImage = coverImage.replace(/\._S[XY]\d+_/, "");
-    }
+  const bookRows = $("tr.bookalike.review").toArray();
 
-    // --- Title & details URL ---
-    const titleLink = $(elem).find("td.field.title a");
-    const title = cleanNewLines(titleLink.text().trim());
-    let detailsURL = titleLink.attr("href");
-    if (detailsURL && !detailsURL.startsWith("http")) {
-      detailsURL = "https://www.goodreads.com" + detailsURL;
-    }
+  const books = await Promise.all(
+    bookRows.map(async (elem) => {
+      // --- Cover Image & Primary Color ---
+      let coverImage = $(elem).find("td.field.cover img").attr("src");
+      let primaryColor = null;
+      // Remove the size specifier to get a larger image.
+      // (like ._SY75_ or ._SX50_)
+      if (coverImage) {
+        coverImage = coverImage.replace(/\._S[XY]\d+_/, "");
+        primaryColor = await getDominantColor(coverImage);
+      }
 
-    // --- Author ---
-    const author = $(elem).find("td.field.author a").first().text().trim();
+      // --- Title & Details URL ---
+      const titleLink = $(elem).find("td.field.title a");
+      const title = cleanNewLines(titleLink.text().trim());
+      let detailsURL = titleLink.attr("href");
+      if (detailsURL && !detailsURL.startsWith("http")) {
+        detailsURL = "https://www.goodreads.com" + detailsURL;
+      }
 
-    // --- Rating ---
-    const rating =
-      translateRating(
-        $(elem).find("td.field.rating span.staticStars").attr("title")
-      ) || null;
+      // --- Author ---
+      const author = $(elem).find("td.field.author a").first().text().trim();
 
-    // --- Review ---
-    // Goodreads shows a preview in a span with an id starting "freeTextContainer"
-    let review = $(elem)
-      .find("td.field.review span[id^='freeTextreview']")
-      .text()
-      .trim();
-    if (!review) {
-      review = $(elem)
-        .find("td.field.review span[id^='freeTextContainer']")
+      // --- Rating ---
+      const rating =
+        translateRating(
+          $(elem).find("td.field.rating span.staticStars").attr("title")
+        ) || null;
+
+      // --- Review ---
+      // Goodreads shows a preview in a span with an id starting "freeTextContainer"
+      let review = $(elem)
+        .find("td.field.review span[id^='freeTextreview']")
         .text()
         .trim();
-    }
-    books.push({
-      title,
-      author,
-      coverImage,
-      URL: detailsURL,
-      userRating: rating,
-      userReview: cleanNewLines(review),
-    });
-  });
+      if (!review) {
+        review = $(elem)
+          .find("td.field.review span[id^='freeTextContainer']")
+          .text()
+          .trim();
+      }
+
+      return {
+        title,
+        author,
+        coverImage,
+        URL: detailsURL,
+        userRating: rating,
+        userReview: cleanNewLines(review),
+        primaryColor,
+      };
+    })
+  );
 
   return { books, $ };
 }
@@ -128,7 +130,7 @@ async function getAllPages(shelfURL) {
   try {
     // 1) Fetch Page 1
     const { books: booksOnPage1, $ } = await getPageItems(shelfURL, 1);
-    console.log(`Found ${booksOnPage1} on page 1`);
+    console.log(`Found ${booksOnPage1.length} on page 1`);
     // 2) Determine total pages
     const totalPages = getTotalPages($);
     console.log(`Total pages: ${totalPages}`);
@@ -140,8 +142,8 @@ async function getAllPages(shelfURL) {
       console.log(`Found ${books.length} on page ${page}`);
       allBooks = allBooks.concat(books);
 
-      // 1-second delay to reduce chance of rate-limiting
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // 1/2-second delay to reduce chance of rate-limiting
+      await new Promise((resolve) => setTimeout(resolve, 500));
     }
     return allBooks;
   } catch (error) {

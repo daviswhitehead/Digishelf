@@ -82,32 +82,6 @@ async function writeGoodreadsShelves(integrationId, integration) {
 async function createShelfItems(shelf) {
   const { shelfId, userId, integrationId, sourceId, shelfURL } = shelf;
 
-  // // Example placeholder items — you can customize these per shelfName if you want
-  // const mockItems = [
-  //   {
-  //     title: "The Inner Game of Tennis",
-  //     author: "W. Timothy Gallwey",
-  //     coverImage: "https://m.media-amazon.com/images/I/71+1CgqvXSL.jpg",
-  //     URL: "inner game of tennis",
-  //     userRating: 4,
-  //     userReview:
-  //       "Overall, I thought this book was a little overhyped, but I enjoyed learning about person 1 and person 2. Overall, I thought this book was a little overhyped, but I enjoyed learning about person 1 and person 2. Overall, I thought this book was a little overhyped, but I enjoyed learning about person 1 and person 2...",
-  //     sourceRating: 4.6,
-  //     sourceReviewsCount: 86747,
-  //   },
-  //   {
-  //     title: "Atomic Habits",
-  //     author: "James Clear",
-  //     coverImage: "https://m.media-amazon.com/images/I/81ANaVZk5LL.jpg",
-  //     URL: "atomic habits",
-  //     userRating: 5,
-  //     userReview:
-  //       "One of the best books on building habits and making small improvements in daily life...",
-  //     sourceRating: 4.1,
-  //     sourceReviewsCount: 231234,
-  //   },
-  // ];
-
   const allBooks = await getAllPages(shelfURL);
 
   for (const book of allBooks) {
