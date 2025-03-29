@@ -1,10 +1,6 @@
-const functions = require("firebase-functions");
-const admin = require("firebase-admin");
-admin.initializeApp(); // uses default credentials in Cloud Functions
 const axios = require("axios");
 const cheerio = require("cheerio");
-// const fs = require("fs");
-// const path = require("path");
+// const { writeHTML } = require("../utils/writeHTML");
 
 // TO DO
 // Get the primary color of each coverImage
@@ -42,18 +38,6 @@ function cleanNewLines(s) {
 }
 
 /**
- * Writes the provided HTML content to a file in the current directory.
- *
- * @param {string} html - The HTML content to be written to the file.
- */
-// function writeHTML(html) {
-//   const filePath = path.join(__dirname, "goodreads.html");
-
-//   fs.writeFileSync(filePath, html, "utf8");
-//   console.log(`HTML saved to ${filePath}`);
-// }
-
-/**
  * Extracts the total number of pages from the pagination links.
  *
  * @param {object} $ - The jQuery object used to select elements.
@@ -71,12 +55,13 @@ function getTotalPages($) {
 /**
  * Scrapes a single Goodreads shelf page (for the given page number).
  *
+ * @param {string} baseURL - The page baseURL.
  * @param {number} pageNumber - The page number.
  */
-async function scrapeGoodreadsPage(pageNumber) {
-  // Construct the URL with the appropriate page parameter.
-  const url = `https://www.goodreads.com/review/list/61851004-davis-whitehead?page=${pageNumber}&shelf=read`;
-  const { data: html } = await axios.get(url);
+async function getPageItems(baseURL, pageNumber) {
+  // Construct the pageURL with the appropriate page parameter.
+  const pageURL = baseURL + `&page=${pageNumber}`;
+  const { data: html } = await axios.get(pageURL);
   const $ = cheerio.load(html);
   // writeHTML(html);
 
@@ -121,12 +106,12 @@ async function scrapeGoodreadsPage(pageNumber) {
         .trim();
     }
     books.push({
-      coverImage,
       title,
       author,
-      detailsURL,
-      rating,
-      review: cleanNewLines(review),
+      coverImage,
+      URL: detailsURL,
+      userRating: rating,
+      userReview: cleanNewLines(review),
     });
   });
 
@@ -134,12 +119,15 @@ async function scrapeGoodreadsPage(pageNumber) {
 }
 
 /**
- * Firebase Cloud Function to scrape all pages and return all books.
+ * Gets all pages of a Goodreads shelf and returns all books.
+ *
+ * @param {string} shelfURL - The URL for a shelf.
+ * @return {object} allBooks - An array of books.
  */
-exports.getGoodreadsShelf = functions.https.onRequest(async (req, res) => {
+async function getAllPages(shelfURL) {
   try {
     // 1) Fetch Page 1
-    const { books: booksOnPage1, $ } = await scrapeGoodreadsPage(1);
+    const { books: booksOnPage1, $ } = await getPageItems(shelfURL, 1);
     console.log(`Found ${booksOnPage1} on page 1`);
     // 2) Determine total pages
     const totalPages = getTotalPages($);
@@ -148,35 +136,20 @@ exports.getGoodreadsShelf = functions.https.onRequest(async (req, res) => {
 
     // 3) Scrape the rest
     for (let page = 2; page <= totalPages; page++) {
-      const { books } = await scrapeGoodreadsPage(page);
+      const { books } = await getPageItems(shelfURL, page);
       console.log(`Found ${books.length} on page ${page}`);
       allBooks = allBooks.concat(books);
 
       // 1-second delay to reduce chance of rate-limiting
       await new Promise((resolve) => setTimeout(resolve, 1000));
     }
-
-    // 1) Connect to Firestore
-    const db = admin.firestore();
-
-    // 2) Use a batch write
-    const batch = db.batch();
-
-    allBooks.forEach((book) => {
-      // Create a new document reference
-      // e.g. 'myGoodreadsBooks' is your collection name
-      const docRef = db.collection("myGoodreadsBooks").doc();
-      // Add the book data to the batch
-      batch.set(docRef, book);
-    });
-
-    // 3) Commit the batch
-    await batch.commit();
-
-    console.log(`Saved ${allBooks.length} books to Firestore.`);
-    return res.status(200).json(allBooks);
+    return allBooks;
   } catch (error) {
     console.error("Error:", error);
-    return res.status(500).send("Error: getBooks");
+    return null;
   }
-});
+}
+
+module.exports = {
+  getAllPages,
+};

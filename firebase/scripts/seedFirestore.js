@@ -45,7 +45,7 @@ async function seedFirestore() {
   await sourceRef.set({
     sourceId,
     displayName: "Goodreads",
-    url: "https://www.goodreads.com/",
+    URL: "https://www.goodreads.com/",
     createdAt: now,
     updatedAt: now,
     shelves: ["All", "Read", "Currently Reading", "Want to Read"],
