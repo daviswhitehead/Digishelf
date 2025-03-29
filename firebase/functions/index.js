@@ -1,16 +1,22 @@
-const functions = require("firebase-functions");
-const admin = require("firebase-admin");
+const { onDocumentWritten } = require("firebase-functions/v2/firestore");
+const { initializeApp } = require("firebase-admin/app");
+const { getFirestore, FieldValue } = require("firebase-admin/firestore");
 
 const { writeGoodreadsShelves } = require("./handlers/goodreadsHandlers");
 
-admin.initializeApp();
-const db = admin.firestore();
+initializeApp();
+const db = getFirestore();
 
-exports.onIntegrationWrite = functions.firestore
-  .document("/integrations/{integrationId}")
-  .onWrite(async (change, context) => {
-    const integrationId = context.params.integrationId;
-    const after = change.after.exists ? change.after.data() : null;
+exports.onIntegrationWrite = onDocumentWritten(
+  {
+    document: "integrations/{integrationId}",
+    region: "us-central1", // or your preferred region
+    memory: "512MiB", // optional
+    timeoutSeconds: 60, // optional
+  },
+  async (event) => {
+    const integrationId = event.params.integrationId;
+    const after = event.data?.after?.data();
 
     if (!after) {
       console.log(`❌ Integration ${integrationId} was deleted — skipping.`);
@@ -25,8 +31,7 @@ exports.onIntegrationWrite = functions.firestore
       return null;
     }
 
-    // Get the source document
-    const sourceRef = admin.firestore().collection("sources").doc(sourceId);
+    const sourceRef = db.collection("sources").doc(sourceId);
     const sourceSnap = await sourceRef.get();
 
     if (!sourceSnap.exists) {
@@ -37,24 +42,18 @@ exports.onIntegrationWrite = functions.firestore
     const sourceData = sourceSnap.data();
     const sourceName = (sourceData.displayName || "").toLowerCase();
 
-    if (sourceName !== "goodreads") {
-      console.log(
-        `ℹ️ Integration ${integrationId} source is not Goodreads — skipping.`
-      );
-      return null;
+    if (sourceName == "goodreads") {
+      console.log(`📥 Processing Goodreads integration: ${integrationId}`);
+
+      try {
+        await writeGoodreadsShelves(integrationId, after);
+        console.log("✅ Finished Goodreads shelf + item creation");
+      } catch (err) {
+        console.error(
+          `🔥 Error handling Goodreads integration ${integrationId}`,
+          err
+        );
+      }
     }
-
-    console.log(`📥 Processing Goodreads integration: ${integrationId}`);
-
-    try {
-      await writeGoodreadsShelves(integrationId, after);
-      console.log("✅ Finished Goodreads shelf + item creation");
-    } catch (err) {
-      console.error(
-        `🔥 Error handling Goodreads integration ${integrationId}`,
-        err
-      );
-    }
-
-    return null;
-  });
+  }
+);

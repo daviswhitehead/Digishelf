@@ -1,13 +1,24 @@
 // node seedFirestore.js
 
 const admin = require("firebase-admin");
-
-// Initialize Firebase Admin SDK
 const serviceAccount = require("../digishelf-app-firebase-adminsdk-servicekey.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
+
+// 🧪 Connect to the Firestore emulator if it's running
+if (process.env.FIRESTORE_EMULATOR_HOST) {
+  const db = admin.firestore();
+  db.settings({
+    host: process.env.FIRESTORE_EMULATOR_HOST,
+    ssl: false,
+  });
+  console.log(
+    "⚙️ Connected to Firestore Emulator:",
+    process.env.FIRESTORE_EMULATOR_HOST
+  );
+}
 
 const db = admin.firestore();
 
@@ -37,8 +48,6 @@ async function seedFirestore() {
     url: "https://www.goodreads.com/",
     createdAt: now,
     updatedAt: now,
-    accountSlug: "",
-    myBooksURL: "",
     shelves: ["All", "Read", "Currently Reading", "Want to Read"],
   });
   console.log("✅ Created source");
