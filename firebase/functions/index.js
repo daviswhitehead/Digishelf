@@ -11,7 +11,7 @@ exports.onIntegrationWrite = onDocumentWritten(
   {
     document: "integrations/{integrationId}",
     memory: "512MiB", // optional
-    timeoutSeconds: 540, // optional
+    timeoutSeconds: 60, // optional
   },
   async (event) => {
     console.time("onIntegrationWrite");
@@ -51,8 +51,8 @@ exports.onIntegrationWrite = onDocumentWritten(
 exports.onShelfWrite = onDocumentWritten(
   {
     document: "shelves/{shelfId}",
-    memory: "512MiB", // optional
-    timeoutSeconds: 540, // optional
+    memory: "1GiB", // optional
+    timeoutSeconds: 180, // optional
   },
   async (event) => {
     console.time("onShelfWrite");
@@ -89,7 +89,7 @@ exports.onShelfWrite = onDocumentWritten(
 //     document: "items/{itemId}",
 //     region:region,
 //     memory: "512MiB", // optional
-//     timeoutSeconds: 540, // optional
+//     timeoutSeconds: 180, // optional
 //   },
 //   async (event) => {
 //     // to do
