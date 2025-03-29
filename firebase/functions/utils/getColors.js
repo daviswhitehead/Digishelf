@@ -11,13 +11,13 @@ async function getDominantColor(imageUrl) {
     const palette = await Vibrant.from(imageUrl).getPalette();
 
     if (!palette.Vibrant) {
-      console.log("No vibrant color found");
+      console.warn(`No vibrant color found for ${imageUrl}`);
       return null;
     }
 
     return palette.Vibrant.hex;
   } catch (error) {
-    console.error(`Failed to get color for ${imageUrl}:`, error);
+    console.error(`Failed to get color for ${imageUrl}:`, error.message);
     return null;
   }
 }

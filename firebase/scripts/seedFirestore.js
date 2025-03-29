@@ -45,10 +45,10 @@ async function seedFirestore() {
   await sourceRef.set({
     sourceId,
     displayName: "Goodreads",
-    URL: "https://www.goodreads.com/",
+    sourceURL: "https://www.goodreads.com/",
+    shelves: ["All", "Read", "Currently Reading", "Want to Read"], // possible shelves
     createdAt: now,
     updatedAt: now,
-    shelves: ["All", "Read", "Currently Reading", "Want to Read"],
   });
   console.log("✅ Created source");
 
@@ -59,12 +59,14 @@ async function seedFirestore() {
     integrationId,
     userId,
     sourceId,
+    displayName: "Goodreads",
+    sourceURL: "https://www.goodreads.com/",
+    shelves: ["All", "Read", "Currently Reading", "Want to Read"], // chosen shelves
+    accountSlug: "61851004-davis-whitehead", // input by user (or derived)
+    myBooksURL:
+      "https://www.goodreads.com/review/list/61851004-davis-whitehead", // input by user (or derived)
     createdAt: now,
     updatedAt: now,
-    accountSlug: "61851004-davis-whitehead",
-    myBooksURL:
-      "https://www.goodreads.com/review/list/61851004-davis-whitehead",
-    shelves: ["All", "Read", "Currently Reading", "Want to Read"],
   });
   console.log("✅ Created integration");
 

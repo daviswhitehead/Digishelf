@@ -1,6 +1,7 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
-const { getDominantColor } = require("../utils/getColors");
+// const { getDominantColor } = require("../utils/getColors");
+const pLimit = require("p-limit");
 
 /**
  * Translates a textual rating into a numerical star rating.
@@ -56,68 +57,88 @@ function getTotalPages($) {
  * @param {number} pageNumber - The page number.
  */
 async function getPageItems(baseURL, pageNumber) {
-  // Construct the pageURL with the appropriate page parameter.
-  const pageURL = baseURL + `&page=${pageNumber}`;
-  const { data: html } = await axios.get(pageURL);
-  const $ = cheerio.load(html);
+  const label = `getPageItems-page-${pageNumber}`;
+  console.time(label); // Use a unique label for each page
+  try {
+    const pageURL = baseURL + `&page=${pageNumber}`;
+    const { data: html } = await axios.get(pageURL);
+    const $ = cheerio.load(html);
 
-  const bookRows = $("tr.bookalike.review").toArray();
+    const bookRows = $("tr.bookalike.review").toArray();
 
-  const books = await Promise.all(
-    bookRows.map(async (elem) => {
-      // --- Cover Image & Primary Color ---
-      let coverImage = $(elem).find("td.field.cover img").attr("src");
-      let primaryColor = null;
-      // Remove the size specifier to get a larger image.
-      // (like ._SY75_ or ._SX50_)
-      if (coverImage) {
-        coverImage = coverImage.replace(/\._S[XY]\d+_/, "");
-        primaryColor = await getDominantColor(coverImage);
-      }
+    const limit = pLimit(5); // Limit to 5 concurrent requests
 
-      // --- Title & Details URL ---
-      const titleLink = $(elem).find("td.field.title a");
-      const title = cleanNewLines(titleLink.text().trim());
-      let detailsURL = titleLink.attr("href");
-      if (detailsURL && !detailsURL.startsWith("http")) {
-        detailsURL = "https://www.goodreads.com" + detailsURL;
-      }
+    const books = await Promise.all(
+      bookRows.map((elem) =>
+        limit(async () => {
+          let coverImage = $(elem).find("td.field.cover img").attr("src");
+          const primaryColor = null;
 
-      // --- Author ---
-      const author = $(elem).find("td.field.author a").first().text().trim();
+          if (coverImage) {
+            coverImage = coverImage.replace(/\._S[XY]\d+_/, ""); // Remove size specifier
+            // try {
+            //   primaryColor = await getDominantColor(coverImage);
+            // } catch (error) {
+            //   console.error(
+            //     `Failed to process color for ${coverImage}:`,
+            //     error.message
+            //   );
+            // }
+          }
 
-      // --- Rating ---
-      const rating =
-        translateRating(
-          $(elem).find("td.field.rating span.staticStars").attr("title")
-        ) || null;
+          // --- Title & Canonical URL ---
+          const titleLink = $(elem).find("td.field.title a");
+          const title = cleanNewLines(titleLink.text().trim());
+          let canonicalURL = titleLink.attr("href");
+          if (canonicalURL && !canonicalURL.startsWith("http")) {
+            canonicalURL = "https://www.goodreads.com" + canonicalURL;
+          }
 
-      // --- Review ---
-      // Goodreads shows a preview in a span with an id starting "freeTextContainer"
-      let review = $(elem)
-        .find("td.field.review span[id^='freeTextreview']")
-        .text()
-        .trim();
-      if (!review) {
-        review = $(elem)
-          .find("td.field.review span[id^='freeTextContainer']")
-          .text()
-          .trim();
-      }
+          // --- Author ---
+          const author = $(elem)
+            .find("td.field.author a")
+            .first()
+            .text()
+            .trim();
 
-      return {
-        title,
-        author,
-        coverImage,
-        URL: detailsURL,
-        userRating: rating,
-        userReview: cleanNewLines(review),
-        primaryColor,
-      };
-    })
-  );
+          // --- Rating ---
+          const rating =
+            translateRating(
+              $(elem).find("td.field.rating span.staticStars").attr("title")
+            ) || null;
 
-  return { books, $ };
+          // --- Review ---
+          // Goodreads shows a preview in a span with an id starting "freeTextContainer"
+          let review = $(elem)
+            .find("td.field.review span[id^='freeTextreview']")
+            .text()
+            .trim();
+          if (!review) {
+            review = $(elem)
+              .find("td.field.review span[id^='freeTextContainer']")
+              .text()
+              .trim();
+          }
+
+          return {
+            title,
+            author,
+            coverImage,
+            canonicalURL,
+            userRating: rating,
+            userReview: cleanNewLines(review),
+            primaryColor,
+          };
+        })
+      )
+    );
+
+    console.timeEnd(label); // End timing for this page
+    return { books, $ };
+  } catch (error) {
+    console.timeEnd(label); // Ensure timing ends even on error
+    throw error;
+  }
 }
 
 /**
@@ -128,26 +149,44 @@ async function getPageItems(baseURL, pageNumber) {
  */
 async function getAllPages(shelfURL) {
   try {
-    // 1) Fetch Page 1
+    console.time("getAllPages");
     const { books: booksOnPage1, $ } = await getPageItems(shelfURL, 1);
-    console.log(`Found ${booksOnPage1.length} on page 1`);
-    // 2) Determine total pages
+    console.info(`Found ${booksOnPage1.length} on page 1`);
+
     const totalPages = getTotalPages($);
-    console.log(`Total pages: ${totalPages}`);
+    console.info(`Total pages: ${totalPages}`);
     let allBooks = [...booksOnPage1];
 
-    // 3) Scrape the rest
-    for (let page = 2; page <= totalPages; page++) {
-      const { books } = await getPageItems(shelfURL, page);
-      console.log(`Found ${books.length} on page ${page}`);
-      allBooks = allBooks.concat(books);
+    if (totalPages > 1) {
+      const limit = pLimit(5); // Limit to 5 concurrent requests
+      const pagePromises = [];
+      for (let page = 2; page <= totalPages; page++) {
+        pagePromises.push(limit(() => getPageItems(shelfURL, page)));
+      }
 
-      // 1/2-second delay to reduce chance of rate-limiting
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      const results = await Promise.allSettled(pagePromises);
+
+      results.forEach((result, index) => {
+        if (result.status === "fulfilled") {
+          const { books } = result.value;
+          console.info(`Found ${books.length} on page ${index + 2}`);
+          allBooks = allBooks.concat(books);
+        } else {
+          console.error(
+            `Failed to fetch page ${index + 2} (${shelfURL}&page=${
+              index + 2
+            }):`,
+            result.reason
+          );
+        }
+      });
     }
+
+    console.timeEnd("getAllPages");
     return allBooks;
   } catch (error) {
     console.error("Error:", error);
+    console.timeEnd("getAllPages");
     return null;
   }
 }

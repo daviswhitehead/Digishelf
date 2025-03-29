@@ -1,58 +1,48 @@
 const { onDocumentWritten } = require("firebase-functions/v2/firestore");
 const { initializeApp } = require("firebase-admin/app");
-const { getFirestore, FieldValue } = require("firebase-admin/firestore");
-
-const { writeGoodreadsShelves } = require("./handlers/goodreadsHandlers");
+const {
+  writeGoodreadsShelves,
+  writeGoodreadsItems,
+} = require("./handlers/goodreadsHandlers");
 
 initializeApp();
-const db = getFirestore();
 
 exports.onIntegrationWrite = onDocumentWritten(
   {
     document: "integrations/{integrationId}",
-    region: "us-central1", // or your preferred region
     memory: "512MiB", // optional
     timeoutSeconds: 540, // optional
   },
   async (event) => {
+    console.time("onIntegrationWrite");
+
     const integrationId = event.params.integrationId;
-    const after = event.data?.after?.data();
+    const after = event.data && event.data.after && event.data.after.data();
 
     if (!after) {
-      console.log(`❌ Integration ${integrationId} was deleted — skipping.`);
+      console.info(`🗑️ Integration was deleted — skipping: ${integrationId}`);
       return null;
     }
 
-    const sourceId = after.sourceId;
-    if (!sourceId) {
-      console.log(
-        `⚠️ Integration ${integrationId} missing sourceId — skipping.`
-      );
-      return null;
-    }
-
-    const sourceRef = db.collection("sources").doc(sourceId);
-    const sourceSnap = await sourceRef.get();
-
-    if (!sourceSnap.exists) {
-      console.log(`❌ Source ${sourceId} does not exist — skipping.`);
-      return null;
-    }
-
-    const sourceData = sourceSnap.data();
-    const sourceName = (sourceData.displayName || "").toLowerCase();
+    const sourceName = (after.displayName || "").toLowerCase();
 
     if (sourceName == "goodreads") {
-      console.log(`📥 Processing Goodreads integration: ${integrationId}`);
+      console.info(`📥 Processing Goodreads integration: ${integrationId}`);
 
       try {
+        console.time("writeGoodreadsShelves");
         await writeGoodreadsShelves(integrationId, after);
-        console.log("✅ Finished Goodreads shelf + item creation");
+        console.timeEnd("writeGoodreadsShelves");
+        console.info(
+          `✅ Finished processing Goodreads integration: ${integrationId}`
+        );
+        console.timeEnd("onIntegrationWrite");
       } catch (err) {
         console.error(
-          `🔥 Error handling Goodreads integration ${integrationId}`,
+          `🐛 Error processing Goodreads integration: ${integrationId}`,
           err
         );
+        console.timeEnd("onIntegrationWrite");
       }
     }
   }
@@ -61,23 +51,47 @@ exports.onIntegrationWrite = onDocumentWritten(
 exports.onShelfWrite = onDocumentWritten(
   {
     document: "shelves/{shelfId}",
-    region: "us-central1", // or your preferred region
     memory: "512MiB", // optional
     timeoutSeconds: 540, // optional
   },
   async (event) => {
-    // to do
+    console.time("onShelfWrite");
+
+    const shelfId = event.params.shelfId;
+    const after = event.data && event.data.after && event.data.after.data();
+
+    if (!after) {
+      console.info(`🗑️ Shelf was deleted — skipping: ${shelfId}`);
+      return null;
+    }
+
+    const sourceName = (after.sourceDisplayName || "").toLowerCase();
+
+    if (sourceName == "goodreads") {
+      console.info(`📥 Processing Goodreads shelf: ${shelfId}`);
+
+      try {
+        console.time("writeGoodreadsItems");
+        await writeGoodreadsItems(shelfId, after);
+        console.timeEnd("writeGoodreadsItems");
+        console.info(`✅ Finished processing Goodreads shelf: ${shelfId}`);
+        console.timeEnd("onShelfWrite");
+      } catch (err) {
+        console.error(`🐛 Error processing Goodreads shelf: ${shelfId}`, err);
+        console.timeEnd("onShelfWrite");
+      }
+    }
   }
 );
 
-exports.onItemWrite = onDocumentWritten(
-  {
-    document: "items/{itemId}",
-    region: "us-central1", // or your preferred region
-    memory: "512MiB", // optional
-    timeoutSeconds: 540, // optional
-  },
-  async (event) => {
-    // to do
-  }
-);
+// exports.onItemWrite = onDocumentWritten(
+//   {
+//     document: "items/{itemId}",
+//     region:region,
+//     memory: "512MiB", // optional
+//     timeoutSeconds: 540, // optional
+//   },
+//   async (event) => {
+//     // to do
+//   }
+// );
