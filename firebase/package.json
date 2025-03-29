@@ -1,0 +1,12 @@
+{
+  "scripts": {
+    "emulators:start": "firebase emulators:start",
+    "seed:production": "node scripts/seedFirestore.js",
+    "seed:emulator": "FIRESTORE_EMULATOR_HOST=localhost:8080 node scripts/seedFirestore.js"
+  },
+  "dependencies": {
+    "eslint-config-prettier": "^10.0.1",
+    "firebase-admin": "^13.2.0",
+    "firebase-functions": "^6.3.2"
+  }
+}
