@@ -6,3 +6,4 @@ export const starColor = "#E3E3E3";
 export const starFilledColor = "#F2994A"; // Your unfilled star color
 export const shadowColor = "#000";
 export const textNeutralWhite = "#F3F3F3";
+export const textBlack = "black";

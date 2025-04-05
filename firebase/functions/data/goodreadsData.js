@@ -144,13 +144,13 @@ async function getPageItems(baseURL, pageNumber) {
 /**
  * Gets all pages of a Goodreads shelf and returns all books.
  *
- * @param {string} shelfURL - The URL for a shelf.
+ * @param {string} originalURL - The URL for a shelf.
  * @return {object} allBooks - An array of books.
  */
-async function getAllPages(shelfURL) {
+async function getAllPages(originalURL) {
   try {
     console.time("getAllPages");
-    const { books: booksOnPage1, $ } = await getPageItems(shelfURL, 1);
+    const { books: booksOnPage1, $ } = await getPageItems(originalURL, 1);
     console.info(`Found ${booksOnPage1.length} on page 1`);
 
     const totalPages = getTotalPages($);
@@ -161,7 +161,7 @@ async function getAllPages(shelfURL) {
       const limit = pLimit(5); // Limit to 5 concurrent requests
       const pagePromises = [];
       for (let page = 2; page <= totalPages; page++) {
-        pagePromises.push(limit(() => getPageItems(shelfURL, page)));
+        pagePromises.push(limit(() => getPageItems(originalURL, page)));
       }
 
       const results = await Promise.allSettled(pagePromises);
@@ -173,7 +173,7 @@ async function getAllPages(shelfURL) {
           allBooks = allBooks.concat(books);
         } else {
           console.error(
-            `Failed to fetch page ${index + 2} (${shelfURL}&page=${
+            `Failed to fetch page ${index + 2} (${originalURL}&page=${
               index + 2
             }):`,
             result.reason

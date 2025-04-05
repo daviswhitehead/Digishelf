@@ -10,7 +10,7 @@ import { shadowColor } from "../utils/colors";
 const BookCard = ({ book }) => {
   const { width, isMobile } = useResponsive();
   const [imageHeight, setImageHeight] = useState(0);
-  
+
   const { cardWidth, margin } = getResponsiveValues(width, isMobile);
 
   useEffect(() => {
@@ -24,9 +24,9 @@ const BookCard = ({ book }) => {
     <View
       style={[
         styles.bookCard,
-        { 
+        {
           width: cardWidth,
-          backgroundColor: book.dominantColor || "#f8f8f8",
+          backgroundColor: book.primaryColor || "#f8f8f8",
           marginBottom: margin,
         },
       ]}
@@ -42,8 +42,8 @@ const BookCard = ({ book }) => {
 
       {/* Book Details */}
       <View style={styles.detailsContainer}>
-        <Rating rating={book.rating} />
-        <Review review={book.review} />
+        <Rating rating={book.userRating} />
+        <Review review={book.userReview} />
       </View>
     </View>
   );
