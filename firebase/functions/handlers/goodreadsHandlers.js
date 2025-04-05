@@ -62,7 +62,9 @@ async function writeGoodreadsShelves(integrationId, integration) {
       integrationId,
       sourceDisplayName: integration.displayName,
       displayName: shelf,
-      shelfURL: `${baseURL}?shelf=${encodeURIComponent(shelfSlugMap[shelf])}`,
+      originalURL: `${baseURL}?shelf=${encodeURIComponent(
+        shelfSlugMap[shelf]
+      )}`,
       updatedAt: now,
     };
 
@@ -89,8 +91,8 @@ async function writeGoodreadsShelves(integrationId, integration) {
  * @param {object} shelf - The shelf object containing details about the shelf
  */
 async function writeGoodreadsItems(shelfId, shelf) {
-  const { integrationId, userId, sourceId, shelfURL } = shelf;
-  const allBooks = await getAllPages(shelfURL);
+  const { integrationId, userId, sourceId, originalURL } = shelf;
+  const allBooks = await getAllPages(originalURL);
 
   const now = FieldValue.serverTimestamp();
   let batch = admin.firestore().batch();

@@ -45,7 +45,7 @@ async function seedFirestore() {
   await sourceRef.set({
     sourceId,
     displayName: "Goodreads",
-    sourceURL: "https://www.goodreads.com/",
+    originalURL: "https://www.goodreads.com/",
     shelves: ["All", "Read", "Currently Reading", "Want to Read"], // possible shelves
     createdAt: now,
     updatedAt: now,
@@ -60,7 +60,7 @@ async function seedFirestore() {
     userId,
     sourceId,
     displayName: "Goodreads",
-    sourceURL: "https://www.goodreads.com/",
+    originalURL: "https://www.goodreads.com/",
     shelves: ["All", "Read", "Currently Reading", "Want to Read"], // chosen shelves
     accountSlug: "61851004-davis-whitehead", // input by user (or derived)
     myBooksURL:
