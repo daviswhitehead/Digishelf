@@ -1,5 +1,5 @@
 import { collection, query, where, getDocs } from "firebase/firestore";
-import { db } from "../firebase";
+import { db } from "./firebase";
 
 /**
  * Fetches items from Firestore by shelfId.
