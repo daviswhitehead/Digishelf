@@ -3,14 +3,13 @@ import { View, StyleSheet, Text } from "react-native";
 import { useResponsive } from "../utils/useResponsive";
 import { getResponsiveValues, calculateTotalWidth } from "../utils/layoutUtils";
 import { useAutoScroll } from "../hooks/useAutoScroll";
-import { collection, query, where, getDocs, limit } from "firebase/firestore";
-import { db } from "../firebase";
+import { fetchItemsByShelfId } from "../utils/firestoreUtils";
 import BookCard from "../components/BookCard";
 import ListHeader from "../components/ListHeader";
 import QRCodeComponent from "../components/QRCode";
-import { usePageUrl } from "../hooks/usePageUrl";
 
 const splitIntoColumns = (data, numColumns) => {
+  // Distributes data evenly across the specified number of columns
   const columns = Array.from({ length: numColumns }, () => []);
   data.forEach((item, index) => {
     columns[index % numColumns].push(item);
@@ -31,6 +30,7 @@ const BookGrid = ({ columns, cardWidth, margin }) => (
 );
 
 export default function Home() {
+  // Removed unused state variables and added comments for clarity
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -47,19 +47,7 @@ export default function Home() {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const q = query(
-          collection(db, "items"),
-          where("shelfId", "==", "EXVQcLV39wYB3PIt8JCY"),
-          limit(20)
-        );
-
-        const querySnapshot = await getDocs(q);
-
-        const booksData = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-
+        const booksData = await fetchItemsByShelfId("EXVQcLV39wYB3PIt8JCY");
         setBooks(booksData);
       } catch (err) {
         setError("Failed to fetch books.");
