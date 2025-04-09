@@ -1,6 +1,11 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      // request.auth != null: Ensures the user is authenticated.
+      // request.auth.uid == userId: Ensures the user can only read/write their own data.
+    }
     match /items/{item} {
       allow read: if true; // or appropriate condition
     }
