@@ -10,6 +10,7 @@ import { fetchItemsByShelfId } from "../../../utils/firestoreUtils";
 import BookCard from "../../../components/BookCard";
 import ListHeader from "../../../components/ListHeader";
 import QRCodeComponent from "../../../components/QRCode";
+import { useRouter } from "next/router";
 
 const splitIntoColumns = (data, numColumns) => {
   // Distributes data evenly across the specified number of columns
@@ -33,7 +34,8 @@ const BookGrid = ({ columns, cardWidth, margin }) => (
 );
 
 export default function Shelf() {
-  // Removed unused state variables and added comments for clarity
+  const router = useRouter();
+  const { shelfId } = router.query; // Get shelfId from the route
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -48,9 +50,11 @@ export default function Shelf() {
   }, []);
 
   useEffect(() => {
+    if (!shelfId) return; // Wait for shelfId to be available
+
     const fetchBooks = async () => {
       try {
-        const booksData = await fetchItemsByShelfId("EXVQcLV39wYB3PIt8JCY");
+        const booksData = await fetchItemsByShelfId(shelfId); // Use dynamic shelfId
         setBooks(booksData);
       } catch (err) {
         setError("Failed to fetch books.");
@@ -61,7 +65,7 @@ export default function Shelf() {
     };
 
     fetchBooks();
-  }, []);
+  }, [shelfId]); // Re-run when shelfId changes
 
   useAutoScroll(isPlaying);
 

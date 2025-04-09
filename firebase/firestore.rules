@@ -6,6 +6,16 @@ service cloud.firestore {
       // request.auth != null: Ensures the user is authenticated.
       // request.auth.uid == userId: Ensures the user can only read/write their own data.
     }
+    match /integrations/{integrationId} {
+      allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
+      // request.auth != null: Ensures the user is authenticated.
+      // request.auth.uid == resource.data.userId: Ensures users can only access documents where they are the owner (userId field matches their UID).
+    }
+    match /shelves/{shelfId} {
+      allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
+      // request.auth != null: Ensures the user is authenticated.
+      // request.auth.uid == resource.data.userId: Ensures users can only access documents where they are the owner (userId field matches their UID).
+    }
     match /items/{item} {
       allow read: if true; // or appropriate condition
     }
