@@ -46,7 +46,9 @@ async function seedFirestore() {
     sourceId,
     displayName: "Goodreads",
     originalURL: "https://www.goodreads.com/",
-    shelves: ["All", "Read", "Currently Reading", "Want to Read"], // possible shelves
+    shelves: ["All", "Read", "Currently Reading", "Want to Read"],
+    accountSlug: "",
+    myBooksURL: "",
     createdAt: now,
     updatedAt: now,
   });
@@ -61,10 +63,10 @@ async function seedFirestore() {
     sourceId,
     displayName: "Goodreads",
     originalURL: "https://www.goodreads.com/",
-    shelves: ["All", "Read", "Currently Reading", "Want to Read"], // chosen shelves
-    accountSlug: "61851004-davis-whitehead", // input by user (or derived)
+    shelves: ["All", "Read", "Currently Reading", "Want to Read"],
+    accountSlug: "61851004-davis-whitehead", // derived from myBooksURL
     myBooksURL:
-      "https://www.goodreads.com/review/list/61851004-davis-whitehead", // input by user (or derived)
+      "https://www.goodreads.com/review/list/61851004-davis-whitehead", // input by user
     createdAt: now,
     updatedAt: now,
   });

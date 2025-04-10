@@ -3,6 +3,14 @@ import { useRouter } from "next/router";
 import { db } from "../../../utils/firebase";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { useUser } from "../../../utils/useUser";
+import Sidebar from "../../../components/Sidebar";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+} from "react-native";
 
 export default function Shelves() {
   const router = useRouter();
@@ -37,35 +45,77 @@ export default function Shelves() {
   };
 
   return (
-    <div
-      style={{ padding: "20px", backgroundColor: "#000", minHeight: "100vh" }}
-    >
-      <h1 style={{ color: "#fff" }}>Your Shelves</h1>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
-        {shelves.map((shelf) => (
-          <div
-            key={shelf.id}
-            style={{
-              backgroundColor: "#1a1a1a",
-              color: "#fff",
-              padding: "15px",
-              borderRadius: "8px",
-              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
-              cursor: "pointer",
-              width: "250px",
-            }}
-            onClick={() => handleShelfClick(shelf.id)}
-          >
-            <h3 style={{ margin: "0 0 5px 0", fontSize: "18px" }}>
-              {shelf.displayName}
-            </h3>
-            <p style={{ margin: 0, fontSize: "14px", color: "#aaa" }}>
-              {shelf.sourceDisplayName}
-            </p>
-          </div>
-        ))}
-      </div>
-    </div>
+    <View style={styles.container}>
+      <Sidebar />
+      <View style={styles.contentWrapper}>
+        <ScrollView contentContainerStyle={styles.content}>
+          <Text style={styles.title}>Your Shelves</Text>
+          {error && <Text style={styles.errorText}>{error}</Text>}
+          <View style={styles.cardContainer}>
+            {shelves.map((shelf) => (
+              <TouchableOpacity
+                key={shelf.id}
+                style={styles.card}
+                onPress={() => handleShelfClick(shelf.id)}
+              >
+                <Text style={styles.cardTitle}>{shelf.displayName}</Text>
+                <Text style={styles.cardSubtitle}>
+                  {shelf.sourceDisplayName}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </ScrollView>
+      </View>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: "row", // Align sidebar and content side by side
+    backgroundColor: "#000",
+  },
+  contentWrapper: {
+    flex: 1, // Allow the content to take up the remaining space
+    marginLeft: 250, // Match the width of the sidebar
+  },
+  content: {
+    padding: 20,
+  },
+  title: {
+    color: "#fff",
+    fontSize: 24,
+    marginBottom: 20,
+  },
+  errorText: {
+    color: "red",
+    fontSize: 16,
+    marginBottom: 20,
+  },
+  cardContainer: {
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 20,
+  },
+  card: {
+    backgroundColor: "#1a1a1a",
+    color: "#fff",
+    padding: 15,
+    borderRadius: 8,
+    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
+    width: 250,
+    cursor: "pointer",
+  },
+  cardTitle: {
+    marginBottom: 5,
+    fontSize: 18,
+    color: "#fff",
+  },
+  cardSubtitle: {
+    fontSize: 14,
+    color: "#aaa",
+  },
+});

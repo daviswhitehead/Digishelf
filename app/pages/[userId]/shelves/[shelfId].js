@@ -84,9 +84,7 @@ export default function Shelf() {
         isPlaying={isPlaying}
         onPlayPausePress={() => setIsPlaying(!isPlaying)}
       />
-
       <QRCodeComponent url={currentUrl} />
-
       <View
         style={[
           styles.contentContainer,

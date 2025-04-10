@@ -1,8 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { db } from "../../../utils/firebase";
-import { doc, getDoc, updateDoc, deleteDoc } from "firebase/firestore";
-import Sidebar from "../../../components/Sidebar";
+import { db } from "../../../../utils/firebase";
+import {
+  doc,
+  getDoc,
+  addDoc,
+  collection,
+  updateDoc,
+  serverTimestamp,
+  runTransaction,
+} from "firebase/firestore";
+import Sidebar from "../../../../components/Sidebar";
 import {
   View,
   Text,
@@ -12,40 +20,35 @@ import {
   ScrollView,
 } from "react-native";
 
-export default function Integration() {
+export default function NewIntegration() {
   const router = useRouter();
-  const { userId, integrationId } = router.query;
-  const [integrationData, setIntegrationData] = useState(null);
+  const { userId, sourceId } = router.query;
+  const [sourceData, setSourceData] = useState(null);
   const [myBooksURL, setMyBooksURL] = useState("");
   const [accountSlug, setAccountSlug] = useState("");
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
-    if (!userId || !integrationId) return;
+    if (!sourceId) return;
 
-    const fetchIntegrationData = async () => {
+    const fetchSourceData = async () => {
       try {
-        const integrationDocRef = doc(db, "integrations", integrationId);
-        const integrationDoc = await getDoc(integrationDocRef);
+        const sourceDocRef = doc(db, "sources", sourceId);
+        const sourceDoc = await getDoc(sourceDocRef);
 
-        if (integrationDoc.exists()) {
-          const data = integrationDoc.data();
-          setIntegrationData(data);
-          setMyBooksURL(data.myBooksURL || "");
-          setAccountSlug(
-            data.myBooksURL ? deriveAccountSlug(data.myBooksURL) : ""
-          );
+        if (sourceDoc.exists()) {
+          setSourceData(sourceDoc.data());
         } else {
-          setError("Integration not found.");
+          setError("Source not found.");
         }
       } catch (err) {
         setError(err.message);
       }
     };
 
-    fetchIntegrationData();
-  }, [userId, integrationId]);
+    fetchSourceData();
+  }, [sourceId]);
 
   const deriveAccountSlug = (url) => {
     try {
@@ -58,22 +61,33 @@ export default function Integration() {
 
   const handleSave = async () => {
     try {
-      const integrationDocRef = doc(db, "integrations", integrationId);
-      await updateDoc(integrationDocRef, {
-        myBooksURL,
-      });
-      setSuccessMessage("Changes saved successfully!");
-      setTimeout(() => setSuccessMessage(""), 3000);
-    } catch (err) {
-      setError(err.message);
-    }
-  };
+      if (!sourceData) {
+        setError("Source data is not loaded.");
+        return;
+      }
 
-  const handleDelete = async () => {
-    try {
-      const integrationDocRef = doc(db, "integrations", integrationId);
-      await deleteDoc(integrationDocRef);
-      router.push(`/${userId}/integrations`);
+      const integrationsRef = collection(db, "integrations");
+
+      await runTransaction(db, async (transaction) => {
+        // Generate a new document reference with a unique ID
+        const newIntegrationRef = doc(integrationsRef);
+
+        // Create the new integration document with the generated ID
+        transaction.set(newIntegrationRef, {
+          ...sourceData, // Inherit all fields from the source document
+          accountSlug, // Override with form input
+          myBooksURL, // Override with form input
+          integrationId: newIntegrationRef.id, // Include the generated ID
+          userId, // Add userId
+          createdAt: serverTimestamp(), // New createdAt field
+          updatedAt: serverTimestamp(), // New updatedAt field
+        });
+      });
+
+      setSuccessMessage("Integration created successfully!");
+      setTimeout(() => {
+        router.push(`/${userId}/integrations`);
+      }, 1000); // Reduced delay to 1 second
     } catch (err) {
       setError(err.message);
     }
@@ -90,7 +104,7 @@ export default function Integration() {
     );
   }
 
-  if (!integrationData) {
+  if (!sourceData) {
     return (
       <View style={styles.container}>
         <Sidebar />
@@ -107,7 +121,7 @@ export default function Integration() {
       <View style={styles.contentWrapper}>
         <ScrollView contentContainerStyle={styles.content}>
           <Text style={styles.title}>
-            Your {integrationData.displayName} Integration
+            Create a new {sourceData.displayName} Integration
           </Text>
           <View style={styles.formGroup}>
             <Text style={styles.label}>My Books URL:</Text>
@@ -141,9 +155,6 @@ export default function Integration() {
           </View>
           <TouchableOpacity onPress={handleSave} style={styles.saveButton}>
             <Text style={styles.saveButtonText}>Save</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleDelete} style={styles.deleteButton}>
-            <Text style={styles.deleteButtonText}>Delete</Text>
           </TouchableOpacity>
           {successMessage && (
             <Text style={styles.successText}>{successMessage}</Text>
@@ -200,20 +211,8 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
-    marginBottom: 10,
   },
   saveButtonText: {
-    color: "#fff",
-    fontSize: 16,
-    textAlign: "center",
-  },
-  deleteButton: {
-    backgroundColor: "#ff4d4d",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-  },
-  deleteButtonText: {
     color: "#fff",
     fontSize: 16,
     textAlign: "center",
