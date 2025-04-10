@@ -1,120 +1,58 @@
-import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Text } from "react-native";
-import { useResponsive } from "../utils/useResponsive";
-import { getResponsiveValues, calculateTotalWidth } from "../utils/layoutUtils";
-import { useAutoScroll } from "../hooks/useAutoScroll";
-import { fetchItemsByShelfId } from "../utils/firestoreUtils";
-import BookCard from "../components/BookCard";
-import ListHeader from "../components/ListHeader";
-import QRCodeComponent from "../components/QRCode";
-
-const splitIntoColumns = (data, numColumns) => {
-  // Distributes data evenly across the specified number of columns
-  const columns = Array.from({ length: numColumns }, () => []);
-  data.forEach((item, index) => {
-    columns[index % numColumns].push(item);
-  });
-  return columns;
-};
-
-const BookGrid = ({ columns, cardWidth, margin }) => (
-  <View style={[styles.row, { gap: margin }]}>
-    {columns.map((column, index) => (
-      <View key={index} style={[styles.column, { width: cardWidth }]}>
-        {column.map((book) => (
-          <BookCard key={book.id} book={book} />
-        ))}
-      </View>
-    ))}
-  </View>
-);
+import React from "react";
+import { useRouter } from "next/router";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 
 export default function Home() {
-  // Removed unused state variables and added comments for clarity
-  const [books, setBooks] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const { width, isLoading } = useResponsive();
-  const [currentUrl, setCurrentUrl] = useState("");
+  const router = useRouter();
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setCurrentUrl(window.location.href);
-    }
-  }, []);
-
-  useEffect(() => {
-    const fetchBooks = async () => {
-      try {
-        const booksData = await fetchItemsByShelfId("EXVQcLV39wYB3PIt8JCY");
-        setBooks(booksData);
-      } catch (err) {
-        setError("Failed to fetch books.");
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBooks();
-  }, []);
-
-  useAutoScroll(isPlaying);
-
-  if (isLoading || loading) return <Text>Loading...</Text>;
-  if (error) return <Text>{error}</Text>;
-  if (books.length === 0) return <Text>No books available.</Text>; // Handle empty state
-
-  const { columns: numColumns, cardWidth, margin } = getResponsiveValues(width);
-  const columns = splitIntoColumns(books, numColumns);
-  const totalWidth = calculateTotalWidth(numColumns, cardWidth, margin);
+  const handleGetStarted = () => {
+    router.push("/login");
+  };
 
   return (
     <View style={styles.container}>
-      <ListHeader
-        title="Read Books"
-        isPlaying={isPlaying}
-        onPlayPausePress={() => setIsPlaying(!isPlaying)}
-      />
-
-      <QRCodeComponent url={currentUrl} />
-
-      <View
-        style={[
-          styles.contentContainer,
-          { maxWidth: totalWidth, marginHorizontal: "auto" },
-        ]}
-      >
-        <BookGrid columns={columns} cardWidth={cardWidth} margin={margin} />
-      </View>
+      <Text style={styles.title}>Welcome to DigiShelf</Text>
+      <Text style={styles.subtitle}>
+        Your digital shelf for managing books, games, and more.
+      </Text>
+      <TouchableOpacity onPress={handleGetStarted} style={styles.button}>
+        <Text style={styles.buttonText}>Get Started</Text>
+      </TouchableOpacity>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    position: "relative",
-    marginVertical: 20,
-    backgroundColor: "#000000",
+    textAlign: "center",
+    padding: 50,
+    backgroundColor: "#000",
+    color: "#fff",
     minHeight: "100vh",
-  },
-  contentContainer: {
-    width: "100%",
-    paddingHorizontal: 20,
-  },
-  row: {
-    flexDirection: "row",
+    display: "flex",
+    flexDirection: "column",
     justifyContent: "center",
-    flexWrap: "nowrap",
+    alignItems: "center",
   },
-  column: {
-    flexShrink: 0,
+  title: {
+    fontSize: 48,
+    marginBottom: 20,
+    color: "#fff",
   },
-  url: {
-    color: "#FFFFFF",
-    padding: 20,
-    fontSize: 14,
+  subtitle: {
+    fontSize: 20,
+    marginBottom: 40,
+    color: "#fff",
+  },
+  button: {
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    backgroundColor: "#4caf50",
+    borderRadius: 5,
+  },
+  buttonText: {
+    fontSize: 16,
+    color: "#fff",
+    textAlign: "center",
   },
 });
