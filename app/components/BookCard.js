@@ -1,24 +1,33 @@
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Image } from "react-native";
-import { useResponsive } from "../utils/useResponsive";
-import { getResponsiveValues } from "../utils/layoutUtils";
 import { SPACING } from "../constants/layout";
 import Rating from "./Rating";
 import Review from "./Review";
 import { shadowColor } from "../utils/colors";
 
-const BookCard = ({ book }) => {
-  const { width, isMobile } = useResponsive();
-  const [imageHeight, setImageHeight] = useState(0);
-
-  const { cardWidth, margin } = getResponsiveValues(width, isMobile);
+const BookCard = ({ book, cardWidth, margin }) => {
+  const [imageHeight, setImageHeight] = useState(null);
 
   useEffect(() => {
-    Image.getSize(book.coverImage, (imgWidth, height) => {
-      const dynamicHeight = (height / imgWidth) * cardWidth;
-      setImageHeight(dynamicHeight);
-    });
+    if (book.coverImage) {
+      Image.getSize(
+        book.coverImage,
+        (imgWidth, imgHeight) => {
+          const dynamicHeight = (imgHeight / imgWidth) * cardWidth;
+
+          setImageHeight(dynamicHeight);
+        },
+        () => {
+          setImageHeight(null); // Handle error by not setting height
+        }
+      );
+    }
   }, [book.coverImage, cardWidth]);
+
+  if (!book.coverImage) {
+    // Do not render if coverImage is null or an empty string
+    return null;
+  }
 
   return (
     <View
@@ -31,20 +40,24 @@ const BookCard = ({ book }) => {
         },
       ]}
     >
-      {/* Image Container with Padding */}
+      {/* Image Container */}
       <View style={styles.imageContainer}>
-        <Image
-          source={{ uri: book.coverImage }}
-          style={[styles.coverImage, { height: imageHeight }]}
-          resizeMode="cover"
-        />
+        {imageHeight && ( // Only render the Image if height is calculated
+          <Image
+            source={{ uri: book.coverImage }}
+            style={[styles.coverImage, { height: imageHeight }]}
+            resizeMode="cover"
+          />
+        )}
       </View>
 
       {/* Book Details */}
-      <View style={styles.detailsContainer}>
-        <Rating rating={book.userRating} />
-        <Review review={book.userReview} />
-      </View>
+      {(book.userRating !== null || book.userReview !== "") && (
+        <View style={styles.detailsContainer}>
+          {book.userRating !== null && <Rating rating={book.userRating} />}
+          {book.userReview !== "" && <Review review={book.userReview} />}
+        </View>
+      )}
     </View>
   );
 };
@@ -63,8 +76,8 @@ const styles = StyleSheet.create({
     padding: SPACING.IMAGE_PADDING,
   },
   coverImage: {
-    width: "100%", // Fills the container width
-    borderRadius: 5, // Slight border radius for the image
+    width: "100%", // Fixed width
+    borderRadius: 5,
   },
   detailsContainer: {
     padding: SPACING.CARD_PADDING,

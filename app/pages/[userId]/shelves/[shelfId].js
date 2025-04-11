@@ -7,6 +7,8 @@ import {
 } from "../../../utils/layoutUtils";
 import { useAutoScroll } from "../../../hooks/useAutoScroll";
 import { fetchItemsByShelfId } from "../../../utils/firestoreUtils";
+import { db } from "../../../utils/firebase";
+import { doc, getDoc } from "firebase/firestore";
 import BookCard from "../../../components/BookCard";
 import ListHeader from "../../../components/ListHeader";
 import QRCodeComponent from "../../../components/QRCode";
@@ -26,7 +28,12 @@ const BookGrid = ({ columns, cardWidth, margin }) => (
     {columns.map((column, index) => (
       <View key={index} style={[styles.column, { width: cardWidth }]}>
         {column.map((book) => (
-          <BookCard key={book.id} book={book} />
+          <BookCard
+            key={book.id}
+            book={book}
+            cardWidth={cardWidth}
+            margin={margin}
+          />
         ))}
       </View>
     ))}
@@ -42,6 +49,10 @@ export default function Shelf() {
   const [isPlaying, setIsPlaying] = useState(false);
   const { width, isLoading } = useResponsive();
   const [currentUrl, setCurrentUrl] = useState("");
+  const [shelfDetails, setShelfDetails] = useState({
+    displayName: "",
+    sourceDisplayName: "",
+  });
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -52,19 +63,32 @@ export default function Shelf() {
   useEffect(() => {
     if (!shelfId) return; // Wait for shelfId to be available
 
-    const fetchBooks = async () => {
+    const fetchShelfDetails = async () => {
       try {
-        const booksData = await fetchItemsByShelfId(shelfId); // Use dynamic shelfId
+        // Fetch shelf details from the /shelves collection
+        const shelfDoc = await getDoc(doc(db, "shelves", shelfId));
+        if (shelfDoc.exists()) {
+          const shelfData = shelfDoc.data();
+          setShelfDetails({
+            displayName: shelfData.displayName || "Shelf",
+            sourceDisplayName: shelfData.sourceDisplayName || "Unknown Source",
+          });
+        } else {
+          throw new Error("Shelf not found.");
+        }
+
+        // Fetch books for the shelf
+        const booksData = await fetchItemsByShelfId(shelfId);
         setBooks(booksData);
       } catch (err) {
-        setError("Failed to fetch books.");
+        setError("Failed to fetch shelf details or books.");
         console.error(err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchBooks();
+    fetchShelfDetails();
   }, [shelfId]); // Re-run when shelfId changes
 
   useAutoScroll(isPlaying);
@@ -80,7 +104,8 @@ export default function Shelf() {
   return (
     <View style={styles.container}>
       <ListHeader
-        title="Read Books"
+        title={shelfDetails.displayName}
+        subtitle={shelfDetails.sourceDisplayName}
         isPlaying={isPlaying}
         onPlayPausePress={() => setIsPlaying(!isPlaying)}
       />
