@@ -8,11 +8,18 @@ import {
 import { useAutoScroll } from "../../../hooks/useAutoScroll";
 import { fetchItemsByShelfId } from "../../../utils/firestoreUtils";
 import { db } from "../../../utils/firebase";
-import { doc, getDoc } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  updateDoc,
+  writeBatch,
+  serverTimestamp,
+} from "firebase/firestore";
 import BookCard from "../../../components/BookCard";
 import ListHeader from "../../../components/ListHeader";
 import QRCodeComponent from "../../../components/QRCode";
 import { useRouter } from "next/router";
+import ColorThief from "colorthief";
 
 const splitIntoColumns = (data, numColumns) => {
   // Distributes data evenly across the specified number of columns
@@ -21,6 +28,51 @@ const splitIntoColumns = (data, numColumns) => {
     columns[index % numColumns].push(item);
   });
   return columns;
+};
+
+const fetchBooksWithPrimaryColor = async (shelfId) => {
+  const booksData = await fetchItemsByShelfId(shelfId);
+  const batch = writeBatch(db); // Initialize Firestore batch
+
+  const updatedBooks = await Promise.all(
+    booksData.map(async (book) => {
+      if (!book.primaryColor && book.coverImage) {
+        const img = new window.Image();
+        img.crossOrigin = "Anonymous";
+        img.src = book.coverImage;
+
+        const primaryColor = await new Promise((resolve) => {
+          img.onload = () => {
+            const colorThief = new ColorThief();
+            const dominantColor = colorThief.getColor(img);
+            const hexColor = `#${dominantColor
+              .map((c) => c.toString(16).padStart(2, "0"))
+              .join("")}`;
+            resolve(hexColor);
+          };
+          img.onerror = () => resolve(null); // No fallback color
+        });
+
+        if (primaryColor) {
+          const itemDocRef = doc(db, "items", book.id);
+          batch.update(itemDocRef, {
+            primaryColor,
+            updatedAt: serverTimestamp(), // Use Firestore server timestamp
+          });
+          return { ...book, primaryColor };
+        }
+      }
+      return book;
+    })
+  );
+
+  try {
+    await batch.commit(); // Commit all batched updates
+  } catch (error) {
+    console.error("Failed to commit Firestore batch:", error);
+  }
+
+  return updatedBooks;
 };
 
 const BookGrid = ({ columns, cardWidth, margin }) => (
@@ -77,9 +129,9 @@ export default function Shelf() {
           throw new Error("Shelf not found.");
         }
 
-        // Fetch books for the shelf
-        const booksData = await fetchItemsByShelfId(shelfId);
-        setBooks(booksData);
+        // Fetch books with primaryColor logic
+        const booksWithColors = await fetchBooksWithPrimaryColor(shelfId);
+        setBooks(booksWithColors);
       } catch (err) {
         setError("Failed to fetch shelf details or books.");
         console.error(err);
