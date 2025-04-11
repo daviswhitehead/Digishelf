@@ -9,7 +9,8 @@ service cloud.firestore {
       allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
     }
     match /shelves/{shelfId} {
-      allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.uid == resource.data.userId;
       allow delete: if request.auth != null || request.auth.token.admin == true;
     }
     match /sources/{sourceId} {
@@ -23,6 +24,7 @@ service cloud.firestore {
   }
 }
 
+// if true; Allow public access
 // request.auth != null: Ensures the user is authenticated.
 // request.auth.uid == userId: Ensures the user can only read/write their own data.
 // request.auth.uid == resource.data.userId: Ensures users can only access documents where they are the owner (userId field matches their UID).

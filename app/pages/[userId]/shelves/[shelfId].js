@@ -133,7 +133,11 @@ export default function Shelf() {
         const booksWithColors = await fetchBooksWithPrimaryColor(shelfId);
         setBooks(booksWithColors);
       } catch (err) {
-        setError("Failed to fetch shelf details or books.");
+        if (err.code === "permission-denied") {
+          setError("You do not have permission to view this shelf.");
+        } else {
+          setError("Failed to fetch shelf details or books.");
+        }
         console.error(err);
       } finally {
         setLoading(false);
