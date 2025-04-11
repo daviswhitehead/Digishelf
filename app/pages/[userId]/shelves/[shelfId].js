@@ -7,10 +7,19 @@ import {
 } from "../../../utils/layoutUtils";
 import { useAutoScroll } from "../../../hooks/useAutoScroll";
 import { fetchItemsByShelfId } from "../../../utils/firestoreUtils";
+import { db } from "../../../utils/firebase";
+import {
+  doc,
+  getDoc,
+  updateDoc,
+  writeBatch,
+  serverTimestamp,
+} from "firebase/firestore";
 import BookCard from "../../../components/BookCard";
 import ListHeader from "../../../components/ListHeader";
 import QRCodeComponent from "../../../components/QRCode";
 import { useRouter } from "next/router";
+import ColorThief from "colorthief";
 
 const splitIntoColumns = (data, numColumns) => {
   // Distributes data evenly across the specified number of columns
@@ -21,12 +30,62 @@ const splitIntoColumns = (data, numColumns) => {
   return columns;
 };
 
+const fetchBooksWithPrimaryColor = async (shelfId) => {
+  const booksData = await fetchItemsByShelfId(shelfId);
+  const batch = writeBatch(db); // Initialize Firestore batch
+
+  const updatedBooks = await Promise.all(
+    booksData.map(async (book) => {
+      if (!book.primaryColor && book.coverImage) {
+        const img = new window.Image();
+        img.crossOrigin = "Anonymous";
+        img.src = book.coverImage;
+
+        const primaryColor = await new Promise((resolve) => {
+          img.onload = () => {
+            const colorThief = new ColorThief();
+            const dominantColor = colorThief.getColor(img);
+            const hexColor = `#${dominantColor
+              .map((c) => c.toString(16).padStart(2, "0"))
+              .join("")}`;
+            resolve(hexColor);
+          };
+          img.onerror = () => resolve(null); // No fallback color
+        });
+
+        if (primaryColor) {
+          const itemDocRef = doc(db, "items", book.id);
+          batch.update(itemDocRef, {
+            primaryColor,
+            updatedAt: serverTimestamp(), // Use Firestore server timestamp
+          });
+          return { ...book, primaryColor };
+        }
+      }
+      return book;
+    })
+  );
+
+  try {
+    await batch.commit(); // Commit all batched updates
+  } catch (error) {
+    console.error("Failed to commit Firestore batch:", error);
+  }
+
+  return updatedBooks;
+};
+
 const BookGrid = ({ columns, cardWidth, margin }) => (
   <View style={[styles.row, { gap: margin }]}>
     {columns.map((column, index) => (
       <View key={index} style={[styles.column, { width: cardWidth }]}>
         {column.map((book) => (
-          <BookCard key={book.id} book={book} />
+          <BookCard
+            key={book.id}
+            book={book}
+            cardWidth={cardWidth}
+            margin={margin}
+          />
         ))}
       </View>
     ))}
@@ -42,6 +101,10 @@ export default function Shelf() {
   const [isPlaying, setIsPlaying] = useState(false);
   const { width, isLoading } = useResponsive();
   const [currentUrl, setCurrentUrl] = useState("");
+  const [shelfDetails, setShelfDetails] = useState({
+    displayName: "",
+    sourceDisplayName: "",
+  });
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -52,19 +115,32 @@ export default function Shelf() {
   useEffect(() => {
     if (!shelfId) return; // Wait for shelfId to be available
 
-    const fetchBooks = async () => {
+    const fetchShelfDetails = async () => {
       try {
-        const booksData = await fetchItemsByShelfId(shelfId); // Use dynamic shelfId
-        setBooks(booksData);
+        // Fetch shelf details from the /shelves collection
+        const shelfDoc = await getDoc(doc(db, "shelves", shelfId));
+        if (shelfDoc.exists()) {
+          const shelfData = shelfDoc.data();
+          setShelfDetails({
+            displayName: shelfData.displayName || "Shelf",
+            sourceDisplayName: shelfData.sourceDisplayName || "Unknown Source",
+          });
+        } else {
+          throw new Error("Shelf not found.");
+        }
+
+        // Fetch books with primaryColor logic
+        const booksWithColors = await fetchBooksWithPrimaryColor(shelfId);
+        setBooks(booksWithColors);
       } catch (err) {
-        setError("Failed to fetch books.");
+        setError("Failed to fetch shelf details or books.");
         console.error(err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchBooks();
+    fetchShelfDetails();
   }, [shelfId]); // Re-run when shelfId changes
 
   useAutoScroll(isPlaying);
@@ -80,7 +156,8 @@ export default function Shelf() {
   return (
     <View style={styles.container}>
       <ListHeader
-        title="Read Books"
+        title={shelfDetails.displayName}
+        subtitle={shelfDetails.sourceDisplayName}
         isPlaying={isPlaying}
         onPlayPausePress={() => setIsPlaying(!isPlaying)}
       />
