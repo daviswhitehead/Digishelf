@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { useResponsive } from "../../../utils/useResponsive";
 import {
   getResponsiveValues,
@@ -7,7 +7,7 @@ import {
 } from "../../../utils/layoutUtils";
 import { useAutoScroll } from "../../../hooks/useAutoScroll";
 import { fetchItemsByShelfId } from "../../../utils/firestoreUtils";
-import { db } from "../../../utils/firebase";
+import { auth, db, functions } from "../../../utils/firebase";
 import {
   doc,
   getDoc,
@@ -15,6 +15,7 @@ import {
   writeBatch,
   serverTimestamp,
 } from "firebase/firestore";
+import { httpsCallable } from "firebase/functions";
 import BookCard from "../../../components/BookCard";
 import ListHeader from "../../../components/ListHeader";
 import QRCodeComponent from "../../../components/QRCode";
@@ -105,6 +106,7 @@ export default function Shelf() {
     displayName: "",
     sourceDisplayName: "",
   });
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -149,6 +151,28 @@ export default function Shelf() {
 
   useAutoScroll(isPlaying);
 
+  const handleRefresh = async () => {
+    console.log("Current user:", auth.currentUser); // Debug log
+
+    if (!auth.currentUser) {
+      setError("You must be logged in to refresh the shelf.");
+      return;
+    }
+
+    setIsRefreshing(true);
+    try {
+      const refreshShelf = httpsCallable(functions, "refreshShelf");
+      await refreshShelf({ shelfId });
+      const booksWithColors = await fetchBooksWithPrimaryColor(shelfId);
+      setBooks(booksWithColors);
+    } catch (err) {
+      console.error("Failed to refresh shelf:", err);
+      setError("Failed to refresh shelf.");
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
+
   if (isLoading || loading) return <Text>Loading...</Text>;
   if (error) return <Text>{error}</Text>;
   if (books.length === 0) return <Text>No books available.</Text>; // Handle empty state
@@ -166,6 +190,15 @@ export default function Shelf() {
         onPlayPausePress={() => setIsPlaying(!isPlaying)}
       />
       <QRCodeComponent url={currentUrl} />
+      <TouchableOpacity
+        onPress={handleRefresh}
+        style={[styles.refreshButton, isRefreshing && styles.disabledButton]}
+        disabled={isRefreshing}
+      >
+        <Text style={styles.refreshButtonText}>
+          {isRefreshing ? "Refreshing..." : "Refresh"}
+        </Text>
+      </TouchableOpacity>
       <View
         style={[
           styles.contentContainer,
@@ -202,5 +235,21 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     padding: 20,
     fontSize: 14,
+  },
+  refreshButton: {
+    backgroundColor: "#4caf50",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    alignSelf: "center",
+    marginVertical: 10,
+  },
+  refreshButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    textAlign: "center",
+  },
+  disabledButton: {
+    backgroundColor: "#888",
   },
 });

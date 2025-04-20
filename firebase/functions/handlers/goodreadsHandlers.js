@@ -150,7 +150,35 @@ async function writeGoodreadsItems(shelfId, shelf) {
   }
 }
 
+/**
+ * Refreshes a Goodreads shelf by fetching the latest data and updating Firestore.
+ * @param {string} shelfId - The shelf ID.
+ */
+async function refreshGoodreadsShelf(shelfId) {
+  const shelfDoc = await admin
+    .firestore()
+    .collection("shelves")
+    .doc(shelfId)
+    .get();
+
+  if (!shelfDoc.exists) {
+    throw new Error(`Shelf not found: ${shelfId}`);
+  }
+
+  const shelf = shelfDoc.data();
+  const { originalURL } = shelf;
+
+  if (!originalURL) {
+    throw new Error(`Shelf URL is missing for shelfId: ${shelfId}`);
+  }
+
+  console.info(`🔄 Refreshing Goodreads shelf: ${shelfId}`);
+  await writeGoodreadsItems(shelfId, shelf);
+  console.info(`✅ Successfully refreshed Goodreads shelf: ${shelfId}`);
+}
+
 module.exports = {
   writeGoodreadsShelves,
   writeGoodreadsItems,
+  refreshGoodreadsShelf, // Export the new function
 };

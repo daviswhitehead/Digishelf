@@ -4,9 +4,11 @@ const {
 } = require("firebase-functions/v2/firestore");
 const { initializeApp } = require("firebase-admin/app");
 const { getFirestore } = require("firebase-admin/firestore");
+const { https } = require("firebase-functions/v2");
 const {
   writeGoodreadsShelves,
   writeGoodreadsItems,
+  refreshGoodreadsShelf,
 } = require("./handlers/goodreadsHandlers");
 
 initializeApp();
@@ -140,3 +142,30 @@ exports.onIntegrationDelete = onDocumentDeleted(
     }
   }
 );
+
+exports.refreshShelf = https.onCall(async (data, context) => {
+  console.info("Request data:", data); // Log the request data
+  console.info("Auth context:", context.auth); // Log the auth context
+
+  if (!context.auth) {
+    throw new https.HttpsError(
+      "unauthenticated",
+      "User must be authenticated."
+    );
+  }
+
+  const { shelfId } = data;
+
+  if (!shelfId) {
+    throw new https.HttpsError("invalid-argument", "Shelf ID is required.");
+  }
+
+  try {
+    console.info(`🔄 Refresh request received for shelfId: ${shelfId}`);
+    await refreshGoodreadsShelf(shelfId);
+    return { success: true, message: "Shelf refreshed successfully." };
+  } catch (error) {
+    console.error(`❌ Error refreshing shelf: ${shelfId}`, error);
+    throw new https.HttpsError("internal", error.message);
+  }
+});
