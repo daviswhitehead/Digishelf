@@ -16,10 +16,11 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 import BookCard from "../../../components/BookCard";
-import ListHeader from "../../../components/ListHeader";
+import ShelfHeader from "../../../components/ShelfHeader";
 import QRCodeComponent from "../../../components/QRCode";
 import { useRouter } from "next/router";
 import ColorThief from "colorthief";
+import { throttle } from "lodash"; // Import lodash for throttling
 
 const splitIntoColumns = (data, numColumns) => {
   // Distributes data evenly across the specified number of columns
@@ -99,6 +100,7 @@ export default function Shelf() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [scrollPosition, setScrollPosition] = useState(0); // Add scrollPosition state
   const { width, isLoading } = useResponsive();
   const [currentUrl, setCurrentUrl] = useState("");
   const [shelfDetails, setShelfDetails] = useState({
@@ -109,6 +111,25 @@ export default function Shelf() {
   useEffect(() => {
     if (typeof window !== "undefined") {
       setCurrentUrl(window.location.href);
+
+      // Throttled scroll handler
+      const handleScroll = throttle(() => {
+        const scrollTop = window.scrollY; // Current scroll position
+        const scrollHeight = document.documentElement.scrollHeight; // Total scrollable height
+        const clientHeight = window.innerHeight; // Viewport height
+        const scrollableHeight = scrollHeight - clientHeight;
+
+        // Calculate scroll position as a percentage
+        const position = (scrollTop / scrollableHeight) * 100;
+        setScrollPosition(Math.min(Math.max(position, 0), 100)); // Clamp between 0 and 100
+      }, 100); // Throttle to run every 100ms
+
+      window.addEventListener("scroll", handleScroll);
+
+      return () => {
+        window.removeEventListener("scroll", handleScroll); // Cleanup on unmount
+        handleScroll.cancel(); // Cancel throttled function
+      };
     }
   }, []);
 
@@ -155,11 +176,13 @@ export default function Shelf() {
 
   return (
     <View style={styles.container}>
-      <ListHeader
+      <ShelfHeader
         title={shelfDetails.displayName}
         subtitle={shelfDetails.sourceDisplayName}
         isPlaying={isPlaying}
         onPlayPausePress={() => setIsPlaying(!isPlaying)}
+        onMenuPress={() => console.log("Menu pressed")} // Placeholder for menu action
+        scrollPosition={scrollPosition} // Pass the calculated scroll position
       />
       <QRCodeComponent url={currentUrl} />
       <View
