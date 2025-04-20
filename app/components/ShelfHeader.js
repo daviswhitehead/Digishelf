@@ -2,15 +2,29 @@ import React from "react";
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 
-const ListHeader = ({ title, subtitle, isPlaying, onPlayPausePress }) => {
+const ShelfHeader = ({
+  title,
+  subtitle,
+  isPlaying,
+  onPlayPausePress,
+  onMenuPress,
+  scrollPosition,
+}) => {
   return (
     <View style={styles.container}>
-      <View style={[styles.background, { height: "100%" }]} />
       <View style={styles.contentContainer}>
-        <View>
+        {/* Hamburger Menu */}
+        <Pressable onPress={onMenuPress} style={styles.iconButton}>
+          <Icon name="menu-outline" size={24} color="#000000" />
+        </Pressable>
+
+        {/* Title and Subtitle */}
+        <View style={styles.textContainer}>
           <Text style={styles.title}>{title}</Text>
           {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
         </View>
+
+        {/* Play/Pause Button */}
         <Pressable onPress={onPlayPausePress} style={styles.iconButton}>
           {({ pressed }) => (
             <Icon
@@ -20,6 +34,13 @@ const ListHeader = ({ title, subtitle, isPlaying, onPlayPausePress }) => {
             />
           )}
         </Pressable>
+      </View>
+
+      {/* Horizontal Scroll Bar */}
+      <View style={styles.scrollBarContainer}>
+        <View
+          style={[styles.scrollBarIndicator, { width: `${scrollPosition}%` }]}
+        />
       </View>
     </View>
   );
@@ -32,46 +53,48 @@ const styles = StyleSheet.create({
     left: 20,
     zIndex: 1000,
     height: "auto",
-  },
-  background: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
     backgroundColor: "white",
-    opacity: 0.8,
-    clipPath: "polygon(0 0, 100% 0, 85% 100%, 0 100%)",
   },
   contentContainer: {
     flexDirection: "row",
     alignItems: "center",
-    borderRadius: 2,
-    padding: 10,
-    marginRight: 10,
+    justifyContent: "space-between",
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+  },
+  textContainer: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    marginHorizontal: 8,
   },
   title: {
     color: "black",
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: "bold",
-    marginRight: 5,
-    whiteSpace: "nowrap",
+    textAlign: "center",
   },
   subtitle: {
     color: "gray",
-    fontSize: 14,
-    marginTop: 2,
-    whiteSpace: "nowrap",
+    fontSize: 20,
+    fontWeight: "light",
+    textAlign: "center",
+    marginLeft: 4,
   },
   iconButton: {
     width: 36,
     height: 36,
-    borderRadius: 2,
     justifyContent: "center",
     alignItems: "center",
   },
-  iconButtonPressed: {
-    backgroundColor: "gray",
+  scrollBarContainer: {
+    height: 4,
+    backgroundColor: "#000000",
+  },
+  scrollBarIndicator: {
+    height: "100%",
+    backgroundColor: "#EAB308",
   },
 });
 
-export default ListHeader;
+export default ShelfHeader;
