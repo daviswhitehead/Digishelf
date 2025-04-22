@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { useResponsive } from "../../../utils/useResponsive";
 import {
   getResponsiveValues,
   calculateTotalWidth,
 } from "../../../utils/layoutUtils";
-import { useAutoScroll } from "../../../hooks/useAutoScroll";
 import { fetchItemsByShelfId } from "../../../utils/firestoreUtils";
 import { auth, db, functions } from "../../../utils/firebase";
 import {
@@ -21,7 +20,7 @@ import ShelfHeader from "../../../components/ShelfHeader";
 import QRCodeComponent from "../../../components/QRCode";
 import { useRouter } from "next/router";
 import ColorThief from "colorthief";
-import { throttle } from "lodash"; // Import lodash for throttling
+import { throttle, debounce } from "lodash"; // Import lodash for throttling and debouncing
 
 const splitIntoColumns = (data, numColumns) => {
   // Distributes data evenly across the specified number of columns
@@ -96,12 +95,12 @@ const BookGrid = ({ columns, cardWidth, margin }) => (
 
 export default function Shelf() {
   const router = useRouter();
-  const { shelfId } = router.query; // Get shelfId from the route
+  const { shelfId } = router.query;
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [scrollPosition, setScrollPosition] = useState(0); // Add scrollPosition state
+  const [scrollPosition, setScrollPosition] = useState(0);
   const { width, isLoading } = useResponsive();
   const [currentUrl, setCurrentUrl] = useState("");
   const [shelfDetails, setShelfDetails] = useState({
@@ -110,37 +109,74 @@ export default function Shelf() {
   });
   const [isRefreshing, setIsRefreshing] = useState(false);
 
+  const isAutoscrolling = useRef(false); // Track if autoscroll is active
+  const throttledUpdateScrollPosition = useRef(
+    throttle(() => {
+      const scrollTop = window.scrollY;
+      const scrollHeight = document.documentElement.scrollHeight;
+      const clientHeight = window.innerHeight;
+      const scrollableHeight = scrollHeight - clientHeight;
+
+      const position = (scrollTop / scrollableHeight) * 100;
+      setScrollPosition(Math.min(Math.max(position, 0), 100)); // Clamp between 0 and 100
+    }, 1000) // Throttle updates to every 200ms
+  ).current;
+
+  // Autoscroll logic using requestAnimationFrame
+  useEffect(() => {
+    let animationFrameId;
+
+    const autoScroll = () => {
+      if (isPlaying) {
+        isAutoscrolling.current = true;
+        window.scrollBy(0, 2); // Scroll down by 2px per frame
+
+        // Throttled update of scrollPosition during autoscroll
+        throttledUpdateScrollPosition();
+
+        animationFrameId = requestAnimationFrame(autoScroll);
+      } else {
+        isAutoscrolling.current = false;
+        cancelAnimationFrame(animationFrameId);
+      }
+    };
+
+    autoScroll();
+
+    return () => cancelAnimationFrame(animationFrameId); // Cleanup on unmount
+  }, [isPlaying, throttledUpdateScrollPosition]);
+
+  // Throttled scroll handler for manual scrolling
   useEffect(() => {
     if (typeof window !== "undefined") {
       setCurrentUrl(window.location.href);
 
-      // Throttled scroll handler
       const handleScroll = throttle(() => {
-        const scrollTop = window.scrollY; // Current scroll position
-        const scrollHeight = document.documentElement.scrollHeight; // Total scrollable height
-        const clientHeight = window.innerHeight; // Viewport height
+        if (isAutoscrolling.current) return; // Skip updates during autoscroll
+
+        const scrollTop = window.scrollY;
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = window.innerHeight;
         const scrollableHeight = scrollHeight - clientHeight;
 
-        // Calculate scroll position as a percentage
         const position = (scrollTop / scrollableHeight) * 100;
-        setScrollPosition(Math.min(Math.max(position, 0), 100)); // Clamp between 0 and 100
+        setScrollPosition(Math.min(Math.max(position, 0), 100));
       }, 100); // Throttle to run every 100ms
 
       window.addEventListener("scroll", handleScroll);
 
       return () => {
-        window.removeEventListener("scroll", handleScroll); // Cleanup on unmount
-        handleScroll.cancel(); // Cancel throttled function
+        window.removeEventListener("scroll", handleScroll);
+        handleScroll.cancel();
       };
     }
   }, []);
 
   useEffect(() => {
-    if (!shelfId) return; // Wait for shelfId to be available
+    if (!shelfId) return;
 
     const fetchShelfDetails = async () => {
       try {
-        // Fetch shelf details from the /shelves collection
         const shelfDoc = await getDoc(doc(db, "shelves", shelfId));
         if (shelfDoc.exists()) {
           const shelfData = shelfDoc.data();
@@ -152,7 +188,6 @@ export default function Shelf() {
           throw new Error("Shelf not found.");
         }
 
-        // Fetch books with primaryColor logic
         const booksWithColors = await fetchBooksWithPrimaryColor(shelfId);
         setBooks(booksWithColors);
       } catch (err) {
@@ -168,9 +203,7 @@ export default function Shelf() {
     };
 
     fetchShelfDetails();
-  }, [shelfId]); // Re-run when shelfId changes
-
-  useAutoScroll(isPlaying);
+  }, [shelfId]);
 
   const handleRefresh = async () => {
     console.log("Current user:", auth.currentUser); // Debug log
@@ -196,7 +229,7 @@ export default function Shelf() {
 
   if (isLoading || loading) return <Text>Loading...</Text>;
   if (error) return <Text>{error}</Text>;
-  if (books.length === 0) return <Text>No books available.</Text>; // Handle empty state
+  if (books.length === 0) return <Text>No books available.</Text>;
 
   const { columns: numColumns, cardWidth, margin } = getResponsiveValues(width);
   const columns = splitIntoColumns(books, numColumns);
@@ -209,8 +242,8 @@ export default function Shelf() {
         subtitle={shelfDetails.sourceDisplayName}
         isPlaying={isPlaying}
         onPlayPausePress={() => setIsPlaying(!isPlaying)}
-        onMenuPress={() => console.log("Menu pressed")} // Placeholder for menu action
-        scrollPosition={scrollPosition} // Pass the calculated scroll position
+        onMenuPress={() => console.log("Menu pressed")}
+        scrollPosition={scrollPosition}
       />
       <QRCodeComponent url={currentUrl} />
       <TouchableOpacity
