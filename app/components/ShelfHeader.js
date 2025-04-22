@@ -1,20 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
+import SidePanel from "./SidePanel";
 
 const ShelfHeader = ({
   title,
   subtitle,
   isPlaying,
   onPlayPausePress,
-  onMenuPress,
   scrollPosition,
+  onMenuToggle,
+  isPanelVisible,
 }) => {
+  if (isPanelVisible) return null; // Hide ShelfHeader when SidePanel is visible
+
   return (
     <View style={styles.container}>
       <View style={styles.contentContainer}>
         {/* Hamburger Menu */}
-        <Pressable onPress={onMenuPress} style={styles.iconButton}>
+        <Pressable onPress={onMenuToggle} style={styles.iconButton}>
           <Icon name="menu-outline" size={24} color="#000000" />
         </Pressable>
 

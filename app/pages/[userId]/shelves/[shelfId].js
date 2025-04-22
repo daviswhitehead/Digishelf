@@ -20,6 +20,7 @@ import QRCodeComponent from "../../../components/QRCode";
 import { useRouter } from "next/router";
 import ColorThief from "colorthief";
 import { throttle, debounce } from "lodash"; // Import lodash for throttling and debouncing
+import SidePanel from "../../../components/SidePanel"; // Add this import
 
 const splitIntoColumns = (data, numColumns) => {
   // Distributes data evenly across the specified number of columns
@@ -100,6 +101,7 @@ export default function Shelf() {
   const [error, setError] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
+  const [isPanelVisible, setIsPanelVisible] = useState(false); // Track SidePanel visibility
   const { width, isLoading } = useResponsive();
   const [currentUrl, setCurrentUrl] = useState("");
   const [shelfDetails, setShelfDetails] = useState({
@@ -203,25 +205,38 @@ export default function Shelf() {
   if (error) return <Text>{error}</Text>;
   if (books.length === 0) return <Text>No books available.</Text>;
 
-  const { columns: numColumns, cardWidth, margin } = getResponsiveValues(width);
+  const { columns: numColumns, cardWidth, margin } = getResponsiveValues(
+    isPanelVisible ? width - 300 : width
+  );
   const columns = splitIntoColumns(books, numColumns);
   const totalWidth = calculateTotalWidth(numColumns, cardWidth, margin);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, isPanelVisible && styles.containerShift]}>
       <ShelfHeader
         title={shelfDetails.displayName}
         subtitle={shelfDetails.sourceDisplayName}
         isPlaying={isPlaying}
         onPlayPausePress={() => setIsPlaying(!isPlaying)}
-        onMenuPress={() => console.log("Menu pressed")}
         scrollPosition={scrollPosition}
+        onMenuToggle={() => setIsPanelVisible(true)}
+        isPanelVisible={isPanelVisible}
+      />
+      <SidePanel
+        isVisible={isPanelVisible}
+        onClose={() => setIsPanelVisible(false)}
+        title={shelfDetails.displayName}
+        subtitle={shelfDetails.sourceDisplayName}
+        scrollPosition={scrollPosition}
+        isPlaying={isPlaying}
+        onPlayPausePress={() => setIsPlaying(!isPlaying)}
       />
       <QRCodeComponent url={currentUrl} />
       <View
         style={[
           styles.contentContainer,
           { maxWidth: totalWidth, marginHorizontal: "auto" },
+          isPanelVisible && styles.contentContainerShift,
         ]}
       >
         <BookGrid columns={columns} cardWidth={cardWidth} margin={margin} />
@@ -237,10 +252,19 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     backgroundColor: "#000000",
     minHeight: "100vh",
+    transition: "all 0.3s ease-in-out", // Smooth transition for all changes
+  },
+  containerShift: {
+    marginLeft: 300, // Space for the side panel
+    width: "calc(100% - 300px)", // Reduce width by panel width
   },
   contentContainer: {
     width: "100%",
     paddingHorizontal: 20,
+    transition: "all 0.3s ease-in-out", // Smooth transition for content
+  },
+  contentContainerShift: {
+    width: "calc(100% - 300px)", // Adjust width when panel is open
   },
   row: {
     flexDirection: "row",
