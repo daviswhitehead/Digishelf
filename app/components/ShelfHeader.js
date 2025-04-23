@@ -58,6 +58,7 @@ const styles = StyleSheet.create({
     zIndex: 1000,
     height: "auto",
     backgroundColor: "white",
+    maxWidth: 350,
   },
   contentContainer: {
     flexDirection: "row",
@@ -71,19 +72,22 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginHorizontal: 8,
+    overflow: 'hidden',
   },
   title: {
     color: "black",
     fontSize: 20,
     fontWeight: "bold",
-    textAlign: "center",
+    flexShrink: 0,
   },
   subtitle: {
     color: "gray",
     fontSize: 20,
     fontWeight: "light",
-    textAlign: "center",
     marginLeft: 4,
+    flexShrink: 1,
+    numberOfLines: 1,
+    ellipsizeMode: 'tail',
   },
   iconButton: {
     width: 36,
