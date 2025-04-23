@@ -107,6 +107,7 @@ export default function Shelf() {
   const [shelfDetails, setShelfDetails] = useState({
     displayName: "",
     sourceDisplayName: "",
+    userId: "",
   });
 
   const isAutoscrolling = useRef(false); // Track if autoscroll is active
@@ -183,6 +184,7 @@ export default function Shelf() {
           setShelfDetails({
             displayName: shelfData.displayName || "Shelf",
             sourceDisplayName: shelfData.sourceDisplayName || "Unknown Source",
+            userId: shelfData.userId,
           });
         } else {
           throw new Error("Shelf not found.");
@@ -206,7 +208,7 @@ export default function Shelf() {
   if (books.length === 0) return <Text>No books available.</Text>;
 
   const { columns: numColumns, cardWidth, margin } = getResponsiveValues(
-    isPanelVisible ? width - 300 : width
+    isPanelVisible ? width - 350 : width
   );
   const columns = splitIntoColumns(books, numColumns);
   const totalWidth = calculateTotalWidth(numColumns, cardWidth, margin);
@@ -228,8 +230,7 @@ export default function Shelf() {
         title={shelfDetails.displayName}
         subtitle={shelfDetails.sourceDisplayName}
         scrollPosition={scrollPosition}
-        isPlaying={isPlaying}
-        onPlayPausePress={() => setIsPlaying(!isPlaying)}
+        userId={shelfDetails.userId}
       />
       <QRCodeComponent url={currentUrl} />
       <View
@@ -255,8 +256,8 @@ const styles = StyleSheet.create({
     transition: "all 0.3s ease-in-out", // Smooth transition for all changes
   },
   containerShift: {
-    marginLeft: 300, // Space for the side panel
-    width: "calc(100% - 300px)", // Reduce width by panel width
+    marginLeft: 350, // Space for the side panel
+    width: "calc(100% - 350px)", // Reduce width by panel width
   },
   contentContainer: {
     width: "100%",
@@ -264,7 +265,7 @@ const styles = StyleSheet.create({
     transition: "all 0.3s ease-in-out", // Smooth transition for content
   },
   contentContainerShift: {
-    width: "calc(100% - 300px)", // Adjust width when panel is open
+    width: "calc(100% - 350px)", // Adjust width when panel is open
   },
   row: {
     flexDirection: "row",
