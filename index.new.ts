@@ -1,30 +1,46 @@
-const {
+import {
   onDocumentWritten,
   onDocumentDeleted,
-} = require("firebase-functions/v2/firestore");
-const { initializeApp } = require("firebase-admin/app");
-const { getFirestore } = require("firebase-admin/firestore");
-const { onCall } = require("firebase-functions/v2/https");
-const {
+  Change,
+  FirestoreEvent,
+} from "firebase-functions/v2/firestore";
+import { initializeApp } from "firebase-admin/app";
+import {
+  getFirestore,
+  Firestore,
+  DocumentData,
+  QueryDocumentSnapshot,
+} from "firebase-admin/firestore";
+import {
+  onCall,
+  HttpsError,
+  CallableRequest,
+  CallableOptions,
+} from "firebase-functions/v2/https";
+import {
   writeGoodreadsShelves,
   writeGoodreadsItems,
   refreshGoodreadsShelf,
-} = require("./handlers/goodreadsHandlers");
+} from "./sources/goodreads/handlers";
+import { GoodreadsIntegration, GoodreadsShelf } from "./shared/types";
 
 initializeApp();
-const db = getFirestore();
+const db: Firestore = getFirestore();
 
-exports.onIntegrationWrite = onDocumentWritten(
+type IntegrationEvent = FirestoreEvent<Change<DocumentData> | undefined>;
+type ShelfEvent = FirestoreEvent<Change<DocumentData> | undefined>;
+
+export const onIntegrationWrite = onDocumentWritten(
   {
     document: "integrations/{integrationId}",
-    memory: "512MiB", // optional
-    timeoutSeconds: 60, // optional
+    memory: "512MiB",
+    timeoutSeconds: 60,
   },
-  async (event) => {
+  async (event: IntegrationEvent): Promise<null> => {
     console.time("onIntegrationWrite");
 
     const integrationId = event.params.integrationId;
-    const after = event.data && event.data.after && event.data.after.data();
+    const after = event.data?.after?.data() as GoodreadsIntegration | undefined;
 
     if (!after) {
       console.info(`🗑️ Integration was deleted — skipping: ${integrationId}`);
@@ -33,7 +49,7 @@ exports.onIntegrationWrite = onDocumentWritten(
 
     const sourceName = (after.displayName || "").toLowerCase();
 
-    if (sourceName == "goodreads") {
+    if (sourceName === "goodreads") {
       console.info(`📥 Processing Goodreads integration: ${integrationId}`);
 
       try {
@@ -44,28 +60,31 @@ exports.onIntegrationWrite = onDocumentWritten(
           `✅ Finished processing Goodreads integration: ${integrationId}`
         );
         console.timeEnd("onIntegrationWrite");
+        return null;
       } catch (err) {
         console.error(
           `🐛 Error processing Goodreads integration: ${integrationId}`,
           err
         );
         console.timeEnd("onIntegrationWrite");
+        return null;
       }
     }
+    return null;
   }
 );
 
-exports.onShelfWrite = onDocumentWritten(
+export const onShelfWrite = onDocumentWritten(
   {
     document: "shelves/{shelfId}",
-    memory: "1GiB", // optional
-    timeoutSeconds: 180, // optional
+    memory: "1GiB",
+    timeoutSeconds: 180,
   },
-  async (event) => {
+  async (event: ShelfEvent): Promise<null> => {
     console.time("onShelfWrite");
 
     const shelfId = event.params.shelfId;
-    const after = event.data && event.data.after && event.data.after.data();
+    const after = event.data?.after?.data() as GoodreadsShelf | undefined;
 
     if (!after) {
       console.info(`🗑️ Shelf was deleted — skipping: ${shelfId}`);
@@ -74,7 +93,7 @@ exports.onShelfWrite = onDocumentWritten(
 
     const sourceName = (after.sourceDisplayName || "").toLowerCase();
 
-    if (sourceName == "goodreads") {
+    if (sourceName === "goodreads") {
       console.info(`📥 Processing Goodreads shelf: ${shelfId}`);
 
       try {
@@ -83,21 +102,24 @@ exports.onShelfWrite = onDocumentWritten(
         console.timeEnd("writeGoodreadsItems");
         console.info(`✅ Finished processing Goodreads shelf: ${shelfId}`);
         console.timeEnd("onShelfWrite");
+        return null;
       } catch (err) {
         console.error(`🐛 Error processing Goodreads shelf: ${shelfId}`, err);
         console.timeEnd("onShelfWrite");
+        return null;
       }
     }
+    return null;
   }
 );
 
-exports.onIntegrationDelete = onDocumentDeleted(
+export const onIntegrationDelete = onDocumentDeleted(
   {
     document: "integrations/{integrationId}",
-    memory: "512MiB", // Optional: Adjust memory allocation
-    timeoutSeconds: 60, // Optional: Adjust timeout
+    memory: "512MiB",
+    timeoutSeconds: 60,
   },
-  async (event) => {
+  async (event: FirestoreEvent<Change<DocumentData> | undefined>): Promise<void> => {
     const { integrationId } = event.params;
 
     try {
@@ -109,7 +131,7 @@ exports.onIntegrationDelete = onDocumentDeleted(
         .where("integrationId", "==", integrationId);
       const shelvesSnapshot = await shelvesQuery.get();
 
-      shelvesSnapshot.docs.forEach((doc) => {
+      shelvesSnapshot.docs.forEach((doc: QueryDocumentSnapshot) => {
         batch.delete(doc.ref);
       });
       console.log(
@@ -122,7 +144,7 @@ exports.onIntegrationDelete = onDocumentDeleted(
         .where("integrationId", "==", integrationId);
       const itemsSnapshot = await itemsQuery.get();
 
-      itemsSnapshot.docs.forEach((doc) => {
+      itemsSnapshot.docs.forEach((doc: QueryDocumentSnapshot) => {
         batch.delete(doc.ref);
       });
       console.log(
@@ -143,30 +165,52 @@ exports.onIntegrationDelete = onDocumentDeleted(
   }
 );
 
-exports.refreshShelf = onCall(
-  {
-    timeoutSeconds: 540, // 9 minutes
-    memory: '1GiB',
-  },
-  async (request) => {
+interface RefreshShelfData {
+  shelfId: string;
+}
+
+interface RefreshShelfResponse {
+  success: boolean;
+  message: string;
+  error?: {
+    code?: string;
+    message: string;
+    stack?: string;
+  };
+}
+
+const refreshShelfOptions: CallableOptions = {
+  timeoutSeconds: 540,
+  memory: "1GiB",
+  region: "us-central1",
+};
+
+export const refreshShelf = onCall<RefreshShelfData, RefreshShelfResponse>(
+  refreshShelfOptions,
+  async (request: CallableRequest<RefreshShelfData>): Promise<RefreshShelfResponse> => {
     const data = request.data;
     const shelfId = data.shelfId;
+
+    if (!shelfId) {
+      throw new HttpsError("invalid-argument", "Shelf ID is required");
+    }
 
     try {
       console.info(`🔄 Refresh request received for shelfId: ${shelfId}`);
       await refreshGoodreadsShelf(shelfId);
       return { success: true, message: "Shelf refreshed successfully." };
-    } catch (error) {
+    } catch (error: unknown) {
       console.error(`❌ Error refreshing shelf: ${shelfId}`, error);
-      return { 
-        success: false, 
-        message: error.message || "Failed to refresh shelf",
+      const err = error as Error & { code?: string };
+      return {
+        success: false,
+        message: err.message || "Failed to refresh shelf",
         error: {
-          code: error.code,
-          message: error.message,
-          stack: error.stack
-        }
+          code: err.code,
+          message: err.message,
+          stack: err.stack,
+        },
       };
     }
   }
-);
+); 

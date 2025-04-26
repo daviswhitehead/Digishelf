@@ -11,5 +11,8 @@
     "firebase-admin": "^13.2.0",
     "firebase-functions": "^6.3.2",
     "firebase": "^10.8.0"
+  },
+  "devDependencies": {
+    "axios-mock-adapter": "^1.22.0"
   }
 }

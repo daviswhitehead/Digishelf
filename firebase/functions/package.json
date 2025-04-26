@@ -4,16 +4,22 @@
   "scripts": {
     "lint": "eslint .",
     "lint_fix": "eslint . --fix",
-    "serve": "firebase emulators:start --only functions",
-    "shell": "firebase functions:shell",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
-    "deploy": "firebase deploy --only functions",
-    "logs": "firebase functions:log"
+    "deploy": "npm run build && firebase deploy --only functions",
+    "logs": "firebase functions:log",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "clean": "rimraf lib"
   },
   "engines": {
     "node": "22"
   },
-  "main": "index.js",
+  "main": "lib/index.js",
   "dependencies": {
     "axios": "^1.7.9",
     "cheerio": "^1.0.0",
@@ -22,9 +28,18 @@
     "node-vibrant": "^4.0.3"
   },
   "devDependencies": {
+    "@google-cloud/functions-framework": "^3.5.1",
+    "@types/express": "^5.0.1",
+    "@types/jest": "^29.5.14",
+    "@types/node": "^22.15.2",
+    "axios-mock-adapter": "^2.1.0",
     "eslint": "^8.15.0",
     "eslint-config-google": "^0.14.0",
-    "firebase-functions-test": "^3.1.0"
+    "firebase-functions-test": "^3.4.1",
+    "jest": "^29.7.0",
+    "rimraf": "^5.0.10",
+    "ts-jest": "^29.3.2",
+    "typescript": "^5.8.3"
   },
   "private": true
 }
