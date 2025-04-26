@@ -3,15 +3,17 @@ import { View, Text, Pressable, StyleSheet, Image } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { useRouter } from "next/router";
 import { doc, getDoc } from "firebase/firestore";
-import { db } from "../utils/firebase";
+import { db, functions } from "../utils/firebase";
 import { useUser } from "../utils/useUser";
+import { httpsCallable } from "firebase/functions";
 
-const SidePanel = ({ isVisible, onClose, title, subtitle, scrollPosition, userId }) => {
+const SidePanel = ({ isVisible, onClose, title, subtitle, scrollPosition, userId, shelfId }) => {
   const router = useRouter();
   const currentUser = useUser();
   const [userData, setUserData] = useState(null);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   // Fetch user data when userId changes
   useEffect(() => {
@@ -164,12 +166,58 @@ const SidePanel = ({ isVisible, onClose, title, subtitle, scrollPosition, userId
           <Pressable 
             style={({ pressed }) => [
               styles.menuItem,
-              pressed && styles.menuItemPressed
+              pressed && styles.menuItemPressed,
+              isRefreshing && styles.menuItemDisabled
             ]}
-            onPress={handleComingSoon}
+            onPress={async () => {
+              console.log('Debug - shelfId:', shelfId); // Debug log
+              
+              if (!shelfId) {
+                setToastMessage('No shelf ID available. Please try again.');
+                setShowToast(true);
+                setTimeout(() => setShowToast(false), 3000);
+                return;
+              }
+              
+              if (!currentUser) {
+                setToastMessage('Please log in to refresh the shelf.');
+                setShowToast(true);
+                setTimeout(() => setShowToast(false), 3000);
+                return;
+              }
+              
+              setIsRefreshing(true);
+              try {
+                console.log('Debug - Making refresh call with:', { shelfId, auth: currentUser }); // Debug log
+                const refreshShelf = httpsCallable(functions, 'refreshShelf');
+                const result = await refreshShelf({
+                  shelfId: shelfId,
+                  auth: currentUser
+                });
+                console.log('Debug - Refresh result:', result); // Log the result
+                setToastMessage('Shelf refreshed successfully!');
+                setShowToast(true);
+                setTimeout(() => setShowToast(false), 3000);
+                // Optionally reload the page to show new data
+                router.reload();
+              } catch (error) {
+                console.error('Failed to refresh shelf:', error);
+                const errorMessage = error.message?.includes('unauthenticated') 
+                  ? 'Please log in to refresh the shelf.'
+                  : 'Failed to refresh shelf. Please try again.';
+                setToastMessage(errorMessage);
+                setShowToast(true);
+                setTimeout(() => setShowToast(false), 3000);
+              } finally {
+                setIsRefreshing(false);
+              }
+            }}
+            disabled={isRefreshing || !shelfId || !currentUser}
           >
-            <Icon name="refresh-outline" size={24} color="#FFFFFF" />
-            <Text style={styles.menuText}>Refresh</Text>
+            <Icon name="refresh-outline" size={24} color={currentUser ? "#FFFFFF" : "#666666"} />
+            <Text style={[styles.menuText, !currentUser && styles.menuTextDisabled]}>
+              {isRefreshing ? "Refreshing..." : "Refresh"}
+            </Text>
           </Pressable>
 
           <Pressable 
@@ -402,6 +450,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 20,
     marginBottom: 8, // Add some space between profile and nav items
+  },
+  menuItemDisabled: {
+    opacity: 0.5,
+  },
+  menuTextDisabled: {
+    color: "#666666",
   },
 });
 

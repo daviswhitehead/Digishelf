@@ -4,7 +4,7 @@ const {
 } = require("firebase-functions/v2/firestore");
 const { initializeApp } = require("firebase-admin/app");
 const { getFirestore } = require("firebase-admin/firestore");
-const { https } = require("firebase-functions/v2");
+const { onCall } = require("firebase-functions/v2/https");
 const {
   writeGoodreadsShelves,
   writeGoodreadsItems,
@@ -143,29 +143,30 @@ exports.onIntegrationDelete = onDocumentDeleted(
   }
 );
 
-exports.refreshShelf = https.onCall(async (data, context) => {
-  console.info("Request data:", data); // Log the request data
-  console.info("Auth context:", context.auth); // Log the auth context
+exports.refreshShelf = onCall(
+  {
+    timeoutSeconds: 540, // 9 minutes
+    memory: '1GiB',
+  },
+  async (request) => {
+    const data = request.data;
+    const shelfId = data.shelfId;
 
-  if (!context.auth) {
-    throw new https.HttpsError(
-      "unauthenticated",
-      "User must be authenticated."
-    );
+    try {
+      console.info(`🔄 Refresh request received for shelfId: ${shelfId}`);
+      await refreshGoodreadsShelf(shelfId);
+      return { success: true, message: "Shelf refreshed successfully." };
+    } catch (error) {
+      console.error(`❌ Error refreshing shelf: ${shelfId}`, error);
+      return { 
+        success: false, 
+        message: error.message || "Failed to refresh shelf",
+        error: {
+          code: error.code,
+          message: error.message,
+          stack: error.stack
+        }
+      };
+    }
   }
-
-  const { shelfId } = data;
-
-  if (!shelfId) {
-    throw new https.HttpsError("invalid-argument", "Shelf ID is required.");
-  }
-
-  try {
-    console.info(`🔄 Refresh request received for shelfId: ${shelfId}`);
-    await refreshGoodreadsShelf(shelfId);
-    return { success: true, message: "Shelf refreshed successfully." };
-  } catch (error) {
-    console.error(`❌ Error refreshing shelf: ${shelfId}`, error);
-    throw new https.HttpsError("internal", error.message);
-  }
-});
+);

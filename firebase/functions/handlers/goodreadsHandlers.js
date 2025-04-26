@@ -91,12 +91,18 @@ async function writeGoodreadsShelves(integrationId, integration) {
  * @param {object} shelf - The shelf object containing details about the shelf
  */
 async function writeGoodreadsItems(shelfId, shelf) {
+  console.time(`writeGoodreadsItems-${shelfId}`);
+  
   const { integrationId, userId, sourceId, originalURL } = shelf;
+  console.info(`📚 Fetching books from: ${originalURL}`);
+  
   const allBooks = await getAllPages(originalURL);
+  console.info(`📚 Found ${allBooks.length} books to process`);
 
   const now = FieldValue.serverTimestamp();
   let batch = admin.firestore().batch();
   let operationCount = 0;
+  let totalProcessed = 0;
 
   for (const book of allBooks) {
     const existing = await admin
@@ -131,11 +137,12 @@ async function writeGoodreadsItems(shelfId, shelf) {
 
     batch.set(itemRef, itemData, { merge: true });
     operationCount++;
+    totalProcessed++;
 
     // Commit the batch if it reaches 500 operations
     if (operationCount === 500) {
       await batch.commit();
-      console.info(`✅ Committed 500 items for shelf: ${shelfId}`);
+      console.info(`✅ Committed batch of 500 items for shelf: ${shelfId} (${totalProcessed}/${allBooks.length} total)`);
       batch = admin.firestore().batch(); // Start a new batch
       operationCount = 0;
     }
@@ -145,9 +152,11 @@ async function writeGoodreadsItems(shelfId, shelf) {
   if (operationCount > 0) {
     await batch.commit();
     console.info(
-      `✅ Committed remaining ${operationCount} items for shelf: ${shelfId}`
+      `✅ Committed remaining ${operationCount} items for shelf: ${shelfId} (${totalProcessed}/${allBooks.length} total)`
     );
   }
+
+  console.timeEnd(`writeGoodreadsItems-${shelfId}`);
 }
 
 /**
@@ -155,6 +164,8 @@ async function writeGoodreadsItems(shelfId, shelf) {
  * @param {string} shelfId - The shelf ID.
  */
 async function refreshGoodreadsShelf(shelfId) {
+  console.time(`refreshGoodreadsShelf-${shelfId}`);
+  
   const shelfDoc = await admin
     .firestore()
     .collection("shelves")
@@ -173,12 +184,21 @@ async function refreshGoodreadsShelf(shelfId) {
   }
 
   console.info(`🔄 Refreshing Goodreads shelf: ${shelfId}`);
-  await writeGoodreadsItems(shelfId, shelf);
-  console.info(`✅ Successfully refreshed Goodreads shelf: ${shelfId}`);
+  console.info(`📚 Fetching books from: ${originalURL}`);
+  
+  try {
+    await writeGoodreadsItems(shelfId, shelf);
+    console.info(`✅ Successfully refreshed Goodreads shelf: ${shelfId}`);
+  } catch (error) {
+    console.error(`❌ Failed to refresh shelf ${shelfId}:`, error);
+    throw error;
+  } finally {
+    console.timeEnd(`refreshGoodreadsShelf-${shelfId}`);
+  }
 }
 
 module.exports = {
   writeGoodreadsShelves,
   writeGoodreadsItems,
-  refreshGoodreadsShelf, // Export the new function
+  refreshGoodreadsShelf,
 };

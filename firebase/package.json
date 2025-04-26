@@ -2,11 +2,14 @@
   "scripts": {
     "emulators:start": "firebase emulators:start",
     "seed:production": "node scripts/seedFirestore.js",
-    "seed:emulator": "FIRESTORE_EMULATOR_HOST=localhost:8081 node scripts/seedFirestore.js"
+    "seed:emulator": "FIRESTORE_EMULATOR_HOST=localhost:8081 node scripts/seedFirestore.js",
+    "pull:prod-data": "node scripts/pullAndSeedData.js",
+    "test:refresh": "FIRESTORE_EMULATOR_HOST=localhost:8081 FIREBASE_FUNCTIONS_EMULATOR_HOST=localhost:5001 node scripts/testRefresh.js"
   },
   "dependencies": {
     "eslint-config-prettier": "^10.0.1",
     "firebase-admin": "^13.2.0",
-    "firebase-functions": "^6.3.2"
+    "firebase-functions": "^6.3.2",
+    "firebase": "^10.8.0"
   }
 }

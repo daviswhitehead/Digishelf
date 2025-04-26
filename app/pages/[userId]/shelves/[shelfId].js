@@ -259,17 +259,9 @@ export default function Shelf() {
         subtitle={shelfDetails.sourceDisplayName}
         scrollPosition={scrollPosition}
         userId={shelfDetails.userId}
+        shelfId={shelfId}
       />
       <QRCodeComponent url={currentUrl} />
-      <TouchableOpacity
-        onPress={handleRefresh}
-        style={[styles.refreshButton, isRefreshing && styles.disabledButton]}
-        disabled={isRefreshing}
-      >
-        <Text style={styles.refreshButtonText}>
-          {isRefreshing ? "Refreshing..." : "Refresh"}
-        </Text>
-      </TouchableOpacity>
       <View
         style={[
           styles.contentContainer,
@@ -316,21 +308,5 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     padding: 20,
     fontSize: 14,
-  },
-  refreshButton: {
-    backgroundColor: "#4caf50",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    alignSelf: "center",
-    marginVertical: 10,
-  },
-  refreshButtonText: {
-    color: "#fff",
-    fontSize: 16,
-    textAlign: "center",
-  },
-  disabledButton: {
-    backgroundColor: "#888",
-  },
+  }
 });
