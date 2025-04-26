@@ -8,4 +8,10 @@ console.log(result)
 // Adding a new function with formatting issues
 function anotherTest(x:any,y:any,){
     return x+    y
+}
+
+// One more test function
+function oneMoreTest(a:any,    b:any){
+console.log("test")
+    return a+b
 } 
