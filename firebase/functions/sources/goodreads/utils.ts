@@ -1,4 +1,4 @@
-import cheerio from 'cheerio';
+import * as cheerio from 'cheerio';
 import { RATING_MAP } from './constants';
 
 /**
@@ -18,7 +18,26 @@ export function cleanNewLines(s: string): string {
 /**
  * Extracts the total number of pages from pagination
  */
-export function getTotalPages($: cheerio.CheerioAPI): number {
-  const lastPageLink = $('#reviewPagination a:not([rel])').last().text().trim();
-  return parseInt(lastPageLink, 10) || 1;
-} 
+export function getTotalPages($: cheerio.Root): number {
+  const $pagination = $('#reviewPagination');
+  if (!$pagination.length) {
+    return 0;
+  }
+
+  const pageNumbers = $pagination
+    .find('a')
+    .map((_, el) => {
+      const text = $(el).text().trim();
+      const num = parseInt(text, 10);
+      return isNaN(num) ? 0 : num;
+    })
+    .get();
+
+  const maxPage = Math.max(...pageNumbers);
+  if (maxPage > 0) {
+    return maxPage;
+  }
+
+  // If no numeric pages found but there's a next button, assume we're on page 1
+  return $pagination.find('a[rel="next"]').length ? 2 : 0;
+}

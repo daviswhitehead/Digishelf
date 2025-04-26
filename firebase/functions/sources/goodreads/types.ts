@@ -1,28 +1,27 @@
 import { Timestamp } from 'firebase-admin/firestore';
 import { Timestamps } from '../../shared/types';
-import { CheerioAPI } from 'cheerio';
+import type { CheerioAPI } from 'cheerio';
 
 export interface GoodreadsBook {
   title: string;
   author: string;
-  coverImage: string;
-  canonicalURL: string;
-  userRating: number | null;
-  userReview: string | null;
-  primaryColor: string | null;
-  dateAdded?: string;
-  dateRead?: string;
-  readCount?: number;
+  coverImg: string;
+  isbn: string;
+  avgRating: number;
+  dateAdded: string;
+  review: string;
+  userRating: number;
 }
 
-export interface GoodreadsShelfData extends Timestamps {
+export interface GoodreadsShelfData {
   shelfId: string;
   userId: string;
   sourceId: string;
   integrationId: string;
-  sourceDisplayName: string;
-  displayName: string;
-  originalURL: string;
+  books: GoodreadsBook[];
+  totalBooks: number;
+  lastRefreshed: string;
+  $: CheerioAPI;
 }
 
 export interface GoodreadsIntegrationData extends Timestamps {
@@ -36,4 +35,4 @@ export interface GoodreadsIntegrationData extends Timestamps {
 export interface PageResult {
   books: GoodreadsBook[];
   $: CheerioAPI;
-} 
+}
