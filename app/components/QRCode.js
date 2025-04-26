@@ -26,7 +26,6 @@ const styles = StyleSheet.create({
     right: 20,
     zIndex: 1000,
     height: 'auto',
-    opacity: 0.8,
     backgroundColor: 'white',
   },
   qrContainer: {
