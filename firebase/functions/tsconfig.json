@@ -25,6 +25,7 @@
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "jsx": "react",
+    "isolatedModules": true,
     "paths": {
       "*": ["node_modules/*", "node_modules/@types/*"]
     },

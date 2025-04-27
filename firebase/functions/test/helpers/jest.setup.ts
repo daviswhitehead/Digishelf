@@ -1,11 +1,21 @@
 /* global jest, afterEach, afterAll */
 
+import { jest } from '@jest/globals';
+import type { Mock } from 'jest';
 import * as admin from 'firebase-admin';
-import { getFirestore } from 'firebase-admin/firestore';
-import type { DocumentData } from 'firebase-admin/firestore';
+import { getFirestore, Timestamp } from 'firebase-admin/firestore';
+import type { 
+  DocumentData, 
+  Firestore, 
+  CollectionReference, 
+  DocumentReference, 
+  QuerySnapshot, 
+  WriteResult,
+  DocumentSnapshot
+} from 'firebase-admin/firestore';
 
 // Import custom matchers
-import './matchers/firestore';
+import './matchers/firestore.js';
 
 // Mock environment variables
 process.env = {
@@ -27,18 +37,60 @@ export const db = getFirestore(app);
 // Global test timeout
 jest.setTimeout(30000);
 
-// Mock Firestore
+// Mock Firestore response objects
+const mockWriteResult: WriteResult = {
+  writeTime: Timestamp.now(),
+} as WriteResult;
+
+const mockDocSnapshot = {
+  exists: true,
+  id: 'test-doc-id',
+  data: jest.fn().mockReturnValue({ id: 'test-doc-id' }),
+  ref: {} as DocumentReference,
+} as unknown as DocumentSnapshot;
+
+const mockQuerySnapshot = {
+  docs: [mockDocSnapshot],
+  empty: false,
+  size: 1,
+  forEach: jest.fn(),
+} as unknown as QuerySnapshot<DocumentData>;
+
+// Create mock document and collection references
+const mockGet = jest.fn<() => Promise<DocumentSnapshot<DocumentData>>>().mockResolvedValue(mockDocSnapshot);
+const mockSet = jest.fn<(data: DocumentData) => Promise<WriteResult>>().mockResolvedValue(mockWriteResult);
+const mockUpdate = jest.fn<(data: Partial<DocumentData>) => Promise<WriteResult>>().mockResolvedValue(mockWriteResult);
+const mockDelete = jest.fn<() => Promise<WriteResult>>().mockResolvedValue(mockWriteResult);
+const mockCollection = jest.fn();
+
+const mockDocRef = {
+  collection: mockCollection,
+  get: mockGet,
+  set: mockSet,
+  update: mockUpdate,
+  delete: mockDelete,
+} as unknown as DocumentReference<DocumentData>;
+
+const mockCollRef = {
+  doc: jest.fn().mockReturnValue(mockDocRef),
+  get: jest.fn(() => Promise.resolve(mockQuerySnapshot)),
+} as unknown as CollectionReference<DocumentData>;
+
+// Mock Firestore with proper types
 const mockFirestore = {
-  collection: jest.fn().mockReturnThis(),
-  doc: jest.fn().mockReturnThis(),
-  get: jest.fn().mockResolvedValue({ docs: [] }),
-  set: jest.fn().mockResolvedValue(true),
-  update: jest.fn().mockResolvedValue(true),
-  delete: jest.fn().mockResolvedValue(true),
-};
+  collection: jest.fn().mockReturnValue(mockCollRef),
+  doc: jest.fn().mockReturnValue(mockDocRef),
+} as unknown as Firestore;
+
+// Set up default mock implementations
+mockGet.mockResolvedValue(mockDocSnapshot);
+mockSet.mockResolvedValue(mockWriteResult);
+mockUpdate.mockResolvedValue(mockWriteResult);
+mockDelete.mockResolvedValue(mockWriteResult);
+mockCollRef.get.mockResolvedValue(mockQuerySnapshot);
 
 // Mock the admin.firestore() call
-jest.spyOn(admin, 'firestore').mockImplementation(() => mockFirestore as any);
+jest.spyOn(admin, 'firestore').mockImplementation(() => mockFirestore);
 
 // Clean up after each test
 afterEach(async () => {

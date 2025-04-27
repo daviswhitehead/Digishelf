@@ -1,7 +1,7 @@
 import type { Config } from '@jest/types';
 
 const config: Config.InitialOptions = {
-  preset: 'ts-jest',
+  preset: 'ts-jest/presets/default-esm',
   testEnvironment: 'node',
   roots: ['<rootDir>/sources', '<rootDir>/handlers', '<rootDir>/shared'],
   setupFilesAfterEnv: ['<rootDir>/test/helpers/jest.setup.ts'],
@@ -15,12 +15,15 @@ const config: Config.InitialOptions = {
     '^@sources/(.*)$': '<rootDir>/sources/$1',
     '^@handlers/(.*)$': '<rootDir>/handlers/$1',
     '^@shared/(.*)$': '<rootDir>/shared/$1',
+    '^(\\.{1,2}/.*)\\.js$': '$1',
   },
   transform: {
     '^.+\\.ts$': ['ts-jest', {
       tsconfig: '<rootDir>/tsconfig.json',
+      useESM: true,
     }],
   },
+  extensionsToTreatAsEsm: ['.ts'],
   verbose: true,
   testPathIgnorePatterns: ['/node_modules/', '/lib/'],
   collectCoverageFrom: [
