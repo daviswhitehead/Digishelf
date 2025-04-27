@@ -1,17 +1,20 @@
 {
   "name": "@digishelf/app",
   "version": "1.0.0",
+  "private": true,
   "description": "Digishelf Next.js Web Application",
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "build:watch": "next dev",
     "start": "next start",
-    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "test": "jest --passWithNoTests",
     "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "type-check": "tsc --noEmit",
     "colors": "node ./utils/extractColors.js",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
     "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,json,md}\""
