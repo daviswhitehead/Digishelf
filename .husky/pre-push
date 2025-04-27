@@ -1,0 +1,53 @@
+#!/bin/sh
+
+# Colors
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+RED='\033[0;31m'
+NC='\033[0m' # No Color
+
+# Check if --no-verify flag was used
+if [ "$HUSKY_SKIP_HOOKS" = "1" ]; then
+  echo "${YELLOW}⚠️  Skipping pre-push checks${NC}"
+  exit 0
+fi
+
+echo "${GREEN}🚀 Running pre-push checks...${NC}"
+
+# Run type check
+echo "${GREEN}📝 Running type check...${NC}"
+npm run type-check || {
+  echo "${RED}❌ Type check failed${NC}"
+  echo "${YELLOW}Fix type errors before pushing or use git push --no-verify to skip${NC}"
+  exit 1
+}
+
+# Run lint check (without fixing)
+echo "${GREEN}🔍 Running lint check...${NC}"
+npm run lint || {
+  echo "${RED}❌ Lint check failed${NC}"
+  echo "${YELLOW}Fix lint errors before pushing or use git push --no-verify to skip${NC}"
+  exit 1
+}
+
+# Run affected tests based on changed files
+echo "${GREEN}🧪 Running affected tests...${NC}"
+CHANGED_FILES=$(git diff --name-only origin/main...HEAD)
+
+if echo "$CHANGED_FILES" | grep -q "^firebase/functions/"; then
+  echo "${GREEN}Running functions tests...${NC}"
+  npm run test:functions || {
+    echo "${RED}❌ Functions tests failed${NC}"
+    exit 1
+  }
+fi
+
+if echo "$CHANGED_FILES" | grep -q "^app/"; then
+  echo "${GREEN}Running app tests...${NC}"
+  npm run test:app || {
+    echo "${RED}❌ App tests failed${NC}"
+    exit 1
+  }
+fi
+
+echo "${GREEN}✅ All pre-push checks passed!${NC}" 

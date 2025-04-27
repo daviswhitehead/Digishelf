@@ -16,9 +16,13 @@
     "build:app": "cd app && npm run build",
     "dev": "concurrently \"cd app && npm run dev\" \"cd firebase/functions && npm run dev\" --names \"app,functions\" --prefix-colors \"blue,green\"",
     "dev:app": "cd app && npm run dev",
-    "dev:functions": "cd firebase/functions && npm run dev"
+    "dev:functions": "cd firebase/functions && npm run dev",
+    "type-check": "tsc --noEmit",
+    "type-check:staged": "tsc --noEmit --incremental false --composite false"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.0.0",
+    "@commitlint/config-conventional": "^19.0.0",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.15.2",
     "@typescript-eslint/eslint-plugin": "^7.0.0",
@@ -35,7 +39,8 @@
   "lint-staged": {
     "**/*.{js,ts,tsx}": [
       "prettier --write",
-      "eslint --fix"
+      "eslint --fix",
+      "npm run type-check:staged"
     ],
     "**/*.{json,md}": [
       "prettier --write"
@@ -43,5 +48,23 @@
   },
   "dependencies": {
     "cheerio": "^1.0.0"
+  },
+  "commitlint": {
+    "extends": ["@commitlint/config-conventional"],
+    "rules": {
+      "type-enum": [2, "always", [
+        "feat",
+        "fix",
+        "docs",
+        "style",
+        "refactor",
+        "perf",
+        "test",
+        "build",
+        "ci",
+        "chore",
+        "revert"
+      ]]
+    }
   }
 }

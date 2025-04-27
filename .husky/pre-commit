@@ -1,6 +1,18 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
+#!/bin/sh
 
-echo "🔍 Running pre-commit checks (non-blocking)..."
-(npx lint-staged && npm test) || echo "⚠️  Issues found, but allowing commit to proceed..."
+# Colors
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+echo "${GREEN}🔍 Running pre-commit checks...${NC}"
+
+# Run lint-staged (includes prettier, eslint, and type checking)
+npx lint-staged || {
+  echo "${YELLOW}⚠️  Issues found in staged files${NC}"
+  echo "${YELLOW}👉 Commit will proceed, but please fix these issues before pushing${NC}"
+  echo "${YELLOW}   Run 'npm run lint:fix' and 'npm run type-check' to fix issues${NC}"
+}
+
+# Always exit successfully (non-blocking)
 exit 0

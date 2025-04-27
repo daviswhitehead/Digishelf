@@ -1,5 +1,5 @@
 import * as admin from 'firebase-admin';
-import { getFunctions, type HttpsCallable } from 'firebase-admin/functions';
+import { getFunctions } from 'firebase-admin/functions';
 import { db } from './jest.setup';
 import type { DocumentData } from 'firebase-admin/firestore';
 
@@ -151,7 +151,7 @@ async function createTestItem(
  */
 async function callFunction<T = any>(name: string, data: any): Promise<T> {
   const functions = getFunctions();
-  const callable = functions.httpsCallable(name) as HttpsCallable;
+  const callable = functions.httpsCallable(name);
   const result = await callable(data);
   return result.data;
 }
