@@ -11,20 +11,13 @@
     "inlineSources": true,
     "declaration": true,
     "declarationMap": true,
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
     "paths": {
-      "*": [
-        "node_modules/*",
-        "node_modules/@types/*"
-      ]
+      "*": ["node_modules/*", "node_modules/@types/*"]
     }
   },
-  "include": [
-    "**/*.ts",
-    "**/*.js"
-  ],
-  "exclude": [
-    "node_modules",
-    "lib",
-    "coverage"
-  ]
-} 
+  "include": ["**/*.ts", "**/*.js"],
+  "exclude": ["node_modules", "lib", "coverage"]
+}
