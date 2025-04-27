@@ -16,9 +16,14 @@ jobs:
           node-version: '22'
           cache: 'npm'
       
-      - run: npm ci
-      - run: npm run lint
-      - run: npm run type-check
+      - name: 'Install root dependencies'
+        run: npm ci
+  
+      - name: 'Lint root'
+        run: npm run lint
+  
+      - name: 'Type Check root'
+          run: npm run type-check
 
   test-functions:
     runs-on: ubuntu-latest
@@ -28,20 +33,29 @@ jobs:
         with:
           node-version: '22'
           cache: 'npm'
-        
-      - run: cd firebase/functions
-      - run: npm ci
-      - run: npm run test
+          cache-dependency-path: 'firebase/functions/package-lock.json'
+      
+      - name: Install functions dependencies
+        run: npm ci
+        working-directory: firebase/functions
+  
+      - name: Test functions
+        run: npm run test
+        working-directory: firebase/functions
         
   test-app:
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v4
-        - uses: actions/setup-node@v4
-          with:
-            node-version: '22'
-            cache: 'npm'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
 
-        - run: cd app
-        - run: npm ci
-        - run: npm run test
+      - name: Install app dependencies
+        run: npm ci
+        working-directory: app
+  
+      - name: Test app
+        run: npm run test
+        working-directory: app
