@@ -1,19 +1,30 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "composite": true,
-    "outDir": "./lib",
     "module": "commonjs",
-    "moduleResolution": "node",
-    "target": "es2022",
-    "baseUrl": ".",
+    "outDir": "lib",
     "rootDir": ".",
     "sourceMap": true,
     "strict": true,
-    "noImplicitReturns": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true
+    "target": "es2022",
+    "noUnusedParameters": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "types": ["node", "jest"],
+    "paths": {
+      "firebase-admin/*": ["./node_modules/firebase-admin/*"],
+      "firebase-functions/*": ["./node_modules/firebase-functions/*"]
+    }
   },
   "include": ["./**/*.ts"],
-  "exclude": ["node_modules", "lib", "**/*.spec.ts", "**/*.test.ts"]
+  "exclude": [
+    "node_modules",
+    "lib",
+    ".runtimeconfig.json",
+    "**/__tests__/**",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "jest.config.ts"
+  ]
 }
