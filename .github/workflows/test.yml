@@ -10,6 +10,10 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
+      - name: Debug repo contents
+        run: |
+          echo "Top level repo structure:"
+          ls -R
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
@@ -33,7 +37,11 @@ jobs:
           - app
           - firebase/functions
     steps:
-      - name: debug
+      - name: Debug repo contents
+        run: |
+          echo "Top level repo structure:"
+          ls -R
+      - name: debug2
         run: |
             echo "Running inside: $(pwd)"
         working-directory: ${{ matrix.package }}
@@ -41,8 +49,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: 'npm'
-          cache-dependency-path: ${{ matrix.package }}/package-lock.json
+          # cache: 'npm'
+          # cache-dependency-path: ${{ matrix.package }}/package-lock.json
 
       - name: debug
         run: |
@@ -50,7 +58,7 @@ jobs:
         working-directory: ${{ matrix.package }}
       
       - name: Install dependencies
-        run: npm ci
+        run: cd app && npm ci
         working-directory: ${{ matrix.package }}
 
       - name: Run tests
