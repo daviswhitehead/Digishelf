@@ -1,5 +1,5 @@
 import { Timestamp as _Timestamp } from 'firebase-admin/firestore';
-import { Timestamps } from '../../shared/types';
+import type { Timestamps } from '../../shared/types.d.ts';
 import { CheerioAPI as _CheerioAPI } from 'cheerio';
 
 export interface GoodreadsBook {

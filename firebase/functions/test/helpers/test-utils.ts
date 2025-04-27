@@ -1,5 +1,5 @@
 import * as admin from 'firebase-admin';
-import { db } from './jest.setup';
+import { db } from './jest.setup.js';
 import type { DocumentData } from 'firebase-admin/firestore';
 import functionTest from 'firebase-functions-test';
 

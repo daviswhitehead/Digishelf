@@ -1,5 +1,5 @@
-import { createTimestamp } from '../mocks/firebase';
-import type { TestUser, TestSource, TestIntegration, TestShelf, TestItem } from '../test-utils';
+import { createTimestamp } from '../mocks/firebase.js';
+import type { TestUser, TestSource, TestIntegration, TestShelf, TestItem } from '../test-utils.js';
 
 /**
  * Generates a test user with optional overrides

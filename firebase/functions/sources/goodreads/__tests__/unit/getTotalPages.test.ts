@@ -1,5 +1,5 @@
 import * as cheerio from 'cheerio';
-import { getTotalPages } from '../../utils';
+import { getTotalPages } from '../../utils.js';
 
 describe('getTotalPages', () => {
   it('returns the highest numeric page when multiple page links exist', () => {

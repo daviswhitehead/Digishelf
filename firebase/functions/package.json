@@ -1,6 +1,7 @@
 {
   "name": "digishelf-app-firebase-functions",
   "description": "Cloud Functions for Firebase",
+  "type": "module",
   "scripts": {
     "serve": "npm run build:dev && firebase emulators:start --only functions",
     "shell": "npm run build:dev && firebase functions:shell",

@@ -1,66 +1,64 @@
+import { initializeApp } from 'firebase-admin/app';
+import { onCall, CallableRequest } from 'firebase-functions/v2/https';
+import type { CallableOptions } from 'firebase-functions/v2/https';
 import {
-  onDocumentWritten,
+  onDocumentUpdated,
   onDocumentDeleted,
+  onDocumentWritten,
   Change,
   FirestoreEvent,
   QueryDocumentSnapshot,
   DocumentOptions,
 } from 'firebase-functions/v2/firestore';
-import { initializeApp } from 'firebase-admin/app';
 import { getFirestore, Firestore, DocumentData, WriteBatch } from 'firebase-admin/firestore';
-import { onCall, CallableRequest, CallableOptions } from 'firebase-functions/v2/https';
 import {
   writeGoodreadsShelves,
   writeGoodreadsItems,
   refreshGoodreadsShelf,
-} from './sources/goodreads/handlers';
-import { GoodreadsIntegration, GoodreadsShelf } from './shared/types';
-import { processBatch } from './shared/utils/firestore';
+} from './sources/goodreads/handlers.js';
+import type { GoodreadsIntegration, GoodreadsShelf } from './shared/types.d.ts';
+import { processBatch } from './shared/utils/firestore.js';
 
 initializeApp();
 const db: Firestore = getFirestore();
 
-type IntegrationEvent = FirestoreEvent<Change<DocumentData> | undefined>;
 type ShelfEvent = FirestoreEvent<Change<DocumentData> | undefined>;
 
-export const onIntegrationWrite = onDocumentWritten(
-  {
-    document: 'integrations/{integrationId}',
-    memory: '512MiB',
-    timeoutSeconds: 60,
-  },
-  async (event: IntegrationEvent): Promise<null> => {
-    console.time('onIntegrationWrite');
-
-    const integrationId = event.params.integrationId;
-    const after = event.data?.after?.data() as GoodreadsIntegration | undefined;
-
-    if (!after) {
-      console.info(`🗑️ Integration was deleted — skipping: ${integrationId}`);
-      return null;
-    }
-
-    const sourceName = (after.displayName || '').toLowerCase();
-
-    if (sourceName === 'goodreads') {
-      console.info(`📥 Processing Goodreads integration: ${integrationId}`);
-
-      try {
-        console.time('writeGoodreadsShelves');
-        await writeGoodreadsShelves(integrationId, after);
-        console.timeEnd('writeGoodreadsShelves');
-        console.info(`✅ Finished processing Goodreads integration: ${integrationId}`);
-        console.timeEnd('onIntegrationWrite');
-        return null;
-      } catch (err) {
-        console.error(`🐛 Error processing Goodreads integration: ${integrationId}`, err);
-        console.timeEnd('onIntegrationWrite');
-        return null;
-      }
-    }
-    return null;
+/** @type {import('firebase-functions/v2/firestore').CloudFunction<FirestoreEvent<Change<QueryDocumentSnapshot>>>} */
+export const onGoodreadsIntegrationUpdate = onDocumentUpdated({
+  document: 'goodreadsIntegrations/{integrationId}',
+  region: 'us-central1',
+}, async (event) => {
+  const integrationId = event.params.integrationId;
+  const data = event.data?.after?.data();
+  
+  if (!data) {
+    console.info(`No data found for integration ${integrationId}`);
+    return;
   }
-);
+
+  const after: GoodreadsIntegration = {
+    userId: data.userId,
+    displayName: data.displayName,
+    profileUrl: data.profileUrl,
+    sourceId: data.sourceId,
+    myBooksURL: data.myBooksURL,
+    shelves: data.shelves,
+    active: data.active,
+    createdAt: data.createdAt,
+    updatedAt: data.updatedAt,
+  };
+
+  try {
+    console.time('writeGoodreadsShelves');
+    await writeGoodreadsShelves(integrationId, after);
+    console.timeEnd('writeGoodreadsShelves');
+    console.info(`✅ Finished processing Goodreads integration: ${integrationId}`);
+  } catch (error: unknown) {
+    console.error('❌ Error processing Goodreads integration:', error);
+    throw error;
+  }
+});
 
 export const onShelfWrite = onDocumentWritten(
   {
@@ -187,4 +185,3 @@ export const refreshShelf = onCall(
     }
   }
 );
-1;

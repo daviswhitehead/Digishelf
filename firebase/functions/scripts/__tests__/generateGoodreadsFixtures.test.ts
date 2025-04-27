@@ -1,7 +1,7 @@
-import { sanitizeResponse, addMetadata } from '../generateGoodreadsFixtures';
+import { sanitizeResponse, addMetadata } from '../generateGoodreadsFixtures.js';
 
 // Import the ShelfId type and SHELF_IDS constant
-import { SHELF_IDS } from '../generateGoodreadsFixtures';
+import { SHELF_IDS } from '../generateGoodreadsFixtures.js';
 type ShelfId = (typeof SHELF_IDS)[keyof typeof SHELF_IDS];
 
 describe('sanitizeResponse', () => {

@@ -6,11 +6,11 @@ import {
   callFunction,
   createTestItem,
   TestItem,
-} from '../../test/helpers/test-utils';
+} from '../../test/helpers/test-utils.js';
 import { getFirestore, Timestamp } from 'firebase-admin/firestore';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
-import { mockGoodreadsResponse } from '../mocks/goodreadsMock';
+import { mockGoodreadsResponse } from '../mocks/goodreadsMock.js';
 import type { DocumentSnapshot } from 'firebase-admin/firestore';
 
 describe('refreshShelf', () => {

@@ -1,12 +1,12 @@
-import axios, { AxiosError } from 'axios';
 import * as cheerio from 'cheerio';
+import axios, { AxiosError } from 'axios';
 import type { Element } from 'domhandler';
-import { withTiming } from '../../shared/utils/timing';
-import { retry } from '../../shared/utils/retry';
-import { GoodreadsBook } from './types';
-import { translateRating, cleanNewLines, getTotalPages } from './utils';
+import { withTiming } from '../../shared/utils/timing.js';
+import { retry } from '../../shared/utils/retry.js';
+import { GoodreadsBook } from './types.js';
+import { translateRating, cleanNewLines, getTotalPages } from './utils.js';
 import pLimit from 'p-limit';
-import { CONCURRENCY } from './constants';
+import { CONCURRENCY } from './constants.js';
 
 /**
  * Extracts review text from a Goodreads review element using multiple possible selectors

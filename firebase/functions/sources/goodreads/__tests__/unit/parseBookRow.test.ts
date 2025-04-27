@@ -1,7 +1,7 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import * as cheerio from 'cheerio';
-import { parseBookRow } from '../../data';
+import { parseBookRow } from '../../data.js';
 
 function getElement(html: string) {
   const $ = cheerio.load(html);

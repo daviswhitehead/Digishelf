@@ -1,7 +1,7 @@
-import { getAllPages } from '../../data';
+import { getAllPages } from '../../data.js';
+import { loadFixture } from '../__fixtures__/loadFixture.js';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
-import { loadFixture } from '../__fixtures__/loadFixture';
 
 describe('getAllPages', () => {
   let mock: MockAdapter;

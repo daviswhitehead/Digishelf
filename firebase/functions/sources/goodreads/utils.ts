@@ -1,5 +1,5 @@
 import * as cheerio from 'cheerio';
-import { RATING_MAP } from './constants';
+import { RATING_MAP } from './constants.js';
 
 /**
  * Translates a textual rating into a numerical star rating.

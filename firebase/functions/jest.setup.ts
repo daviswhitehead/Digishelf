@@ -1,4 +1,4 @@
-import { cleanup } from './test/helpers/test-utils';
+import { cleanup } from './test/helpers/test-utils.js';
 import './test/helpers/jest.setup';
 
 // Increase the default timeout

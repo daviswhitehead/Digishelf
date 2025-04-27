@@ -1,69 +1,56 @@
-import axios from 'axios';
-import MockAdapter from 'axios-mock-adapter';
-import { readFileSync } from 'fs';
-import { join } from 'path';
+import { jest } from '@jest/globals';
+import type { AxiosResponse, AxiosStatic } from 'axios';
 
-const FIXTURES_PATH = join(__dirname, '../../..', 'sources/goodreads/__tests__/__fixtures__/responses');
+// Helper function to create mock responses
+const mockAxiosResponse = <T = any>(data: T): AxiosResponse<T> => ({
+  data,
+  status: 200,
+  statusText: 'OK',
+  headers: {},
+  config: {} as any,
+});
 
-/**
- * Creates a mock for Goodreads API responses
- * @returns MockAdapter instance
- */
-export function createGoodreadsMock(): MockAdapter {
-  const mock = new MockAdapter(axios);
-  return mock;
-}
+// Create mock instance with proper types
+const mockAxios = {
+  get: jest.fn().mockImplementation(() => Promise.resolve(mockAxiosResponse({}))),
+  post: jest.fn().mockImplementation(() => Promise.resolve(mockAxiosResponse({}))),
+  put: jest.fn().mockImplementation(() => Promise.resolve(mockAxiosResponse({}))),
+  delete: jest.fn().mockImplementation(() => Promise.resolve(mockAxiosResponse({}))),
+  patch: jest.fn().mockImplementation(() => Promise.resolve(mockAxiosResponse({}))),
+  create: jest.fn().mockReturnThis(),
+  defaults: {
+    headers: {
+      common: {},
+      delete: {},
+      get: {},
+      head: {},
+      post: {},
+      put: {},
+      patch: {},
+    },
+    baseURL: '',
+  },
+  interceptors: {
+    request: {
+      use: jest.fn(),
+      eject: jest.fn(),
+      clear: jest.fn(),
+    },
+    response: {
+      use: jest.fn(),
+      eject: jest.fn(),
+      clear: jest.fn(),
+    },
+  },
+} as unknown as jest.Mocked<AxiosStatic>;
 
-/**
- * Mocks a Goodreads shelf page response
- * @param mock - MockAdapter instance
- * @param userId - Goodreads user ID
- * @param shelfId - Shelf ID (e.g., 'currently-reading', 'read')
- * @param page - Page number
- * @param fixture - Fixture file name
- */
-export function mockGoodreadsShelfPage(
-  mock: MockAdapter,
-  userId: string,
-  shelfId: string,
-  page: number = 1,
-  fixture: string = 'currently_reading.html'
-): void {
-  const url = `https://www.goodreads.com/review/list/${userId}`;
-  const html = readFileSync(join(FIXTURES_PATH, fixture), 'utf8');
-  
-  mock.onGet(url, { params: { shelf: shelfId, page } }).reply(200, html);
-}
+beforeEach(() => {
+  mockAxios.get.mockClear();
+  mockAxios.post.mockClear();
+  mockAxios.put.mockClear();
+  mockAxios.delete.mockClear();
+  mockAxios.patch.mockClear();
+});
 
-/**
- * Mocks a Goodreads error response
- * @param mock - MockAdapter instance
- * @param userId - Goodreads user ID
- * @param shelfId - Shelf ID
- * @param errorCode - HTTP error code
- */
-export function mockGoodreadsError(
-  mock: MockAdapter,
-  userId: string,
-  shelfId: string,
-  errorCode: number = 404
-): void {
-  const url = `https://www.goodreads.com/review/list/${userId}`;
-  mock.onGet(url, { params: { shelf: shelfId } }).reply(errorCode);
-}
-
-/**
- * Helper to reset all mocks
- * @param mock - MockAdapter instance
- */
-export function resetMocks(mock: MockAdapter): void {
-  mock.reset();
-}
-
-/**
- * Helper to restore axios to its original state
- * @param mock - MockAdapter instance
- */
-export function restoreAxios(mock: MockAdapter): void {
-  mock.restore();
-} 
+export { mockAxios };
+export default mockAxios;
