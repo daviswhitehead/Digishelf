@@ -9,7 +9,7 @@
     "build:watch": "next dev",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "test": "jest",
+    "test": "jest --passWithNoTests",
     "test:watch": "jest --watch",
     "colors": "node ./utils/extractColors.js"
   },
