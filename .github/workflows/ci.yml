@@ -1,7 +1,7 @@
 name: Remote CI
 
 on:
-  push: # <- triggers on *any* push, any branch
+  push: # <- triggers on *any* push, any brancha
   pull_request: # <- triggers on *any* PR to any branch
   workflow_dispatch: # <- allows manual trigger
 
