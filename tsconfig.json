@@ -1,18 +1,24 @@
 {
   "compilerOptions": {
+    "target": "es2017",
     "module": "commonjs",
-    "noImplicitReturns": true,
-    "noUnusedLocals": true,
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": false,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "baseUrl": ".",
     "outDir": "lib",
     "sourceMap": true,
-    "strict": true,
-    "target": "es2017",
-    "baseUrl": ".",
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "moduleResolution": "node",
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
     "types": ["node", "jest"],
     "paths": {
       "*": [
@@ -23,7 +29,20 @@
       ]
     }
   },
-  "compileOnSave": true,
-  "include": ["app/**/*", "firebase/functions/**/*"],
-  "exclude": ["node_modules", "**/node_modules", "**/lib", "**/dist", "**/.next"]
+  "include": [
+    "app/**/*.ts",
+    "app/**/*.tsx",
+    "app/**/*.js",
+    "app/**/*.jsx",
+    "firebase/functions/**/*.ts",
+    "firebase/functions/**/*.js"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/node_modules",
+    "**/lib",
+    "**/dist",
+    "**/.next",
+    "**/coverage"
+  ]
 }

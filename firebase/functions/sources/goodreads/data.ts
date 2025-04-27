@@ -1,5 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import * as cheerio from 'cheerio';
+import type { Element } from 'domhandler';
 import { withTiming } from '../../shared/utils/timing';
 import { retry } from '../../shared/utils/retry';
 import { GoodreadsBook } from './types';
@@ -10,7 +11,7 @@ import { CONCURRENCY } from './constants';
 /**
  * Extracts review text from a Goodreads review element using multiple possible selectors
  */
-export function extractReviewText($: cheerio.CheerioAPI, elem: cheerio.Element): string {
+export function extractReviewText($: cheerio.CheerioAPI, elem: Element): string {
   // Try to find the review text in various possible locations
   const reviewSelectors = ['span[id^="freeTextreview"]', 'span[id^="freeText"]', '.field.review'];
 
@@ -29,7 +30,7 @@ export function extractReviewText($: cheerio.CheerioAPI, elem: cheerio.Element):
 /**
  * Parses a single book row from Goodreads HTML
  */
-export function parseBookRow($: cheerio.CheerioAPI, elem: cheerio.Element): GoodreadsBook {
+export function parseBookRow($: cheerio.CheerioAPI, elem: Element): GoodreadsBook {
   // Cover Image
   let coverImage = $(elem).find('td.field.cover img').attr('src') || '';
   if (coverImage) {
@@ -99,7 +100,7 @@ export async function getPageItems(baseURL: string, pageNumber: number): Promise
 
       const limit = pLimit(CONCURRENCY.PAGE_REQUESTS);
       const books = await Promise.all(
-        bookRows.map(elem => limit(async () => parseBookRow($, elem as cheerio.Element)))
+        bookRows.map(elem => limit(async () => parseBookRow($, elem as Element)))
       );
 
       return { books, $ };

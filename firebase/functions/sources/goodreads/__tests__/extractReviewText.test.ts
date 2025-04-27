@@ -1,4 +1,5 @@
 import * as cheerio from 'cheerio';
+import type { Element } from 'domhandler';
 import { extractReviewText } from '../data';
 
 describe('extractReviewText', () => {
@@ -15,8 +16,8 @@ describe('extractReviewText', () => {
   </table>
 </body>
 </html>`;
-    const $ = cheerio.load(html) as cheerio.CheerioAPI;
-    const elem = $('.field.review')[0] as cheerio.Element;
+    const $ = cheerio.load(html);
+    const elem = $('.field.review')[0] as Element;
     expect(extractReviewText($, elem)).toBe('This is a review');
   });
 
@@ -33,8 +34,8 @@ describe('extractReviewText', () => {
   </table>
 </body>
 </html>`;
-    const $ = cheerio.load(html) as cheerio.CheerioAPI;
-    const elem = $('.field.review')[0] as cheerio.Element;
+    const $ = cheerio.load(html);
+    const elem = $('.field.review')[0] as Element;
     expect(extractReviewText($, elem)).toBe('Another review');
   });
 
@@ -53,8 +54,8 @@ describe('extractReviewText', () => {
   </table>
 </body>
 </html>`;
-    const $ = cheerio.load(html) as cheerio.CheerioAPI;
-    const elem = $('.field.review')[0] as cheerio.Element;
+    const $ = cheerio.load(html);
+    const elem = $('.field.review')[0] as Element;
     expect(extractReviewText($, elem)).toBe('Review with spaces');
   });
 
@@ -69,8 +70,8 @@ describe('extractReviewText', () => {
   </table>
 </body>
 </html>`;
-    const $ = cheerio.load(html) as cheerio.CheerioAPI;
-    const elem = $('.field.review')[0] as cheerio.Element;
+    const $ = cheerio.load(html);
+    const elem = $('.field.review')[0] as Element;
     expect(extractReviewText($, elem)).toBe('');
   });
 
@@ -89,8 +90,8 @@ describe('extractReviewText', () => {
   </table>
 </body>
 </html>`;
-    const $ = cheerio.load(html) as cheerio.CheerioAPI;
-    const elem = $('.field.review')[0] as cheerio.Element;
+    const $ = cheerio.load(html);
+    const elem = $('.field.review')[0] as Element;
     expect(extractReviewText($, elem)).toBe('Nested review text');
   });
 });
