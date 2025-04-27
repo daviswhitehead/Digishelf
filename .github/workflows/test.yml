@@ -1,9 +1,9 @@
-name: Test
+name: Remote CI
 
 on:
-  push:    # <- triggers on *any* push, any branch
-  pull_request:   # <- triggers on *any* PR to any branch
-  workflow_dispatch:  # <- allows manual trigger
+  push: # <- triggers on *any* push, any branch
+  pull_request: # <- triggers on *any* PR to any branch
+  workflow_dispatch: # <- allows manual trigger
 
 jobs:
   validate:
@@ -18,15 +18,15 @@ jobs:
         with:
           node-version: '22'
           cache: 'npm'
-      
+
       - name: 'Install root dependencies'
         run: npm ci
-  
+
       - name: 'Lint root'
         run: npm run lint
-  
+
       - name: 'Type Check root'
-          run: npm run type-check
+        run: npm run type-check
 
   test:
     runs-on: ubuntu-latest
@@ -42,7 +42,7 @@ jobs:
           ls -R
       - name: debug2
         run: |
-            echo "Running inside: $(pwd)"
+          echo "Running inside: $(pwd)"
         working-directory: ${{ matrix.package }}
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -53,9 +53,9 @@ jobs:
 
       - name: debug
         run: |
-            echo "Running inside: $(pwd)"
+          echo "Running inside: $(pwd)"
         working-directory: ${{ matrix.package }}
-      
+
       - name: Install dependencies
         run: cd app && npm ci
         working-directory: ${{ matrix.package }}
