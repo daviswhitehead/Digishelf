@@ -38,7 +38,8 @@ jobs:
         with:
           node-version: '22'
           cache: 'npm'
-          cache-dependency-path: ${{ matrix.package }}/package-lock.json
+          cache-dependency-path: package-lock.json
+        working-directory: ${{ matrix.package }}
 
       - name: debug
         run: |
