@@ -1,5 +1,6 @@
 name: CI
 
+# Continuous Integration workflow for Digishelf
 on:
   push:
     branches: [ main ]
