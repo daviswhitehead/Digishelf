@@ -93,4 +93,4 @@ describe('extractReviewText', () => {
     const elem = $('.field.review')[0] as cheerio.Element;
     expect(extractReviewText($, elem)).toBe('Nested review text');
   });
-}); 
+});

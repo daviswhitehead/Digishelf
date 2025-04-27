@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, Pressable, StyleSheet, Image } from "react-native";
-import Icon from "react-native-vector-icons/Ionicons";
-import { useRouter } from "next/router";
-import { doc, getDoc } from "firebase/firestore";
-import { db, functions } from "../utils/firebase";
-import { useUser } from "../utils/useUser";
-import { httpsCallable } from "firebase/functions";
+import React, { useState, useEffect } from 'react';
+import { View, Text, Pressable, StyleSheet, Image } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { useRouter } from 'next/router';
+import { doc, getDoc } from 'firebase/firestore';
+import { db, functions } from '../utils/firebase';
+import { useUser } from '../utils/useUser';
+import { httpsCallable } from 'firebase/functions';
 
 const SidePanel = ({ isVisible, onClose, title, subtitle, scrollPosition, userId, shelfId }) => {
   const router = useRouter();
@@ -19,14 +19,14 @@ const SidePanel = ({ isVisible, onClose, title, subtitle, scrollPosition, userId
   useEffect(() => {
     const fetchUserData = async () => {
       if (!userId) return;
-      
+
       try {
-        const userDoc = await getDoc(doc(db, "users", userId));
+        const userDoc = await getDoc(doc(db, 'users', userId));
         if (userDoc.exists()) {
           setUserData(userDoc.data());
         }
       } catch (error) {
-        console.error("Error fetching user data:", error);
+        console.error('Error fetching user data:', error);
       }
     };
 
@@ -55,31 +55,25 @@ const SidePanel = ({ isVisible, onClose, title, subtitle, scrollPosition, userId
     setTimeout(() => setShowToast(false), 3000);
   };
 
-  const handleNavigation = (path) => {
+  const handleNavigation = path => {
     router.push(path);
     onClose();
   };
 
   return (
-    <View
-      style={[styles.container, isVisible ? styles.visible : styles.hidden]}
-    >
+    <View style={[styles.container, isVisible ? styles.visible : styles.hidden]}>
       {/* Header - Matching ShelfHeader style */}
       <View style={styles.header}>
         <View style={styles.headerContent}>
           {/* Close Button */}
           <Pressable onPress={onClose} style={styles.iconButton}>
-            <Icon name="close-outline" size={24} color="#FFFFFF" />
+            <Icon name='close-outline' size={24} color='#FFFFFF' />
           </Pressable>
 
           {/* Title and Subtitle */}
           <View style={styles.textContainer}>
             <Text style={styles.title}>{title}</Text>
-            <Text 
-              style={styles.subtitle}
-              numberOfLines={1}
-              ellipsizeMode="tail"
-            >
+            <Text style={styles.subtitle} numberOfLines={1} ellipsizeMode='tail'>
               {subtitle}
             </Text>
           </View>
@@ -87,112 +81,90 @@ const SidePanel = ({ isVisible, onClose, title, subtitle, scrollPosition, userId
 
         {/* Progress Bar - Matching ShelfHeader */}
         <View style={styles.scrollBarContainer}>
-          <View
-            style={[styles.scrollBarIndicator, { width: `${scrollPosition}%` }]}
-          />
+          <View style={[styles.scrollBarIndicator, { width: `${scrollPosition}%` }]} />
         </View>
       </View>
 
       {/* Panel Content */}
       <View style={styles.content}>
         {/* User Profile - Updated */}
-        <Pressable 
-          style={styles.profileSection}
-          onPress={handleProfileClick}
-        >
+        <Pressable style={styles.profileSection} onPress={handleProfileClick}>
           <View style={styles.profileContainer}>
             {userData?.photoURL ? (
-              <Image
-                source={{ uri: userData.photoURL }}
-                style={styles.profileImage}
-              />
+              <Image source={{ uri: userData.photoURL }} style={styles.profileImage} />
             ) : (
               <View style={styles.profileImagePlaceholder}>
-                <Icon name="person" size={40} color="#FFFFFF" />
+                <Icon name='person' size={40} color='#FFFFFF' />
               </View>
             )}
-            <Text style={styles.profileName}>
-              {userData?.displayName || "Loading..."}
-            </Text>
+            <Text style={styles.profileName}>{userData?.displayName || 'Loading...'}</Text>
           </View>
         </Pressable>
 
         {/* Menu Items */}
         <View style={styles.menuSection}>
-          <Pressable 
-            style={({ pressed }) => [
-              styles.menuItem,
-              pressed && styles.menuItemPressed
-            ]}
+          <Pressable
+            style={({ pressed }) => [styles.menuItem, pressed && styles.menuItemPressed]}
             onPress={handleShare}
           >
-            <Icon name="share-outline" size={24} color="#FFFFFF" />
+            <Icon name='share-outline' size={24} color='#FFFFFF' />
             <Text style={styles.menuText}>Share</Text>
           </Pressable>
-          
-          <Pressable 
-            style={({ pressed }) => [
-              styles.menuItem,
-              pressed && styles.menuItemPressed
-            ]}
+
+          <Pressable
+            style={({ pressed }) => [styles.menuItem, pressed && styles.menuItemPressed]}
             onPress={handleComingSoon}
           >
-            <Icon name="search-outline" size={24} color="#FFFFFF" />
+            <Icon name='search-outline' size={24} color='#FFFFFF' />
             <Text style={styles.menuText}>Search</Text>
           </Pressable>
 
-          <Pressable 
-            style={({ pressed }) => [
-              styles.menuItem,
-              pressed && styles.menuItemPressed
-            ]}
+          <Pressable
+            style={({ pressed }) => [styles.menuItem, pressed && styles.menuItemPressed]}
             onPress={handleComingSoon}
           >
-            <Icon name="filter-outline" size={24} color="#FFFFFF" />
+            <Icon name='filter-outline' size={24} color='#FFFFFF' />
             <Text style={styles.menuText}>Filter</Text>
           </Pressable>
 
-          <Pressable 
-            style={({ pressed }) => [
-              styles.menuItem,
-              pressed && styles.menuItemPressed
-            ]}
+          <Pressable
+            style={({ pressed }) => [styles.menuItem, pressed && styles.menuItemPressed]}
             onPress={handleComingSoon}
           >
-            <Icon name="swap-vertical-outline" size={24} color="#FFFFFF" />
+            <Icon name='swap-vertical-outline' size={24} color='#FFFFFF' />
             <Text style={styles.menuText}>Sort</Text>
           </Pressable>
 
-          <Pressable 
+          <Pressable
             style={({ pressed }) => [
               styles.menuItem,
               pressed && styles.menuItemPressed,
-              isRefreshing && styles.menuItemDisabled
+              isRefreshing && styles.menuItemDisabled,
             ]}
             onPress={async () => {
               console.log('Debug - shelfId:', shelfId); // Debug log
-              
+
               if (!shelfId) {
                 setToastMessage('No shelf ID available. Please try again.');
                 setShowToast(true);
                 setTimeout(() => setShowToast(false), 3000);
                 return;
               }
-              
+
               if (!currentUser) {
                 setToastMessage('Please log in to refresh the shelf.');
                 setShowToast(true);
                 setTimeout(() => setShowToast(false), 3000);
                 return;
               }
-              
+
               setIsRefreshing(true);
               try {
                 console.log('Debug - Making refresh call with:', { shelfId, auth: currentUser }); // Debug log
                 const refreshShelf = httpsCallable(functions, 'refreshShelf');
                 const result = await refreshShelf({
                   shelfId: shelfId,
-                  auth: currentUser
+                  auth: currentUser,
                 });
                 console.log('Debug - Refresh result:', result); // Log the result
                 setToastMessage('Shelf refreshed successfully!');
@@ -202,7 +174,7 @@ const SidePanel = ({ isVisible, onClose, title, subtitle, scrollPosition, userId
                 router.reload();
               } catch (error) {
                 console.error('Failed to refresh shelf:', error);
-                const errorMessage = error.message?.includes('unauthenticated') 
+                const errorMessage = error.message?.includes('unauthenticated')
                   ? 'Please log in to refresh the shelf.'
                   : 'Failed to refresh shelf. Please try again.';
                 setToastMessage(errorMessage);
@@ -214,20 +186,17 @@ const SidePanel = ({ isVisible, onClose, title, subtitle, scrollPosition, userId
             }}
             disabled={isRefreshing || !shelfId || !currentUser}
           >
-            <Icon name="refresh-outline" size={24} color={currentUser ? "#FFFFFF" : "#666666"} />
+            <Icon name='refresh-outline' size={24} color={currentUser ? '#FFFFFF' : '#666666'} />
             <Text style={[styles.menuText, !currentUser && styles.menuTextDisabled]}>
-              {isRefreshing ? "Refreshing..." : "Refresh"}
+              {isRefreshing ? 'Refreshing...' : 'Refresh'}
             </Text>
           </Pressable>
 
-          <Pressable 
-            style={({ pressed }) => [
-              styles.menuItem,
-              pressed && styles.menuItemPressed
-            ]}
+          <Pressable
+            style={({ pressed }) => [styles.menuItem, pressed && styles.menuItemPressed]}
             onPress={handleComingSoon}
           >
-            <Icon name="settings-outline" size={24} color="#FFFFFF" />
+            <Icon name='settings-outline' size={24} color='#FFFFFF' />
             <Text style={styles.menuText}>Settings</Text>
           </Pressable>
         </View>
@@ -236,47 +205,36 @@ const SidePanel = ({ isVisible, onClose, title, subtitle, scrollPosition, userId
       {/* Bottom Navigation Section */}
       <View style={styles.bottomSection}>
         {/* Current User Profile */}
-        <Pressable 
+        <Pressable
           style={styles.currentUserProfile}
           onPress={() => handleNavigation(`/${currentUser?.uid}`)}
         >
           <View style={styles.profileContainer}>
             {currentUser?.photoURL ? (
-              <Image
-                source={{ uri: currentUser.photoURL }}
-                style={styles.profileImage}
-              />
+              <Image source={{ uri: currentUser.photoURL }} style={styles.profileImage} />
             ) : (
               <View style={styles.profileImagePlaceholder}>
-                <Icon name="person" size={40} color="#FFFFFF" />
+                <Icon name='person' size={40} color='#FFFFFF' />
               </View>
             )}
-            <Text style={styles.profileName}>
-              {currentUser?.displayName || "Loading..."}
-            </Text>
+            <Text style={styles.profileName}>{currentUser?.displayName || 'Loading...'}</Text>
           </View>
         </Pressable>
-        
+
         {/* Navigation Links */}
-        <Pressable 
-          style={({ pressed }) => [
-            styles.navItem,
-            pressed && styles.menuItemPressed
-          ]}
+        <Pressable
+          style={({ pressed }) => [styles.navItem, pressed && styles.menuItemPressed]}
           onPress={() => handleNavigation(`/${currentUser?.uid}/shelves`)}
         >
-          <Icon name="book-outline" size={24} color="#FFFFFF" />
+          <Icon name='book-outline' size={24} color='#FFFFFF' />
           <Text style={styles.menuText}>Shelves</Text>
         </Pressable>
 
-        <Pressable 
-          style={({ pressed }) => [
-            styles.navItem,
-            pressed && styles.menuItemPressed
-          ]}
+        <Pressable
+          style={({ pressed }) => [styles.navItem, pressed && styles.menuItemPressed]}
           onPress={() => handleNavigation(`/${currentUser?.uid}/integrations`)}
         >
-          <Icon name="link-outline" size={24} color="#FFFFFF" />
+          <Icon name='link-outline' size={24} color='#FFFFFF' />
           <Text style={styles.menuText}>Integrations</Text>
         </Pressable>
       </View>
@@ -293,15 +251,15 @@ const SidePanel = ({ isVisible, onClose, title, subtitle, scrollPosition, userId
 
 const styles = StyleSheet.create({
   container: {
-    position: "fixed",
+    position: 'fixed',
     top: 0,
     left: 0,
-    height: "100vh",
+    height: '100vh',
     width: 350,
-    backgroundColor: "#1C1C1C",
+    backgroundColor: '#1C1C1C',
     zIndex: 2000,
     transform: [{ translateX: -350 }],
-    transition: "transform 0.3s ease-in-out",
+    transition: 'transform 0.3s ease-in-out',
   },
   visible: {
     transform: [{ translateX: 0 }],
@@ -313,24 +271,24 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   headerContent: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 8,
   },
   textContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     marginLeft: 8,
   },
   title: {
-    color: "white",
+    color: 'white',
     fontSize: 20,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     flexShrink: 0,
   },
   subtitle: {
-    color: "gray",
+    color: 'gray',
     fontSize: 20,
     marginLeft: 4,
     flexShrink: 1,
@@ -340,16 +298,16 @@ const styles = StyleSheet.create({
   iconButton: {
     width: 36,
     height: 36,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   scrollBarContainer: {
     height: 4,
-    backgroundColor: "white",
+    backgroundColor: 'white',
   },
   scrollBarIndicator: {
-    height: "100%",
-    backgroundColor: "#EAB308",
+    height: '100%',
+    backgroundColor: '#EAB308',
   },
   content: {
     flex: 1,
@@ -387,12 +345,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   menuItem: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingVertical: 12,
   },
   menuText: {
-    color: "#FFFFFF",
+    color: '#FFFFFF',
     fontSize: 16,
     marginLeft: 12,
   },
@@ -455,9 +413,8 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   menuTextDisabled: {
-    color: "#666666",
+    color: '#666666',
   },
 });
 
 export default SidePanel;
-

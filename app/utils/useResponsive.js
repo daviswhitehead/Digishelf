@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import { useWindowDimensions } from 'react-native';
+import { useWindowDimensions as _useWindowDimensions } from 'react-native';
 
 export const breakpoints = {
   mobile: 768,
   tablet: 1024,
-  desktop: 1280
+  desktop: 1280,
 };
 
 export const useResponsive = () => {
@@ -13,11 +13,11 @@ export const useResponsive = () => {
 
   useEffect(() => {
     const handleResize = () => setWidth(window.innerWidth);
-    
+
     setWidth(window.innerWidth);
     setIsMounted(true);
     window.addEventListener('resize', handleResize);
-    
+
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
@@ -27,7 +27,7 @@ export const useResponsive = () => {
       isMobile: false,
       isTablet: false,
       isDesktop: false,
-      isLoading: true
+      isLoading: true,
     };
   }
 
@@ -36,6 +36,6 @@ export const useResponsive = () => {
     isMobile: width < breakpoints.mobile,
     isTablet: width >= breakpoints.mobile && width < breakpoints.tablet,
     isDesktop: width >= breakpoints.tablet,
-    isLoading: false
+    isLoading: false,
   };
-}; 
+};

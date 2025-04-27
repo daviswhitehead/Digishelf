@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Image } from "react-native";
-import { SPACING } from "../constants/layout";
-import Rating from "./Rating";
-import Review from "./Review";
-import { shadowColor } from "../utils/colors";
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, Image } from 'react-native';
+import { SPACING } from '../constants/layout';
+import Rating from './Rating';
+import Review from './Review';
+import { shadowColor } from '../utils/colors';
 
-const getContrastColor = (hexColor) => {
+const getContrastColor = hexColor => {
   // Ensure the hexColor is valid and has 6 characters
-  if (!hexColor || hexColor.length !== 7 || hexColor[0] !== "#") {
-    return "#000000"; // Default to black if invalid
+  if (!hexColor || hexColor.length !== 7 || hexColor[0] !== '#') {
+    return '#000000'; // Default to black if invalid
   }
 
   // Convert hex to RGB
@@ -20,17 +20,15 @@ const getContrastColor = (hexColor) => {
   const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
 
   // Return white for dark backgrounds, black for light backgrounds
-  return luminance > 0.5 ? "#000000" : "#FFFFFF";
+  return luminance > 0.5 ? '#000000' : '#FFFFFF';
 };
 
 const BookCard = ({ book, cardWidth, margin }) => {
   const [imageHeight, setImageHeight] = useState(null);
   const backgroundColor = book.primaryColor
     ? `${book.primaryColor}E6` // Add 90% opacity (E6 in hex)
-    : "#f8f8f8";
-  const textColor = book.primaryColor
-    ? getContrastColor(book.primaryColor)
-    : "#000";
+    : '#f8f8f8';
+  const textColor = book.primaryColor ? getContrastColor(book.primaryColor) : '#000';
 
   useEffect(() => {
     if (book.coverImage) {
@@ -69,18 +67,16 @@ const BookCard = ({ book, cardWidth, margin }) => {
           <Image
             source={{ uri: book.coverImage }}
             style={[styles.coverImage, { height: imageHeight }]}
-            resizeMode="cover"
+            resizeMode='cover'
           />
         )}
       </View>
 
       {/* Book Details */}
-      {(book.userRating !== null || book.userReview !== "") && (
+      {(book.userRating !== null || book.userReview !== '') && (
         <View style={styles.detailsContainer}>
           {book.userRating !== null && <Rating rating={book.userRating} />}
-          {book.userReview !== "" && (
-            <Review review={book.userReview} color={textColor} />
-          )}
+          {book.userReview !== '' && <Review review={book.userReview} color={textColor} />}
         </View>
       )}
     </View>
@@ -90,9 +86,9 @@ const BookCard = ({ book, cardWidth, margin }) => {
 const styles = StyleSheet.create({
   bookCard: {
     borderRadius: 10,
-    overflow: "hidden",
+    overflow: 'hidden',
     borderWidth: 0.1,
-    borderColor: "#374151",
+    borderColor: '#374151',
     shadowColor: shadowColor,
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 1 },
@@ -103,7 +99,7 @@ const styles = StyleSheet.create({
     padding: SPACING.IMAGE_PADDING,
   },
   coverImage: {
-    width: "100%", // Fixed width
+    width: '100%', // Fixed width
     borderRadius: 10,
   },
   detailsContainer: {

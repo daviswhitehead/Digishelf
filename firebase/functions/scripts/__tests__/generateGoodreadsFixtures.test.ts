@@ -2,7 +2,7 @@ import { sanitizeResponse, addMetadata } from '../generateGoodreadsFixtures';
 
 // Import the ShelfId type and SHELF_IDS constant
 import { SHELF_IDS } from '../generateGoodreadsFixtures';
-type ShelfId = typeof SHELF_IDS[keyof typeof SHELF_IDS];
+type ShelfId = (typeof SHELF_IDS)[keyof typeof SHELF_IDS];
 
 describe('sanitizeResponse', () => {
   it('removes sensitive information from HTML', () => {
@@ -108,4 +108,4 @@ describe('addMetadata', () => {
     expect(withMetadata).not.toContain('Page:');
     expect(withMetadata).toContain('Shelf ID: read');
   });
-}); 
+});

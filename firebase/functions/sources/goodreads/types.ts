@@ -1,7 +1,7 @@
-import { Timestamp } from 'firebase-admin/firestore';
+import { Timestamp as _Timestamp } from 'firebase-admin/firestore';
 import { Timestamps } from '../../shared/types';
-import type { CheerioAPI } from 'cheerio/lib/load';
-import type { Element } from 'domhandler';
+import { CheerioAPI as _CheerioAPI } from 'cheerio';
+import { Element as _Element } from 'cheerio';
 
 export interface GoodreadsBook {
   title: string;
@@ -37,4 +37,4 @@ export interface GoodreadsIntegrationData extends Timestamps {
 export interface PageResult {
   books: GoodreadsBook[];
   $: ReturnType<typeof import('cheerio').load>;
-} 
+}

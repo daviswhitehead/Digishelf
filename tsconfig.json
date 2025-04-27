@@ -24,15 +24,6 @@
     }
   },
   "compileOnSave": true,
-  "include": [
-    "app/**/*",
-    "firebase/functions/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "**/node_modules",
-    "**/lib",
-    "**/dist",
-    "**/.next"
-  ]
-} 
+  "include": ["app/**/*", "firebase/functions/**/*"],
+  "exclude": ["node_modules", "**/node_modules", "**/lib", "**/dist", "**/.next"]
+}

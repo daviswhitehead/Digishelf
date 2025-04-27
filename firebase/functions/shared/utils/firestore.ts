@@ -1,4 +1,4 @@
-import { Query, WriteBatch, QueryDocumentSnapshot, getFirestore } from "firebase-admin/firestore";
+import { Query, WriteBatch, QueryDocumentSnapshot, getFirestore } from 'firebase-admin/firestore';
 
 export async function processBatch(
   query: Query,
@@ -33,4 +33,4 @@ export async function processBatch(
 
   await Promise.all(batches.map(batch => batch.commit()));
   console.log(`${description}: Completed successfully`);
-} 
+}

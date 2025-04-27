@@ -4,10 +4,7 @@
  * @param operation The async operation to time
  * @returns The result of the operation
  */
-export async function withTiming<T>(
-  label: string,
-  operation: () => Promise<T>
-): Promise<T> {
+export async function withTiming<T>(label: string, operation: () => Promise<T>): Promise<T> {
   console.time(label);
   try {
     const result = await operation();
@@ -17,4 +14,4 @@ export async function withTiming<T>(
     console.timeEnd(label);
     throw error;
   }
-} 
+}

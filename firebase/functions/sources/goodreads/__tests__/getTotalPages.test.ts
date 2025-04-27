@@ -35,4 +35,4 @@ describe('getTotalPages', () => {
     const $ = cheerio.load(html);
     expect(getTotalPages($)).toBe(2);
   });
-}); 
+});

@@ -18,4 +18,4 @@ if (typeof document !== 'undefined') {
 
   // Inject stylesheet
   document.head.appendChild(style);
-} 
+}

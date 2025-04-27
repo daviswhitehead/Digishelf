@@ -1,27 +1,24 @@
-import React, { useState, useEffect, useRef } from "react";
-import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
-import { useResponsive } from "../../../utils/useResponsive";
-import {
-  getResponsiveValues,
-  calculateTotalWidth,
-} from "../../../utils/layoutUtils";
-import { fetchItemsByShelfId } from "../../../utils/firestoreUtils";
-import { auth, db, functions } from "../../../utils/firebase";
+import React, { useState, useEffect, useRef } from 'react';
+import { View, StyleSheet, Text, TouchableOpacity as _TouchableOpacity } from 'react-native';
+import { useResponsive } from '../../../utils/useResponsive';
+import { getResponsiveValues, calculateTotalWidth } from '../../../utils/layoutUtils';
+import { fetchItemsByShelfId } from '../../../utils/firestoreUtils';
+import { auth, db, functions } from '../../../utils/firebase';
 import {
   doc,
   getDoc,
-  updateDoc,
+  updateDoc as _updateDoc,
   writeBatch,
   serverTimestamp,
-} from "firebase/firestore";
-import { httpsCallable } from "firebase/functions";
-import BookCard from "../../../components/BookCard";
-import ShelfHeader from "../../../components/ShelfHeader";
-import QRCodeComponent from "../../../components/QRCode";
-import { useRouter } from "next/router";
-import ColorThief from "colorthief";
-import { throttle, debounce } from "lodash"; // Import lodash for throttling and debouncing
-import SidePanel from "../../../components/SidePanel"; // Add this import
+} from 'firebase/firestore';
+import { httpsCallable } from 'firebase/functions';
+import BookCard from '../../../components/BookCard';
+import ShelfHeader from '../../../components/ShelfHeader';
+import QRCodeComponent from '../../../components/QRCode';
+import { useRouter } from 'next/router';
+import ColorThief from 'colorthief';
+import { throttle, debounce as _debounce } from 'lodash'; // Import lodash for throttling and debouncing
+import SidePanel from '../../../components/SidePanel'; // Add this import
 
 const splitIntoColumns = (data, numColumns) => {
   // Distributes data evenly across the specified number of columns
@@ -32,31 +29,29 @@ const splitIntoColumns = (data, numColumns) => {
   return columns;
 };
 
-const fetchBooksWithPrimaryColor = async (shelfId) => {
+const fetchBooksWithPrimaryColor = async shelfId => {
   const booksData = await fetchItemsByShelfId(shelfId);
   const batch = writeBatch(db); // Initialize Firestore batch
 
   const updatedBooks = await Promise.all(
-    booksData.map(async (book) => {
+    booksData.map(async book => {
       if (!book.primaryColor && book.coverImage) {
         const img = new window.Image();
-        img.crossOrigin = "Anonymous";
+        img.crossOrigin = 'Anonymous';
         img.src = book.coverImage;
 
-        const primaryColor = await new Promise((resolve) => {
+        const primaryColor = await new Promise(resolve => {
           img.onload = () => {
             const colorThief = new ColorThief();
             const dominantColor = colorThief.getColor(img);
-            const hexColor = `#${dominantColor
-              .map((c) => c.toString(16).padStart(2, "0"))
-              .join("")}`;
+            const hexColor = `#${dominantColor.map(c => c.toString(16).padStart(2, '0')).join('')}`;
             resolve(hexColor);
           };
           img.onerror = () => resolve(null); // No fallback color
         });
 
         if (primaryColor) {
-          const itemDocRef = doc(db, "items", book.id);
+          const itemDocRef = doc(db, 'items', book.id);
           batch.update(itemDocRef, {
             primaryColor,
             updatedAt: serverTimestamp(), // Use Firestore server timestamp
@@ -71,7 +66,7 @@ const fetchBooksWithPrimaryColor = async (shelfId) => {
   try {
     await batch.commit(); // Commit all batched updates
   } catch (error) {
-    console.error("Failed to commit Firestore batch:", error);
+    console.error('Failed to commit Firestore batch:', error);
   }
 
   return updatedBooks;
@@ -81,13 +76,8 @@ const BookGrid = ({ columns, cardWidth, margin }) => (
   <View style={[styles.row, { gap: margin }]}>
     {columns.map((column, index) => (
       <View key={index} style={[styles.column, { width: cardWidth }]}>
-        {column.map((book) => (
-          <BookCard
-            key={book.id}
-            book={book}
-            cardWidth={cardWidth}
-            margin={margin}
-          />
+        {column.map(book => (
+          <BookCard key={book.id} book={book} cardWidth={cardWidth} margin={margin} />
         ))}
       </View>
     ))}
@@ -104,13 +94,13 @@ export default function Shelf() {
   const [scrollPosition, setScrollPosition] = useState(0);
   const [isPanelVisible, setIsPanelVisible] = useState(false); // Track SidePanel visibility
   const { width, isLoading } = useResponsive();
-  const [currentUrl, setCurrentUrl] = useState("");
+  const [currentUrl, setCurrentUrl] = useState('');
   const [shelfDetails, setShelfDetails] = useState({
-    displayName: "",
-    sourceDisplayName: "",
-    userId: "",
+    displayName: '',
+    sourceDisplayName: '',
+    userId: '',
   });
-  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [_isRefreshing, setIsRefreshing] = useState(false);
 
   const isAutoscrolling = useRef(false); // Track if autoscroll is active
   const throttledUpdateScrollPosition = useRef(
@@ -151,7 +141,7 @@ export default function Shelf() {
 
   // Throttled scroll handler for manual scrolling
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       setCurrentUrl(window.location.href);
 
       const handleScroll = throttle(() => {
@@ -166,10 +156,10 @@ export default function Shelf() {
         setScrollPosition(Math.min(Math.max(position, 0), 100));
       }, 100); // Throttle to run every 100ms
 
-      window.addEventListener("scroll", handleScroll);
+      window.addEventListener('scroll', handleScroll);
 
       return () => {
-        window.removeEventListener("scroll", handleScroll);
+        window.removeEventListener('scroll', handleScroll);
         handleScroll.cancel();
       };
     }
@@ -180,25 +170,25 @@ export default function Shelf() {
 
     const fetchShelfDetails = async () => {
       try {
-        const shelfDoc = await getDoc(doc(db, "shelves", shelfId));
+        const shelfDoc = await getDoc(doc(db, 'shelves', shelfId));
         if (shelfDoc.exists()) {
           const shelfData = shelfDoc.data();
           setShelfDetails({
-            displayName: shelfData.displayName || "Shelf",
-            sourceDisplayName: shelfData.sourceDisplayName || "Unknown Source",
+            displayName: shelfData.displayName || 'Shelf',
+            sourceDisplayName: shelfData.sourceDisplayName || 'Unknown Source',
             userId: shelfData.userId,
           });
         } else {
-          throw new Error("Shelf not found.");
+          throw new Error('Shelf not found.');
         }
 
         const booksWithColors = await fetchBooksWithPrimaryColor(shelfId);
         setBooks(booksWithColors);
       } catch (err) {
-        if (err.code === "permission-denied") {
-          setError("You do not have permission to view this shelf.");
+        if (err.code === 'permission-denied') {
+          setError('You do not have permission to view this shelf.');
         } else {
-          setError("Failed to fetch shelf details or books.");
+          setError('Failed to fetch shelf details or books.');
         }
         console.error(err);
       } finally {
@@ -209,23 +199,23 @@ export default function Shelf() {
     fetchShelfDetails();
   }, [shelfId]);
 
-  const handleRefresh = async () => {
-    console.log("Current user:", auth.currentUser); // Debug log
+  const _handleRefresh = async () => {
+    console.log('Current user:', auth.currentUser); // Debug log
 
     if (!auth.currentUser) {
-      setError("You must be logged in to refresh the shelf.");
+      setError('You must be logged in to refresh the shelf.');
       return;
     }
 
     setIsRefreshing(true);
     try {
-      const refreshShelf = httpsCallable(functions, "refreshShelf");
+      const refreshShelf = httpsCallable(functions, 'refreshShelf');
       await refreshShelf({ shelfId });
       const booksWithColors = await fetchBooksWithPrimaryColor(shelfId);
       setBooks(booksWithColors);
     } catch (err) {
-      console.error("Failed to refresh shelf:", err);
-      setError("Failed to refresh shelf.");
+      console.error('Failed to refresh shelf:', err);
+      setError('Failed to refresh shelf.');
     } finally {
       setIsRefreshing(false);
     }
@@ -235,9 +225,11 @@ export default function Shelf() {
   if (error) return <Text>{error}</Text>;
   if (books.length === 0) return <Text>No books available.</Text>;
 
-  const { columns: numColumns, cardWidth, margin } = getResponsiveValues(
-    isPanelVisible ? width - 350 : width
-  );
+  const {
+    columns: numColumns,
+    cardWidth,
+    margin,
+  } = getResponsiveValues(isPanelVisible ? width - 350 : width);
   const columns = splitIntoColumns(books, numColumns);
   const totalWidth = calculateTotalWidth(numColumns, cardWidth, margin);
 
@@ -265,7 +257,7 @@ export default function Shelf() {
       <View
         style={[
           styles.contentContainer,
-          { maxWidth: totalWidth, marginHorizontal: "auto" },
+          { maxWidth: totalWidth, marginHorizontal: 'auto' },
           isPanelVisible && styles.contentContainerShift,
         ]}
       >
@@ -278,35 +270,35 @@ export default function Shelf() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    position: "relative",
+    position: 'relative',
     marginVertical: 20,
-    backgroundColor: "#000000",
-    minHeight: "100vh",
-    transition: "all 0.3s ease-in-out", // Smooth transition for all changes
+    backgroundColor: '#000000',
+    minHeight: '100vh',
+    transition: 'all 0.3s ease-in-out', // Smooth transition for all changes
   },
   containerShift: {
     marginLeft: 350, // Space for the side panel
-    width: "calc(100% - 350px)", // Reduce width by panel width
+    width: 'calc(100% - 350px)', // Reduce width by panel width
   },
   contentContainer: {
-    width: "100%",
+    width: '100%',
     paddingHorizontal: 20,
-    transition: "all 0.3s ease-in-out", // Smooth transition for content
+    transition: 'all 0.3s ease-in-out', // Smooth transition for content
   },
   contentContainerShift: {
-    width: "calc(100% - 350px)", // Adjust width when panel is open
+    width: 'calc(100% - 350px)', // Adjust width when panel is open
   },
   row: {
-    flexDirection: "row",
-    justifyContent: "center",
-    flexWrap: "nowrap",
+    flexDirection: 'row',
+    justifyContent: 'center',
+    flexWrap: 'nowrap',
   },
   column: {
     flexShrink: 0,
   },
   url: {
-    color: "#FFFFFF",
+    color: '#FFFFFF',
     padding: 20,
     fontSize: 14,
-  }
+  },
 });

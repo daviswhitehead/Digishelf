@@ -1,4 +1,4 @@
-const { Vibrant } = require("node-vibrant/node");
+const { Vibrant } = require('node-vibrant/node');
 
 /**
  * Gets the primary color of an image using the Vibrant library.

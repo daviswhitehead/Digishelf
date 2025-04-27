@@ -1,6 +1,7 @@
 # Firebase Functions
 
 ## Directory Structure
+
 ```
 /functions
   ├── sources/        # Source-specific implementations
@@ -29,7 +30,9 @@
 ## Directory Purposes
 
 ### `/sources`
+
 Each source (e.g., Goodreads, IMDB) has its own directory containing:
+
 - `data.js`: Data access layer for external APIs
 - `handlers.js`: Business logic and Firebase function implementations
 - `types.js`: Type definitions specific to the source
@@ -37,13 +40,17 @@ Each source (e.g., Goodreads, IMDB) has its own directory containing:
 - `__tests__/`: Tests specific to this source
 
 ### `/shared`
+
 Code shared across multiple sources:
+
 - `/types`: Common type definitions
 - `/utils`: Shared utility functions
 - `/constants`: Shared configuration and constants
 
 ### `/__tests__`
+
 Global test files:
+
 - `/integration`: Tests requiring Firebase emulator
   - End-to-end function testing
   - Firestore interaction testing
@@ -55,6 +62,7 @@ Global test files:
   - Utility function testing
 
 ### `index.js`
+
 - Exports all Cloud Functions
 - Defines function triggers and configurations
 - Routes requests to appropriate source handlers
@@ -77,6 +85,7 @@ To add a new source:
 Each source should have comprehensive tests:
 
 1. Unit Tests:
+
    - Test data transformation
    - Test utility functions
    - No external dependencies

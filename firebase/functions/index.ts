@@ -5,34 +5,17 @@ import {
   FirestoreEvent,
   QueryDocumentSnapshot,
   DocumentOptions,
-} from "firebase-functions/v2/firestore";
-import { initializeApp } from "firebase-admin/app";
-import {
-  getFirestore,
-  Firestore,
-  DocumentData,
-  WriteBatch,
-} from "firebase-admin/firestore";
-import {
-  onCall,
-  HttpsError,
-  CallableRequest,
-  CallableOptions,
-  CallableFunction,
-  CallableResponse,
-} from "firebase-functions/v2/https";
+} from 'firebase-functions/v2/firestore';
+import { initializeApp } from 'firebase-admin/app';
+import { getFirestore, Firestore, DocumentData, WriteBatch } from 'firebase-admin/firestore';
+import { onCall, CallableRequest, CallableOptions } from 'firebase-functions/v2/https';
 import {
   writeGoodreadsShelves,
   writeGoodreadsItems,
   refreshGoodreadsShelf,
-} from "./sources/goodreads/handlers";
-import { 
-  Integration, 
-  Shelf,
-  GoodreadsIntegration, 
-  GoodreadsShelf 
-} from "./shared/types";
-import { processBatch } from "./shared/utils/firestore";
+} from './sources/goodreads/handlers';
+import { GoodreadsIntegration, GoodreadsShelf } from './shared/types';
+import { processBatch } from './shared/utils/firestore';
 
 initializeApp();
 const db: Firestore = getFirestore();
@@ -42,12 +25,12 @@ type ShelfEvent = FirestoreEvent<Change<DocumentData> | undefined>;
 
 export const onIntegrationWrite = onDocumentWritten(
   {
-    document: "integrations/{integrationId}",
-    memory: "512MiB",
+    document: 'integrations/{integrationId}',
+    memory: '512MiB',
     timeoutSeconds: 60,
   },
   async (event: IntegrationEvent): Promise<null> => {
-    console.time("onIntegrationWrite");
+    console.time('onIntegrationWrite');
 
     const integrationId = event.params.integrationId;
     const after = event.data?.after?.data() as GoodreadsIntegration | undefined;
@@ -57,26 +40,21 @@ export const onIntegrationWrite = onDocumentWritten(
       return null;
     }
 
-    const sourceName = (after.displayName || "").toLowerCase();
+    const sourceName = (after.displayName || '').toLowerCase();
 
-    if (sourceName === "goodreads") {
+    if (sourceName === 'goodreads') {
       console.info(`📥 Processing Goodreads integration: ${integrationId}`);
 
       try {
-        console.time("writeGoodreadsShelves");
+        console.time('writeGoodreadsShelves');
         await writeGoodreadsShelves(integrationId, after);
-        console.timeEnd("writeGoodreadsShelves");
-        console.info(
-          `✅ Finished processing Goodreads integration: ${integrationId}`
-        );
-        console.timeEnd("onIntegrationWrite");
+        console.timeEnd('writeGoodreadsShelves');
+        console.info(`✅ Finished processing Goodreads integration: ${integrationId}`);
+        console.timeEnd('onIntegrationWrite');
         return null;
       } catch (err) {
-        console.error(
-          `🐛 Error processing Goodreads integration: ${integrationId}`,
-          err
-        );
-        console.timeEnd("onIntegrationWrite");
+        console.error(`🐛 Error processing Goodreads integration: ${integrationId}`, err);
+        console.timeEnd('onIntegrationWrite');
         return null;
       }
     }
@@ -86,12 +64,12 @@ export const onIntegrationWrite = onDocumentWritten(
 
 export const onShelfWrite = onDocumentWritten(
   {
-    document: "shelves/{shelfId}",
-    memory: "1GiB",
+    document: 'shelves/{shelfId}',
+    memory: '1GiB',
     timeoutSeconds: 180,
   },
   async (event: ShelfEvent): Promise<null> => {
-    console.time("onShelfWrite");
+    console.time('onShelfWrite');
 
     const shelfId = event.params.shelfId;
     const after = event.data?.after?.data() as GoodreadsShelf | undefined;
@@ -101,21 +79,21 @@ export const onShelfWrite = onDocumentWritten(
       return null;
     }
 
-    const sourceName = (after.sourceDisplayName || "").toLowerCase();
+    const sourceName = (after.sourceDisplayName || '').toLowerCase();
 
-    if (sourceName === "goodreads") {
+    if (sourceName === 'goodreads') {
       console.info(`📥 Processing Goodreads shelf: ${shelfId}`);
 
       try {
-        console.time("writeGoodreadsItems");
+        console.time('writeGoodreadsItems');
         await writeGoodreadsItems(shelfId, after);
-        console.timeEnd("writeGoodreadsItems");
+        console.timeEnd('writeGoodreadsItems');
         console.info(`✅ Finished processing Goodreads shelf: ${shelfId}`);
-        console.timeEnd("onShelfWrite");
+        console.timeEnd('onShelfWrite');
         return null;
       } catch (err) {
         console.error(`🐛 Error processing Goodreads shelf: ${shelfId}`, err);
-        console.timeEnd("onShelfWrite");
+        console.timeEnd('onShelfWrite');
         return null;
       }
     }
@@ -125,43 +103,34 @@ export const onShelfWrite = onDocumentWritten(
 
 export const onIntegrationDelete = onDocumentDeleted(
   {
-    document: "integrations/{integrationId}",
-    memory: "512MiB",
+    document: 'integrations/{integrationId}',
+    memory: '512MiB',
     timeoutSeconds: 60,
-  } as DocumentOptions<"integrations/{integrationId}">,
+  } as DocumentOptions<'integrations/{integrationId}'>,
   async (event: FirestoreEvent<QueryDocumentSnapshot | undefined>): Promise<void> => {
     const { integrationId } = event.params;
 
     try {
       // Delete all shelves and items associated with the integrationId
-      const shelvesQuery = db
-        .collection("shelves")
-        .where("integrationId", "==", integrationId);
-      const itemsQuery = db
-        .collection("items")
-        .where("integrationId", "==", integrationId);
+      const shelvesQuery = db.collection('shelves').where('integrationId', '==', integrationId);
+      const itemsQuery = db.collection('items').where('integrationId', '==', integrationId);
 
       await Promise.all([
         processBatch(
           shelvesQuery,
           (batch: WriteBatch, doc: QueryDocumentSnapshot) => batch.delete(doc.ref),
-          "Deleting shelves"
+          'Deleting shelves'
         ),
         processBatch(
           itemsQuery,
           (batch: WriteBatch, doc: QueryDocumentSnapshot) => batch.delete(doc.ref),
-          "Deleting items"
+          'Deleting items'
         ),
       ]);
 
-      console.log(
-        `Successfully deleted all associated data for integrationId: ${integrationId}`
-      );
+      console.log(`Successfully deleted all associated data for integrationId: ${integrationId}`);
     } catch (error) {
-      console.error(
-        `Error deleting associated data for integrationId: ${integrationId}`,
-        error
-      );
+      console.error(`Error deleting associated data for integrationId: ${integrationId}`, error);
     }
   }
 );
@@ -182,33 +151,33 @@ interface RefreshShelfResponse {
 
 const refreshShelfOptions: CallableOptions = {
   timeoutSeconds: 540,
-  memory: "1GiB",
-  region: "us-central1",
+  memory: '1GiB',
+  region: 'us-central1',
 };
 
 export const refreshShelf = onCall(
   refreshShelfOptions,
-  async (request: CallableRequest<RefreshShelfData>, response?: CallableResponse<unknown>): Promise<RefreshShelfResponse> => {
+  async (request: CallableRequest<RefreshShelfData>): Promise<RefreshShelfResponse> => {
     const data = request.data;
     const shelfId = data.shelfId;
 
     if (!shelfId) {
       return {
         success: false,
-        message: "Shelf ID is required",
+        message: 'Shelf ID is required',
       };
     }
 
     try {
       console.info(`🔄 Refresh request received for shelfId: ${shelfId}`);
       await refreshGoodreadsShelf(shelfId);
-      return { success: true, message: "Shelf refreshed successfully." };
+      return { success: true, message: 'Shelf refreshed successfully.' };
     } catch (error: unknown) {
       console.error(`❌ Error refreshing shelf: ${shelfId}`, error);
       const err = error as Error & { code?: string };
       return {
         success: false,
-        message: err.message || "Failed to refresh shelf",
+        message: err.message || 'Failed to refresh shelf',
         error: {
           code: err.code,
           message: err.message,
@@ -217,4 +186,5 @@ export const refreshShelf = onCall(
       };
     }
   }
-); 
+);
+1;

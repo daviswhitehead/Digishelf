@@ -15,7 +15,9 @@
     "build": "tsc --project ../../tsconfig.json",
     "build:watch": "tsc --project ../../tsconfig.json --watch",
     "clean": "rimraf lib",
-    "generate-fixtures": "ts-node scripts/generateGoodreadsFixtures.ts"
+    "generate-fixtures": "ts-node scripts/generateGoodreadsFixtures.ts",
+    "lint": "cd ../.. && npm run lint",
+    "format": "cd ../.. && npm run format"
   },
   "engines": {
     "node": "22"

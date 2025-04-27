@@ -5,7 +5,7 @@ import { loadFixture } from './__fixtures__/loadFixture';
 
 describe('getAllPages', () => {
   let mock: MockAdapter;
-  
+
   beforeEach(() => {
     mock = new MockAdapter(axios);
     jest.spyOn(console, 'warn').mockImplementation(() => {});
@@ -65,4 +65,4 @@ describe('getAllPages', () => {
       expect.stringContaining('429')
     );
   });
-}); 
+});

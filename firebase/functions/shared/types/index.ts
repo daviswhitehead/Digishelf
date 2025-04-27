@@ -46,4 +46,4 @@ export interface GoodreadsItem extends Timestamps {
   dominantColors?: {
     [key: string]: string;
   };
-} 
+}

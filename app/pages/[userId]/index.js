@@ -1,16 +1,10 @@
-import React from "react";
-import { useRouter } from "next/router";
-import { auth } from "../../utils/firebase";
-import { signOut } from "firebase/auth";
-import { useUser } from "../../utils/useUser";
-import Sidebar from "../../components/Sidebar";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-} from "react-native";
+import React from 'react';
+import { useRouter } from 'next/router';
+import { auth } from '../../utils/firebase';
+import { signOut } from 'firebase/auth';
+import { useUser } from '../../utils/useUser';
+import Sidebar from '../../components/Sidebar';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 
 export default function Profile() {
   const router = useRouter();
@@ -19,7 +13,7 @@ export default function Profile() {
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      router.push("/login");
+      router.push('/login');
     } catch (err) {
       console.error(err.message);
     }
@@ -57,8 +51,8 @@ export default function Profile() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: "row", // Align sidebar and content side by side
-    backgroundColor: "#000",
+    flexDirection: 'row', // Align sidebar and content side by side
+    backgroundColor: '#000',
   },
   contentWrapper: {
     flex: 1, // Allow the content to take up the remaining space
@@ -68,34 +62,34 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   loadingText: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 18,
   },
   title: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 24,
     marginBottom: 20,
   },
   jsonContainer: {
-    backgroundColor: "#f4f4f4",
+    backgroundColor: '#f4f4f4',
     padding: 10,
     borderRadius: 5,
-    overflow: "hidden",
+    overflow: 'hidden',
   },
   jsonText: {
-    color: "#000",
-    fontFamily: "monospace",
+    color: '#000',
+    fontFamily: 'monospace',
   },
   logoutButton: {
     marginTop: 20,
     paddingVertical: 10,
     paddingHorizontal: 20,
-    backgroundColor: "#ff4d4d",
+    backgroundColor: '#ff4d4d',
     borderRadius: 5,
   },
   logoutButtonText: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 16,
-    textAlign: "center",
+    textAlign: 'center',
   },
 });

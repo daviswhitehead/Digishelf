@@ -1,17 +1,19 @@
+/* global jest, afterEach, afterAll */
+
+const { resetDb } = require('./__tests__/test-utils');
+
 // Increase the default timeout
-jest.setTimeout(10000);
+jest.setTimeout(30000);
 
 // Ensure cleanup after each test
-afterEach(() => {
+afterEach(async () => {
   jest.clearAllMocks();
   jest.clearAllTimers();
 });
 
 // Force cleanup after all tests
-afterAll(done => {
-  // Clear any remaining timers
-  jest.clearAllTimers();
-  // Clear any remaining mocks
+afterAll(async () => {
+  await resetDb();
   jest.clearAllMocks();
-  done();
-}); 
+  jest.clearAllTimers();
+});

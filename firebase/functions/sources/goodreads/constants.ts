@@ -1,6 +1,6 @@
 export const SHELF_SLUG_MAP: Record<string, string> = {
-  'All': 'all',
-  'Read': 'read',
+  All: 'all',
+  Read: 'read',
   'Currently Reading': 'currently-reading',
   'Want to Read': 'to-read',
 };
@@ -21,4 +21,4 @@ interface ConcurrencyConfig {
 export const CONCURRENCY: ConcurrencyConfig = {
   PAGE_REQUESTS: 5, // Maximum concurrent page requests
   COLOR_PROCESSING: 3, // Maximum concurrent color processing operations
-}; 
+};

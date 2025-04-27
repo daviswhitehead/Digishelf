@@ -1,3 +1,5 @@
+/* global jest, afterEach */
+
 const { initializeApp } = require('firebase-admin/app');
 const { getFirestore } = require('firebase-admin/firestore');
 
@@ -23,9 +25,9 @@ afterEach(async () => {
   for (const collection of collections) {
     const snapshot = await db.collection(collection).get();
     const batch = db.batch();
-    snapshot.docs.forEach((doc) => {
+    snapshot.docs.forEach(doc => {
       batch.delete(doc.ref);
     });
     await batch.commit();
   }
-}); 
+});

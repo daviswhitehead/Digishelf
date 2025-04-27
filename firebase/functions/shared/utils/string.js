@@ -45,4 +45,4 @@ module.exports = {
   ensureProtocol,
   removeImageSizeFromUrl,
   toUrlSlug,
-}; 
+};

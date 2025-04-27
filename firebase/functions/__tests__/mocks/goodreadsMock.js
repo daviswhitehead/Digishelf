@@ -1,6 +1,6 @@
 // __tests__/mocks/goodreadsMock.js
-const mockGoodreadsResponse = (books) => {
-    return `
+const mockGoodreadsResponse = books => {
+  return `
       <html>
         <body>
           <div id="reviewPagination">
@@ -9,7 +9,9 @@ const mockGoodreadsResponse = (books) => {
             <a rel="next">next »</a>
           </div>
           <table>
-            ${books.map(book => `
+            ${books
+              .map(
+                book => `
               <tr class="bookalike review">
                 <td class="field cover">
                   <img src="${book.coverImage || 'https://example.com/cover.jpg'}" />
@@ -27,13 +29,15 @@ const mockGoodreadsResponse = (books) => {
                   <span id="freeTextreview123">${book.review || ''}</span>
                 </td>
               </tr>
-            `).join('')}
+            `
+              )
+              .join('')}
           </table>
         </body>
       </html>
     `;
-  };
-  
-  module.exports = {
-    mockGoodreadsResponse
-  };
+};
+
+module.exports = {
+  mockGoodreadsResponse,
+};

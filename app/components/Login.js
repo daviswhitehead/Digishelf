@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { useRouter } from "next/router"; // Import useRouter
-import { signInWithPopup } from "firebase/auth";
-import { auth, googleProvider, db } from "../utils/firebase";
-import { doc, setDoc, serverTimestamp, getDoc } from "firebase/firestore";
+import React, { useState } from 'react';
+import { useRouter } from 'next/router'; // Import useRouter
+import { signInWithPopup } from 'firebase/auth';
+import { auth, googleProvider, db } from '../utils/firebase';
+import { doc, setDoc, serverTimestamp, getDoc } from 'firebase/firestore';
 
 const AuthPage = () => {
   const [error, setError] = useState(null);
@@ -14,11 +14,11 @@ const AuthPage = () => {
       const user = result.user;
 
       // Extract first and last name from displayName
-      const [firstName, ...lastNameParts] = user.displayName.split(" ");
-      const lastName = lastNameParts.join(" ");
+      const [firstName, ...lastNameParts] = user.displayName.split(' ');
+      const lastName = lastNameParts.join(' ');
 
       // Create or update the user document in Firestore
-      const userDocRef = doc(db, "users", user.uid);
+      const userDocRef = doc(db, 'users', user.uid);
       const userDoc = await getDoc(userDocRef);
 
       await setDoc(
@@ -46,12 +46,12 @@ const AuthPage = () => {
   return (
     <div
       style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100vh",
-        padding: "20px",
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100vh',
+        padding: '20px',
       }}
     >
       <h1>Log in or sign up</h1>
@@ -59,20 +59,20 @@ const AuthPage = () => {
       <button
         onClick={handleGoogleLogin}
         style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: "10px 20px",
-          border: "1px solid #ccc",
-          borderRadius: "5px",
-          backgroundColor: "#fff",
-          cursor: "pointer",
-          marginTop: "20px",
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '10px 20px',
+          border: '1px solid #ccc',
+          borderRadius: '5px',
+          backgroundColor: '#fff',
+          cursor: 'pointer',
+          marginTop: '20px',
         }}
       >
-        <span style={{ marginRight: "10px" }}>🏫</span> Continue with Google
+        <span style={{ marginRight: '10px' }}>🏫</span> Continue with Google
       </button>
-      {error && <p style={{ color: "red", marginTop: "10px" }}>{error}</p>}
+      {error && <p style={{ color: 'red', marginTop: '10px' }}>{error}</p>}
     </div>
   );
 };

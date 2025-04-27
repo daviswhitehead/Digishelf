@@ -18,4 +18,4 @@ export const FIXTURES = {
   MULTI_PAGE: 'responses/multi_page.html',
   EMPTY_SHELF: 'responses/empty_shelf.html',
   SUBSEQUENT_PAGE: 'responses/subsequent_page.html',
-} as const; 
+} as const;

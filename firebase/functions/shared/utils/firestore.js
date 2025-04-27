@@ -93,4 +93,4 @@ module.exports = {
   getNewDocumentTimestamps,
   getUpdateTimestamp,
   findDocumentByFields,
-}; 
+};

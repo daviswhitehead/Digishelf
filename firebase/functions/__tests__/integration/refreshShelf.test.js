@@ -4,7 +4,7 @@ const {
   createTestIntegration,
   createTestShelf,
   callFunction,
-  createTestItem
+  createTestItem,
 } = require('../test-utils');
 const { getFirestore } = require('firebase-admin/firestore');
 const MockAdapter = require('axios-mock-adapter');
@@ -47,7 +47,7 @@ describe('refreshShelf', () => {
         updatedAt: new Date(now.getTime() - 24 * 60 * 60 * 1000),
         userId: TEST_USER_ID,
         sourceId: TEST_SOURCE_ID,
-        sourceDisplayName: 'Goodreads'
+        sourceDisplayName: 'Goodreads',
       });
 
       // 2. Mock the Goodreads API response with richer data
@@ -64,8 +64,8 @@ describe('refreshShelf', () => {
           publishedYear: 2023,
           publisher: 'Test Publisher',
           language: 'English',
-          genre: ['Fiction', 'Mystery']
-        }
+          genre: ['Fiction', 'Mystery'],
+        },
       ];
 
       mock.onGet().reply(200, mockGoodreadsResponse(mockBooks));
@@ -76,15 +76,15 @@ describe('refreshShelf', () => {
       // 4. Verify the function response
       expect(result).toEqual({
         success: true,
-        message: 'Shelf refreshed successfully.'
+        message: 'Shelf refreshed successfully.',
       });
 
       // 5. Verify the item was updated in Firestore with comprehensive checks
       const updatedItem = await db.collection('items').doc('test-item-1').get();
       expect(updatedItem.exists).toBe(true);
-      
+
       const itemData = updatedItem.data();
-      
+
       // Check that updated fields match new data
       expect(itemData.title).toBe('New Title');
       expect(itemData.author).toBe('New Author');
@@ -97,7 +97,7 @@ describe('refreshShelf', () => {
       expect(itemData.publisher).toBe('Test Publisher');
       expect(itemData.language).toBe('English');
       expect(itemData.genre).toEqual(['Fiction', 'Mystery']);
-      
+
       // Check that relationships are maintained
       expect(itemData.shelfId).toBe(TEST_SHELF_ID);
       expect(itemData.integrationId).toBe(TEST_INTEGRATION_ID);
@@ -105,12 +105,14 @@ describe('refreshShelf', () => {
       expect(itemData.sourceId).toBe(TEST_SOURCE_ID);
       expect(itemData.sourceDisplayName).toBe('Goodreads');
       expect(itemData.canonicalURL).toBe('https://www.goodreads.com/book/show/123');
-      
+
       // Check timestamps
       expect(itemData.createdAt.toDate()).toEqual(expect.any(Date));
       expect(itemData.updatedAt.toDate()).toEqual(expect.any(Date));
-      expect(itemData.createdAt.toDate().getTime()).toBeLessThan(itemData.updatedAt.toDate().getTime());
-      
+      expect(itemData.createdAt.toDate().getTime()).toBeLessThan(
+        itemData.updatedAt.toDate().getTime()
+      );
+
       // Verify the updatedAt timestamp is recent
       const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000);
       expect(itemData.updatedAt.toDate()).toBeGreaterThan(fiveMinutesAgo);
@@ -198,4 +200,4 @@ describe('refreshShelf', () => {
       // TODO: Implement test
     });
   });
-}); 
+});

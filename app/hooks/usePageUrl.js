@@ -12,7 +12,7 @@ export const usePageUrl = () => {
         setPageUrl(fullUrl);
       };
 
-      updateUrl();  // Initial URL set
+      updateUrl(); // Initial URL set
 
       router.events.on('routeChangeComplete', updateUrl);
       return () => router.events.off('routeChangeComplete', updateUrl);

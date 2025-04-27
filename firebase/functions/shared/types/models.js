@@ -42,4 +42,4 @@
  * @property {function(): Date} toDate - Converts to JavaScript Date
  * @property {number} seconds - Seconds since epoch
  * @property {number} nanoseconds - Additional precision in nanoseconds
- */ 
+ */

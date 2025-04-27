@@ -1,7 +1,8 @@
-import React, { useState } from "react";
-import { View, Text, Pressable, StyleSheet } from "react-native";
-import Icon from "react-native-vector-icons/Ionicons";
-import SidePanel from "./SidePanel";
+import React, { useState as _useState } from 'react';
+import { View, Text, Pressable, StyleSheet } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { SidePanel as _SidePanel } from './SidePanel';
+import { useRouter as _useRouter } from 'next/router';
 
 const ShelfHeader = ({
   title,
@@ -19,7 +20,7 @@ const ShelfHeader = ({
       <View style={styles.contentContainer}>
         {/* Hamburger Menu */}
         <Pressable onPress={onMenuToggle} style={styles.iconButton}>
-          <Icon name="menu-outline" size={24} color="#000000" />
+          <Icon name='menu-outline' size={24} color='#000000' />
         </Pressable>
 
         {/* Title and Subtitle */}
@@ -32,9 +33,9 @@ const ShelfHeader = ({
         <Pressable onPress={onPlayPausePress} style={styles.iconButton}>
           {({ pressed }) => (
             <Icon
-              name={isPlaying ? "pause-outline" : "play-outline"}
+              name={isPlaying ? 'pause-outline' : 'play-outline'}
               size={20}
-              color={pressed ? "#808080" : "#000000"}
+              color={pressed ? '#808080' : '#000000'}
             />
           )}
         </Pressable>
@@ -42,9 +43,7 @@ const ShelfHeader = ({
 
       {/* Horizontal Scroll Bar */}
       <View style={styles.scrollBarContainer}>
-        <View
-          style={[styles.scrollBarIndicator, { width: `${scrollPosition}%` }]}
-        />
+        <View style={[styles.scrollBarIndicator, { width: `${scrollPosition}%` }]} />
       </View>
     </View>
   );
@@ -52,38 +51,38 @@ const ShelfHeader = ({
 
 const styles = StyleSheet.create({
   container: {
-    position: "fixed",
+    position: 'fixed',
     top: 20,
     left: 20,
     zIndex: 1000,
-    height: "auto",
-    backgroundColor: "white",
+    height: 'auto',
+    backgroundColor: 'white',
     maxWidth: 350,
   },
   contentContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     paddingHorizontal: 16,
     paddingVertical: 8,
   },
   textContainer: {
     flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     marginHorizontal: 8,
     overflow: 'hidden',
   },
   title: {
-    color: "black",
+    color: 'black',
     fontSize: 20,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     flexShrink: 0,
   },
   subtitle: {
-    color: "gray",
+    color: 'gray',
     fontSize: 20,
-    fontWeight: "light",
+    fontWeight: 'light',
     marginLeft: 4,
     flexShrink: 1,
     numberOfLines: 1,
@@ -92,16 +91,16 @@ const styles = StyleSheet.create({
   iconButton: {
     width: 36,
     height: 36,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   scrollBarContainer: {
     height: 4,
-    backgroundColor: "#000000",
+    backgroundColor: '#000000',
   },
   scrollBarIndicator: {
-    height: "100%",
-    backgroundColor: "#EAB308",
+    height: '100%',
+    backgroundColor: '#EAB308',
   },
 });
 

@@ -12,4 +12,4 @@ export const typography = {
     },
   },
   // ... other text styles
-}; 
+};

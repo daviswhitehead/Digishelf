@@ -13,12 +13,7 @@ interface RetryOptions {
  */
 export async function retry<T>(
   operation: () => Promise<T>,
-  {
-    retries = 3,
-    minTimeout = 1000,
-    factor = 2,
-    onRetry = () => {},
-  }: RetryOptions = {}
+  { retries = 3, minTimeout = 1000, factor = 2, onRetry = () => {} }: RetryOptions = {}
 ): Promise<T> {
   let lastError: Error;
   let attempt = 0;
@@ -29,9 +24,9 @@ export async function retry<T>(
     } catch (error) {
       lastError = error instanceof Error ? error : new Error(String(error));
       attempt++;
-      
+
       if (attempt === retries) {
-        throw lastError;
+        throw new Error(`Failed after ${retries} attempts: ${lastError.message}`);
       }
 
       const timeout = minTimeout * Math.pow(factor, attempt - 1);
@@ -40,5 +35,5 @@ export async function retry<T>(
     }
   }
 
-  throw lastError!;
-} 
+  throw new Error(`Failed after ${retries} attempts: ${lastError!.message}`);
+}

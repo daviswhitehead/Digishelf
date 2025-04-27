@@ -5,7 +5,7 @@ import { loadFixture } from './__fixtures__/loadFixture';
 
 describe('getPageItems', () => {
   let mock: MockAdapter;
-  
+
   beforeEach(() => {
     mock = new MockAdapter(axios);
     jest.spyOn(console, 'warn').mockImplementation(() => {});
@@ -27,7 +27,7 @@ describe('getPageItems', () => {
 
     expect(result).toBeDefined();
     expect(result.books).toHaveLength(7); // Currently reading shelf has 7 books
-    
+
     // Verify first book (Wind and Truth)
     const firstBook = result.books[0];
     expect(firstBook).toMatchObject({
@@ -40,7 +40,7 @@ describe('getPageItems', () => {
     // Verify another book (Old Man's War)
     const secondBook = result.books[1];
     expect(secondBook).toMatchObject({
-      title: "Old Man's War (Old Man's War, #1)",
+      title: 'Old Man\'s War (Old Man\'s War, #1)',
       author: 'Scalzi, John',
       canonicalURL: expect.stringContaining('/book/show/36510196-old-man-s-war'),
       userRating: null, // Not rated yet
@@ -57,7 +57,7 @@ describe('getPageItems', () => {
 
     expect(result).toBeDefined();
     expect(result.books.length).toBeGreaterThan(0);
-    
+
     // Verify a rated book from the read shelf
     const ratedBook = result.books.find(book => book.userRating !== null && book.userRating > 0);
     expect(ratedBook).toBeDefined();
@@ -78,4 +78,4 @@ describe('getPageItems', () => {
     expect(result.books).toHaveLength(0);
     expect(console.warn).toHaveBeenCalledWith(`No books found on page ${pageNumber}`);
   });
-}); 
+});

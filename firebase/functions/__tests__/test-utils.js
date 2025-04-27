@@ -10,12 +10,15 @@ const db = getFirestore();
  * @param {Object} [data] - Additional user data
  */
 async function createTestUser(userId, data = {}) {
-  await db.collection('users').doc(userId).set({
-    userId,
-    createdAt: admin.firestore.FieldValue.serverTimestamp(),
-    updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-    ...data,
-  });
+  await db
+    .collection('users')
+    .doc(userId)
+    .set({
+      userId,
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      ...data,
+    });
 }
 
 /**
@@ -24,12 +27,15 @@ async function createTestUser(userId, data = {}) {
  * @param {Object} [data] - Additional source data
  */
 async function createTestSource(sourceId, data = {}) {
-  await db.collection('sources').doc(sourceId).set({
-    sourceId,
-    createdAt: admin.firestore.FieldValue.serverTimestamp(),
-    updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-    ...data,
-  });
+  await db
+    .collection('sources')
+    .doc(sourceId)
+    .set({
+      sourceId,
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      ...data,
+    });
 }
 
 /**
@@ -40,14 +46,17 @@ async function createTestSource(sourceId, data = {}) {
  * @param {Object} [data] - Additional integration data
  */
 async function createTestIntegration(integrationId, userId, sourceId, data = {}) {
-  await db.collection('integrations').doc(integrationId).set({
-    integrationId,
-    userId,
-    sourceId,
-    createdAt: admin.firestore.FieldValue.serverTimestamp(),
-    updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-    ...data,
-  });
+  await db
+    .collection('integrations')
+    .doc(integrationId)
+    .set({
+      integrationId,
+      userId,
+      sourceId,
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      ...data,
+    });
 }
 
 /**
@@ -59,15 +68,18 @@ async function createTestIntegration(integrationId, userId, sourceId, data = {})
  * @param {Object} [data] - Additional shelf data
  */
 async function createTestShelf(shelfId, userId, sourceId, integrationId, data = {}) {
-  await db.collection('shelves').doc(shelfId).set({
-    shelfId,
-    userId,
-    sourceId,
-    integrationId,
-    createdAt: admin.firestore.FieldValue.serverTimestamp(),
-    updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-    ...data,
-  });
+  await db
+    .collection('shelves')
+    .doc(shelfId)
+    .set({
+      shelfId,
+      userId,
+      sourceId,
+      integrationId,
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      ...data,
+    });
 }
 
 /**
@@ -78,14 +90,17 @@ async function createTestShelf(shelfId, userId, sourceId, integrationId, data = 
  * @param {Object} [data] - Additional item data
  */
 async function createTestItem(itemId, shelfId, integrationId, data = {}) {
-  await db.collection('items').doc(itemId).set({
-    itemId,
-    shelfId,
-    integrationId,
-    createdAt: admin.firestore.FieldValue.serverTimestamp(),
-    updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-    ...data,
-  });
+  await db
+    .collection('items')
+    .doc(itemId)
+    .set({
+      itemId,
+      shelfId,
+      integrationId,
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      ...data,
+    });
 }
 
 /**
@@ -109,14 +124,20 @@ async function callFunction(name, data) {
  * @param {string[]} collections.shelves - Shelf IDs to delete
  * @param {string[]} collections.items - Item IDs to delete
  */
-async function cleanup({ users = [], sources = [], integrations = [], shelves = [], items = [] } = {}) {
+async function cleanup({
+  users = [],
+  sources = [],
+  integrations = [],
+  shelves = [],
+  items = [],
+} = {}) {
   const batch = db.batch();
 
-  users.forEach((id) => batch.delete(db.collection('users').doc(id)));
-  sources.forEach((id) => batch.delete(db.collection('sources').doc(id)));
-  integrations.forEach((id) => batch.delete(db.collection('integrations').doc(id)));
-  shelves.forEach((id) => batch.delete(db.collection('shelves').doc(id)));
-  items.forEach((id) => batch.delete(db.collection('items').doc(id)));
+  users.forEach(id => batch.delete(db.collection('users').doc(id)));
+  sources.forEach(id => batch.delete(db.collection('sources').doc(id)));
+  integrations.forEach(id => batch.delete(db.collection('integrations').doc(id)));
+  shelves.forEach(id => batch.delete(db.collection('shelves').doc(id)));
+  items.forEach(id => batch.delete(db.collection('items').doc(id)));
 
   await batch.commit();
 }
@@ -129,4 +150,4 @@ module.exports = {
   createTestItem,
   callFunction,
   cleanup,
-}; 
+};

@@ -1,13 +1,13 @@
 import { useRef, useEffect } from 'react';
 import { SCROLL_SETTINGS, getScrollPositions, scrollToPosition } from '../utils/scroll';
 
-export const useAutoScroll = (isPlaying) => {
+export const useAutoScroll = isPlaying => {
   const animationFrameRef = useRef(null);
   const isResettingRef = useRef(false);
 
   const scroll = () => {
     const { currentOffset, maxScroll } = getScrollPositions();
-    
+
     if (currentOffset >= maxScroll && !isResettingRef.current) {
       handleScrollReset();
     } else if (!isResettingRef.current) {
@@ -18,7 +18,7 @@ export const useAutoScroll = (isPlaying) => {
   const handleScrollReset = () => {
     isResettingRef.current = true;
     scrollToPosition(0, 'smooth');
-    
+
     setTimeout(() => {
       isResettingRef.current = false;
       if (isPlaying) {
@@ -27,7 +27,7 @@ export const useAutoScroll = (isPlaying) => {
     }, SCROLL_SETTINGS.RESET_DURATION);
   };
 
-  const continueScrolling = (currentOffset) => {
+  const continueScrolling = currentOffset => {
     scrollToPosition(currentOffset + SCROLL_SETTINGS.SPEED);
     animationFrameRef.current = requestAnimationFrame(scroll);
   };
@@ -41,4 +41,4 @@ export const useAutoScroll = (isPlaying) => {
 
     return () => cancelAnimationFrame(animationFrameRef.current);
   }, [isPlaying]);
-}; 
+};

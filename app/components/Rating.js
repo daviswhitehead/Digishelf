@@ -1,6 +1,6 @@
-import React from "react";
-import { View } from "react-native";
-import Star from "./Star";
+import React from 'react';
+import { View } from 'react-native';
+import Star from './Star';
 
 const Rating = ({ rating }) => {
   const stars = [];
@@ -10,7 +10,7 @@ const Rating = ({ rating }) => {
   return (
     <View
       style={{
-        flexDirection: "row",
+        flexDirection: 'row',
       }}
     >
       {stars}

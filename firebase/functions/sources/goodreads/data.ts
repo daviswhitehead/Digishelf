@@ -12,11 +12,7 @@ import { CONCURRENCY } from './constants';
  */
 export function extractReviewText($: cheerio.CheerioAPI, elem: cheerio.Element): string {
   // Try to find the review text in various possible locations
-  const reviewSelectors = [
-    'span[id^="freeTextreview"]',
-    'span[id^="freeText"]',
-    '.field.review'
-  ];
+  const reviewSelectors = ['span[id^="freeTextreview"]', 'span[id^="freeText"]', '.field.review'];
 
   for (const selector of reviewSelectors) {
     const reviewText = $(elem).find(selector).text().trim();
@@ -49,16 +45,10 @@ export function parseBookRow($: cheerio.CheerioAPI, elem: cheerio.Element): Good
   }
 
   // Author
-  const author = $(elem)
-    .find('td.field.author a')
-    .first()
-    .text()
-    .trim();
+  const author = $(elem).find('td.field.author a').first().text().trim();
 
   // Rating and Review
-  const rating = translateRating(
-    $(elem).find('td.field.rating span.staticStars').attr('title')
-  );
+  const rating = translateRating($(elem).find('td.field.rating span.staticStars').attr('title'));
   const userReview = extractReviewText($, elem);
 
   return {
@@ -84,47 +74,43 @@ export async function getPageItems(baseURL: string, pageNumber: number): Promise
   return withTiming(`getPageItems-page-${pageNumber}`, async () => {
     try {
       const pageURL = baseURL + `&page=${pageNumber}`;
-      
+
       // Fetch HTML with retry logic
-      const { data: html } = await retry(
-        () => axios.get(pageURL),
-        {
-          retries: 3,
-          minTimeout: 1000,
-          factor: 2,
-          onRetry: (error: Error) => {
-            console.warn(
-              `Retrying page ${pageNumber} after error:`,
-              error instanceof AxiosError ? error.message : 'Unknown error'
-            );
-          }
-        }
-      );
+      const { data: html } = await retry(() => axios.get(pageURL), {
+        retries: 3,
+        minTimeout: 1000,
+        factor: 2,
+        onRetry: (error: Error) => {
+          console.warn(
+            `Retrying page ${pageNumber} after error:`,
+            error instanceof AxiosError ? error.message : 'Unknown error'
+          );
+        },
+      });
 
       // Load HTML with cheerio
       const $ = cheerio.load(html) as cheerio.CheerioAPI;
-      
+
       const bookRows = $('tr.bookalike.review').toArray();
-      
+
       if (!bookRows.length) {
         console.warn(`No books found on page ${pageNumber}`);
       }
 
       const limit = pLimit(CONCURRENCY.PAGE_REQUESTS);
       const books = await Promise.all(
-        bookRows.map((elem) =>
-          limit(async () => parseBookRow($, elem as cheerio.Element))
-        )
+        bookRows.map(elem => limit(async () => parseBookRow($, elem as cheerio.Element)))
       );
 
       return { books, $ };
     } catch (error) {
-      const errorMessage = error instanceof AxiosError 
-        ? `HTTP ${error.response?.status}: ${error.message}`
-        : error instanceof Error 
-          ? error.message 
-          : 'Unknown error';
-          
+      const errorMessage =
+        error instanceof AxiosError
+          ? `HTTP ${error.response?.status}: ${error.message}`
+          : error instanceof Error
+            ? error.message
+            : 'Unknown error';
+
       console.error(`Failed to fetch page ${pageNumber}:`, errorMessage);
       throw error;
     }
@@ -147,9 +133,8 @@ export async function getAllPages(originalURL: string): Promise<GoodreadsBook[] 
 
       if (totalPages > 1) {
         const limit = pLimit(CONCURRENCY.PAGE_REQUESTS);
-        const pagePromises = Array.from(
-          { length: totalPages - 1 },
-          (_, i) => limit(() => getPageItems(originalURL, i + 2))
+        const pagePromises = Array.from({ length: totalPages - 1 }, (_, i) =>
+          limit(() => getPageItems(originalURL, i + 2))
         );
 
         const results = await Promise.allSettled(pagePromises);
@@ -185,7 +170,10 @@ export async function getAllPages(originalURL: string): Promise<GoodreadsBook[] 
       console.info(`Total books collected: ${allBooks.length}`);
       return allBooks;
     } catch (error) {
-      console.error('Fatal error in getAllPages:', error instanceof Error ? error.message : 'Unknown error');
+      console.error(
+        'Fatal error in getAllPages:',
+        error instanceof Error ? error.message : 'Unknown error'
+      );
       return null;
     }
   }) as Promise<GoodreadsBook[] | null>; // Type assertion to fix return type

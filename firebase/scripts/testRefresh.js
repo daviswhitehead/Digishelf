@@ -38,17 +38,17 @@ async function testRefresh() {
     console.log('Shelf data:', shelf.data());
 
     // 2. Get items before refresh
-    const itemsQuery = query(
-      collection(db, 'items'),
-      where('shelfId', '==', shelfId)
-    );
+    const itemsQuery = query(collection(db, 'items'), where('shelfId', '==', shelfId));
     const itemsBefore = await getDocs(itemsQuery);
 
     console.log(`\n📦 Items before refresh: ${itemsBefore.size}`);
-    console.log('First few items:', itemsBefore.docs.slice(0, 3).map(doc => ({
-      id: doc.id,
-      title: doc.data().title
-    })));
+    console.log(
+      'First few items:',
+      itemsBefore.docs.slice(0, 3).map(doc => ({
+        id: doc.id,
+        title: doc.data().title,
+      }))
+    );
 
     // 3. Call refresh function through emulator
     console.log('\n🔄 Calling refresh function...');
@@ -61,10 +61,13 @@ async function testRefresh() {
     const itemsAfter = await getDocs(itemsQuery);
 
     console.log(`\n📦 Items after refresh: ${itemsAfter.size}`);
-    console.log('First few items:', itemsAfter.docs.slice(0, 3).map(doc => ({
-      id: doc.id,
-      title: doc.data().title
-    })));
+    console.log(
+      'First few items:',
+      itemsAfter.docs.slice(0, 3).map(doc => ({
+        id: doc.id,
+        title: doc.data().title,
+      }))
+    );
 
     // 5. Compare results
     console.log('\n📊 Comparison:');
@@ -75,7 +78,7 @@ async function testRefresh() {
     // 6. Check for new items
     const beforeIds = new Set(itemsBefore.docs.map(doc => doc.id));
     const newItems = itemsAfter.docs.filter(doc => !beforeIds.has(doc.id));
-    
+
     if (newItems.length > 0) {
       console.log('\n🆕 New items found:');
       newItems.forEach(doc => {
@@ -91,4 +94,4 @@ async function testRefresh() {
   }
 }
 
-testRefresh(); 
+testRefresh();

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import { db } from "../../../utils/firebase";
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import { db } from '../../../utils/firebase';
 import {
   collection,
   query,
@@ -9,16 +9,10 @@ import {
   setDoc,
   doc,
   serverTimestamp,
-} from "firebase/firestore";
-import { useUser } from "../../../utils/useUser";
-import Sidebar from "../../../components/Sidebar";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-} from "react-native";
+} from 'firebase/firestore';
+import { useUser } from '../../../utils/useUser';
+import Sidebar from '../../../components/Sidebar';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 
 export default function Integrations() {
   const router = useRouter();
@@ -33,31 +27,26 @@ export default function Integrations() {
     const fetchIntegrations = async () => {
       try {
         // Fetch enabled integrations
-        const integrationsRef = collection(db, "integrations");
-        const integrationsQuery = query(
-          integrationsRef,
-          where("userId", "==", user.uid)
-        );
+        const integrationsRef = collection(db, 'integrations');
+        const integrationsQuery = query(integrationsRef, where('userId', '==', user.uid));
         const integrationsSnapshot = await getDocs(integrationsQuery);
-        const enabled = integrationsSnapshot.docs.map((doc) => ({
+        const enabled = integrationsSnapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data(),
         }));
 
         // Fetch available integrations (sources)
-        const sourcesRef = collection(db, "sources");
+        const sourcesRef = collection(db, 'sources');
         const sourcesSnapshot = await getDocs(sourcesRef);
-        const available = sourcesSnapshot.docs.map((doc) => ({
+        const available = sourcesSnapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data(),
         }));
 
         // Filter out duplicates by displayName
-        const enabledDisplayNames = new Set(
-          enabled.map((integration) => integration.displayName)
-        );
+        const enabledDisplayNames = new Set(enabled.map(integration => integration.displayName));
         const filteredAvailable = available.filter(
-          (source) => !enabledDisplayNames.has(source.displayName)
+          source => !enabledDisplayNames.has(source.displayName)
         );
 
         setEnabledIntegrations(enabled);
@@ -70,18 +59,18 @@ export default function Integrations() {
     fetchIntegrations();
   }, [user]);
 
-  const handleIntegrationClick = (integrationId) => {
+  const handleIntegrationClick = integrationId => {
     router.push(`/${user.uid}/integrations/${integrationId}`);
   };
 
-  const handleEnableIntegration = async (source) => {
+  const handleEnableIntegration = async source => {
     try {
-      if (source.displayName === "Goodreads") {
+      if (source.displayName === 'Goodreads') {
         router.push(`/${user.uid}/integrations/new/${source.id}`);
         return;
       }
       // Logic to enable an integration (e.g., create a new document in the integrations collection)
-      const integrationsRef = collection(db, "integrations");
+      const integrationsRef = collection(db, 'integrations');
       await setDoc(doc(integrationsRef), {
         userId: user.uid,
         displayName: source.displayName,
@@ -90,12 +79,12 @@ export default function Integrations() {
       });
 
       // Refresh the integrations
-      setEnabledIntegrations((prev) => [
+      setEnabledIntegrations(prev => [
         ...prev,
         { displayName: source.displayName, sourceId: source.id },
       ]);
-      setAvailableIntegrations((prev) =>
-        prev.filter((item) => item.displayName !== source.displayName)
+      setAvailableIntegrations(prev =>
+        prev.filter(item => item.displayName !== source.displayName)
       );
     } catch (err) {
       setError(err.message);
@@ -110,25 +99,21 @@ export default function Integrations() {
           <Text style={styles.title}>Enabled Integrations</Text>
           {error && <Text style={styles.errorText}>{error}</Text>}
           <View style={styles.cardContainer}>
-            {enabledIntegrations.map((integration) => (
+            {enabledIntegrations.map(integration => (
               <TouchableOpacity
                 key={integration.id}
                 style={styles.card}
                 onPress={() => handleIntegrationClick(integration.id)}
               >
                 <Text style={styles.cardTitle}>{integration.displayName}</Text>
-                <Text style={styles.cardSubtitle}>
-                  {integration.shelves?.join(" · ")}
-                </Text>
+                <Text style={styles.cardSubtitle}>{integration.shelves?.join(' · ')}</Text>
               </TouchableOpacity>
             ))}
           </View>
 
-          <Text style={[styles.title, { marginTop: 40 }]}>
-            Available Integrations
-          </Text>
+          <Text style={[styles.title, { marginTop: 40 }]}>Available Integrations</Text>
           <View style={styles.cardContainer}>
-            {availableIntegrations.map((source) => (
+            {availableIntegrations.map(source => (
               <TouchableOpacity
                 key={source.id}
                 style={styles.card}
@@ -136,7 +121,7 @@ export default function Integrations() {
               >
                 <Text style={styles.cardTitle}>{source.displayName}</Text>
                 <Text style={styles.cardSubtitle}>
-                  {source.shelves?.join(" · ") || "No shelves available"}
+                  {source.shelves?.join(' · ') || 'No shelves available'}
                 </Text>
               </TouchableOpacity>
             ))}
@@ -150,8 +135,8 @@ export default function Integrations() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: "row", // Align sidebar and content side by side
-    backgroundColor: "#000",
+    flexDirection: 'row', // Align sidebar and content side by side
+    backgroundColor: '#000',
   },
   contentWrapper: {
     flex: 1, // Allow the content to take up the remaining space
@@ -161,37 +146,37 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   title: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 24,
     marginBottom: 20,
   },
   errorText: {
-    color: "red",
+    color: 'red',
     fontSize: 16,
     marginBottom: 20,
   },
   cardContainer: {
-    display: "flex",
-    flexDirection: "row",
-    flexWrap: "wrap",
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: 20,
   },
   card: {
-    backgroundColor: "#1a1a1a",
-    color: "#fff",
+    backgroundColor: '#1a1a1a',
+    color: '#fff',
     padding: 15,
     borderRadius: 8,
-    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
+    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
     width: 250,
-    cursor: "pointer",
+    cursor: 'pointer',
   },
   cardTitle: {
     marginBottom: 5,
     fontSize: 18,
-    color: "#fff",
+    color: '#fff',
   },
   cardSubtitle: {
     fontSize: 14,
-    color: "#aaa",
+    color: '#aaa',
   },
 });

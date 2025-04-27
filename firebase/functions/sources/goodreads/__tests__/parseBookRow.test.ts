@@ -29,10 +29,11 @@ describe('parseBookRow', () => {
       title: 'Wind and Truth (The Stormlight Archive, #5)',
       author: 'Sanderson, Brandon',
       canonicalURL: 'https://www.goodreads.com/book/show/203578847-wind-and-truth',
-      coverImage: 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1724944713l/203578847.jpg',
+      coverImage:
+        'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1724944713l/203578847.jpg',
       primaryColor: '',
       userRating: null,
-      userReview: 'review None'
+      userReview: 'review None',
     });
   });
 
@@ -61,7 +62,7 @@ describe('parseBookRow', () => {
       coverImage: '',
       primaryColor: '',
       userRating: null,
-      userReview: ''
+      userReview: '',
     });
   });
 });

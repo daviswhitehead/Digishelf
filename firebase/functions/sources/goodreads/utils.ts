@@ -39,4 +39,4 @@ export function getTotalPages($: cheerio.CheerioAPI): number {
   // Check for content
   const hasContent = $('.review').length > 0;
   return hasContent ? 1 : 0;
-} 
+}

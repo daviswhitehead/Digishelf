@@ -1,5 +1,5 @@
-const admin = require("firebase-admin");
-const serviceAccount = require("../digishelf-app-firebase-adminsdk-servicekey.json");
+const admin = require('firebase-admin');
+const serviceAccount = require('../digishelf-app-firebase-adminsdk-servicekey.json');
 
 // Remove emulator environment variable for production connection
 delete process.env.FIRESTORE_EMULATOR_HOST;
@@ -8,13 +8,16 @@ delete process.env.FIRESTORE_EMULATOR_HOST;
 console.log('🔑 Service Account Details:');
 console.log('Project ID:', serviceAccount.project_id);
 console.log('Client Email:', serviceAccount.client_email);
-console.log('Database URL:', "https://digishelf-app.firebaseio.com");
+console.log('Database URL:', 'https://digishelf-app.firebaseio.com');
 
 // Initialize production app with explicit database URL
-const prodApp = admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://digishelf-app.firebaseio.com"
-}, 'production');
+const prodApp = admin.initializeApp(
+  {
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: 'https://digishelf-app.firebaseio.com',
+  },
+  'production'
+);
 
 // Log the initialized app details
 console.log('\n🔧 Initialized App Details:');
@@ -25,9 +28,12 @@ console.log('Database URL:', prodApp.options.databaseURL);
 const prodDb = prodApp.firestore();
 
 // Initialize emulator app separately
-const emuApp = admin.initializeApp({
-  projectId: 'digishelf-app',
-}, 'emulator');
+const emuApp = admin.initializeApp(
+  {
+    projectId: 'digishelf-app',
+  },
+  'emulator'
+);
 
 const emuDb = emuApp.firestore();
 
@@ -45,17 +51,20 @@ const COLLECTIONS = [
   { name: 'sources', isUserSpecific: false },
   { name: 'integrations', isUserSpecific: true },
   { name: 'shelves', isUserSpecific: true },
-  { name: 'items', isUserSpecific: true }
+  { name: 'items', isUserSpecific: true },
 ];
 
 async function testProductionConnection() {
   console.log('\n🔍 Testing Production Connection...');
-  
+
   try {
     // Test 1: Simple collection list
     console.log('\nTest 1: Listing collections...');
     const collections = await prodDb.listCollections();
-    console.log('Available collections:', collections.map(c => c.id));
+    console.log(
+      'Available collections:',
+      collections.map(c => c.id)
+    );
 
     // Test 2: Direct document access
     console.log('\nTest 2: Direct document access...');
@@ -67,17 +76,18 @@ async function testProductionConnection() {
 
     // Test 3: Query test
     console.log('\nTest 3: Query test...');
-    const querySnapshot = await prodDb.collection('users')
+    const querySnapshot = await prodDb
+      .collection('users')
       .where('userId', '==', TARGET_USER_ID)
       .get();
-    
+
     console.log('Query results:', {
       empty: querySnapshot.empty,
       size: querySnapshot.size,
       docs: querySnapshot.docs.map(doc => ({
         id: doc.id,
-        data: doc.data()
-      }))
+        data: doc.data(),
+      })),
     });
 
     return true;
@@ -86,7 +96,7 @@ async function testProductionConnection() {
     console.error('Error details:', {
       code: error.code,
       message: error.message,
-      stack: error.stack
+      stack: error.stack,
     });
     return false;
   }
@@ -102,11 +112,10 @@ async function pullAndSeedData() {
 
     for (const collection of COLLECTIONS) {
       console.log(`\n📥 Processing ${collection.name}...`);
-      
+
       let query;
       if (collection.isUserSpecific) {
-        query = prodDb.collection(collection.name)
-          .where('userId', '==', TARGET_USER_ID);
+        query = prodDb.collection(collection.name).where('userId', '==', TARGET_USER_ID);
       } else {
         query = prodDb.collection(collection.name);
       }
@@ -114,20 +123,20 @@ async function pullAndSeedData() {
       try {
         console.log('Executing query:', {
           collection: collection.name,
-          where: query._queryOptions.filters
+          where: query._queryOptions.filters,
         });
 
         const snapshot = await query.get();
-        
+
         console.log('Query results:', {
           empty: snapshot.empty,
           size: snapshot.size,
           docs: snapshot.docs.map(doc => ({
             id: doc.id,
-            data: doc.data()
-          }))
+            data: doc.data(),
+          })),
         });
-        
+
         if (snapshot.empty) {
           console.log(`No ${collection.name} found`);
           continue;
@@ -141,11 +150,11 @@ async function pullAndSeedData() {
         for (const doc of snapshot.docs) {
           const data = doc.data();
           console.log(`Processing ${collection.name} document:`, doc.id);
-          
+
           // Use the same document ID as production
           const emuRef = emuDb.collection(collection.name).doc(doc.id);
           batch.set(emuRef, data);
-          
+
           batchCount++;
           totalDocs++;
 
@@ -166,7 +175,6 @@ async function pullAndSeedData() {
 
         totalCollections++;
         console.log(`✅ Finished processing ${collection.name}`);
-
       } catch (error) {
         console.error(`Error processing ${collection.name}:`, error);
       }
@@ -197,4 +205,4 @@ testProductionConnection()
   .catch(error => {
     console.error('❌ Unexpected error:', error);
     process.exit(1);
-  }); 
+  });

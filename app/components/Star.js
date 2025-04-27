@@ -1,6 +1,6 @@
-import React from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { starColor, starFilledColor } from "../utils/colors";
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import { starColor, starFilledColor } from '../utils/colors';
 
 const Star = ({ filled }) => (
   <View style={styles.star}>
@@ -12,8 +12,8 @@ const styles = StyleSheet.create({
   star: {
     width: 20,
     height: 20,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   filledStar: {
     color: starFilledColor,

@@ -9,9 +9,9 @@ const QRCodeComponent = ({ url, size = 100 }) => {
         <QRCodeSVG
           value={url}
           size={size}
-          bgColor="#ffffff"
-          fgColor="#000000"
-          level="L"
+          bgColor='#ffffff'
+          fgColor='#000000'
+          level='L'
           includeMargin={false}
         />
       </View>
@@ -35,4 +35,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default QRCodeComponent; 
+export default QRCodeComponent;

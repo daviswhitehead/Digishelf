@@ -1,7 +1,7 @@
-const axios = require("axios");
-const cheerio = require("cheerio");
+const axios = require('axios');
+const cheerio = require('cheerio');
 // const { getDominantColor } = require("../utils/getColors");
-const pLimit = require("p-limit");
+const pLimit = require('p-limit');
 
 /**
  * Translates a textual rating into a numerical star rating.
@@ -13,11 +13,11 @@ const pLimit = require("p-limit");
 function translateRating(ratingText) {
   // Translate "really liked it" to number of stars
   const ratingMap = {
-    "did not like it": 1,
-    "it was ok": 2,
-    "liked it": 3,
-    "really liked it": 4,
-    "it was amazing": 5,
+    'did not like it': 1,
+    'it was ok': 2,
+    'liked it': 3,
+    'really liked it': 4,
+    'it was amazing': 5,
   };
 
   return ratingText ? ratingMap[ratingText.toLowerCase()] : null;
@@ -32,7 +32,7 @@ function translateRating(ratingText) {
  */
 function cleanNewLines(s) {
   // Remove newlines and extra spaces
-  return s.replace(/\n\s+/g, " ");
+  return s.replace(/\n\s+/g, ' ');
 }
 
 /**
@@ -44,7 +44,7 @@ function cleanNewLines(s) {
 function getTotalPages($) {
   // #reviewPagination includes links like 1,2,3,...,14,"next »"
   // We want the last numeric link, ignoring rel="next".
-  const lastPageLink = $("#reviewPagination a:not([rel])").last().text().trim();
+  const lastPageLink = $('#reviewPagination a:not([rel])').last().text().trim();
   // Convert to integer or default to 1 if not found
   const totalPages = parseInt(lastPageLink, 10) || 1;
   return totalPages;
@@ -64,18 +64,18 @@ async function getPageItems(baseURL, pageNumber) {
     const { data: html } = await axios.get(pageURL);
     const $ = cheerio.load(html);
 
-    const bookRows = $("tr.bookalike.review").toArray();
+    const bookRows = $('tr.bookalike.review').toArray();
 
     const limit = pLimit(5); // Limit to 5 concurrent requests
 
     const books = await Promise.all(
-      bookRows.map((elem) =>
+      bookRows.map(elem =>
         limit(async () => {
-          let coverImage = $(elem).find("td.field.cover img").attr("src");
+          let coverImage = $(elem).find('td.field.cover img').attr('src');
           const primaryColor = null;
 
           if (coverImage) {
-            coverImage = coverImage.replace(/\._S[XY]\d+_/, ""); // Remove size specifier
+            coverImage = coverImage.replace(/\._S[XY]\d+_/, ''); // Remove size specifier
             // try {
             //   primaryColor = await getDominantColor(coverImage);
             // } catch (error) {
@@ -87,37 +87,25 @@ async function getPageItems(baseURL, pageNumber) {
           }
 
           // --- Title & Canonical URL ---
-          const titleLink = $(elem).find("td.field.title a");
+          const titleLink = $(elem).find('td.field.title a');
           const title = cleanNewLines(titleLink.text().trim());
-          let canonicalURL = titleLink.attr("href");
-          if (canonicalURL && !canonicalURL.startsWith("http")) {
-            canonicalURL = "https://www.goodreads.com" + canonicalURL;
+          let canonicalURL = titleLink.attr('href');
+          if (canonicalURL && !canonicalURL.startsWith('http')) {
+            canonicalURL = 'https://www.goodreads.com' + canonicalURL;
           }
 
           // --- Author ---
-          const author = $(elem)
-            .find("td.field.author a")
-            .first()
-            .text()
-            .trim();
+          const author = $(elem).find('td.field.author a').first().text().trim();
 
           // --- Rating ---
           const rating =
-            translateRating(
-              $(elem).find("td.field.rating span.staticStars").attr("title")
-            ) || null;
+            translateRating($(elem).find('td.field.rating span.staticStars').attr('title')) || null;
 
           // --- Review ---
           // Goodreads shows a preview in a span with an id starting "freeTextContainer"
-          let review = $(elem)
-            .find("td.field.review span[id^='freeTextreview']")
-            .text()
-            .trim();
+          let review = $(elem).find('td.field.review span[id^=\'freeTextreview\']').text().trim();
           if (!review) {
-            review = $(elem)
-              .find("td.field.review span[id^='freeTextContainer']")
-              .text()
-              .trim();
+            review = $(elem).find('td.field.review span[id^=\'freeTextContainer\']').text().trim();
           }
 
           return {
@@ -149,7 +137,7 @@ async function getPageItems(baseURL, pageNumber) {
  */
 async function getAllPages(originalURL) {
   try {
-    console.time("getAllPages");
+    console.time('getAllPages');
     const { books: booksOnPage1, $ } = await getPageItems(originalURL, 1);
     console.info(`Found ${booksOnPage1.length} on page 1`);
 
@@ -167,26 +155,24 @@ async function getAllPages(originalURL) {
       const results = await Promise.allSettled(pagePromises);
 
       results.forEach((result, index) => {
-        if (result.status === "fulfilled") {
+        if (result.status === 'fulfilled') {
           const { books } = result.value;
           console.info(`Found ${books.length} on page ${index + 2}`);
           allBooks = allBooks.concat(books);
         } else {
           console.error(
-            `Failed to fetch page ${index + 2} (${originalURL}&page=${
-              index + 2
-            }):`,
+            `Failed to fetch page ${index + 2} (${originalURL}&page=${index + 2}):`,
             result.reason
           );
         }
       });
     }
 
-    console.timeEnd("getAllPages");
+    console.timeEnd('getAllPages');
     return allBooks;
   } catch (error) {
-    console.error("Error:", error);
-    console.timeEnd("getAllPages");
+    console.error('Error:', error);
+    console.timeEnd('getAllPages');
     return null;
   }
 }
