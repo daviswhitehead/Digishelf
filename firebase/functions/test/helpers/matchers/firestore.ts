@@ -1,7 +1,11 @@
+// / <reference types="jest" />
+
 import * as admin from 'firebase-admin';
 import type { DocumentReference, Timestamp } from 'firebase-admin/firestore';
 
 declare global {
+  // This namespace declaration is necessary for extending Jest's matchers
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace jest {
     interface Matchers<R> {
       toBeFirestoreTimestamp(): R;

@@ -1,8 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const generateGoodreadsFixtures_1 = require("../generateGoodreadsFixtures");
+'use strict';
+Object.defineProperty(exports, '__esModule', { value: true });
+const generateGoodreadsFixtures_1 = require('../generateGoodreadsFixtures');
 // Import the ShelfId type and SHELF_IDS constant
-const generateGoodreadsFixtures_2 = require("../generateGoodreadsFixtures");
+const generateGoodreadsFixtures_2 = require('../generateGoodreadsFixtures');
 describe('sanitizeResponse', () => {
     it('removes sensitive information from HTML', () => {
         const html = `
@@ -95,4 +95,4 @@ describe('addMetadata', () => {
         expect(withMetadata).toContain('Shelf ID: read');
     });
 });
-//# sourceMappingURL=generateGoodreadsFixtures.test.js.map
+// # sourceMappingURL=generateGoodreadsFixtures.test.js.map

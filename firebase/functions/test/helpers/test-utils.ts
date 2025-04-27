@@ -151,7 +151,7 @@ async function createTestItem(
 /**
  * Calls a Firebase function
  */
-async function callFunction<T = any>(name: string, data: any): Promise<T> {
+async function callFunction<T = unknown>(name: string, data: Record<string, unknown>): Promise<T> {
   const wrapped = test.wrap(require('../lib')[name]);
   const result = await wrapped(data);
   return result as T;

@@ -1,9 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+'use strict';
+Object.defineProperty(exports, '__esModule', { value: true });
 exports.translateRating = translateRating;
 exports.cleanNewLines = cleanNewLines;
 exports.getTotalPages = getTotalPages;
-const constants_1 = require("./constants");
+const constants_1 = require('./constants');
 /**
  * Translates a textual rating into a numerical star rating.
  */
@@ -38,4 +38,4 @@ function getTotalPages($) {
     const hasContent = $('.review').length > 0;
     return hasContent ? 1 : 0;
 }
-//# sourceMappingURL=utils.js.map
+// # sourceMappingURL=utils.js.map

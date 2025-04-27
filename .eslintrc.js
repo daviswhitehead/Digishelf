@@ -43,5 +43,13 @@ module.exports = {
         'no-undef': 'off',
       },
     },
+    {
+      files: ['**/*.js'],
+      rules: {
+        'camelcase': 'off',
+        '@typescript-eslint/camelcase': 'off',
+        'no-invalid-this': 'off'
+      },
+    },
   ],
 };

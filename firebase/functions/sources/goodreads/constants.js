@@ -1,5 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+'use strict';
+Object.defineProperty(exports, '__esModule', { value: true });
 exports.CONCURRENCY = exports.RATING_MAP = exports.SHELF_SLUG_MAP = void 0;
 exports.SHELF_SLUG_MAP = {
     All: 'all',
@@ -18,4 +18,4 @@ exports.CONCURRENCY = {
     PAGE_REQUESTS: 5, // Maximum concurrent page requests
     COLOR_PROCESSING: 3, // Maximum concurrent color processing operations
 };
-//# sourceMappingURL=constants.js.map
+// # sourceMappingURL=constants.js.map

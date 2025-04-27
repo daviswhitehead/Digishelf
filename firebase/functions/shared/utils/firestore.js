@@ -1,7 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+'use strict';
+Object.defineProperty(exports, '__esModule', { value: true });
 exports.processBatch = processBatch;
-const firestore_1 = require("firebase-admin/firestore");
+const firestore_1 = require('firebase-admin/firestore');
 async function processBatch(query, processFn, description) {
     const db = (0, firestore_1.getFirestore)();
     const snapshot = await query.get();
@@ -26,4 +26,4 @@ async function processBatch(query, processFn, description) {
     await Promise.all(batches.map(batch => batch.commit()));
     console.log(`${description}: Completed successfully`);
 }
-//# sourceMappingURL=firestore.js.map
+// # sourceMappingURL=firestore.js.map

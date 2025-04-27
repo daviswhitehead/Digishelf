@@ -1,8 +1,8 @@
-"use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+'use strict';
+const __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+    let desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ('get' in desc ? !m.__esModule : desc.writable || desc.configurable)) {
       desc = { enumerable: true, get: function() { return m[k]; } };
     }
     Object.defineProperty(o, k2, desc);
@@ -10,43 +10,43 @@ var __createBinding = (this && this.__createBinding) || (Object.create ? (functi
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
 }));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
+const __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, 'default', { enumerable: true, value: v });
 }) : function(o, v) {
-    o["default"] = v;
+    o['default'] = v;
 });
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
+const __importStar = (this && this.__importStar) || (function () {
+    let ownKeys = function(o) {
         ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            const ar = [];
+            for (const k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
             return ar;
         };
         return ownKeys(o);
     };
     return function (mod) {
         if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        const result = {};
+        if (mod != null) for (let k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== 'default') __createBinding(result, mod, k[i]);
         __setModuleDefault(result, mod);
         return result;
     };
 })();
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
+const __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { 'default': mod };
 };
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, '__esModule', { value: true });
 exports.extractReviewText = extractReviewText;
 exports.parseBookRow = parseBookRow;
 exports.getPageItems = getPageItems;
 exports.getAllPages = getAllPages;
-const axios_1 = __importStar(require("axios"));
-const cheerio = __importStar(require("cheerio"));
-const timing_1 = require("../../shared/utils/timing");
-const retry_1 = require("../../shared/utils/retry");
-const utils_1 = require("./utils");
-const p_limit_1 = __importDefault(require("p-limit"));
-const constants_1 = require("./constants");
+const axios_1 = __importStar(require('axios'));
+const cheerio = __importStar(require('cheerio'));
+const timing_1 = require('../../shared/utils/timing');
+const retry_1 = require('../../shared/utils/retry');
+const utils_1 = require('./utils');
+const p_limit_1 = __importDefault(require('p-limit'));
+const constants_1 = require('./constants');
 /**
  * Extracts review text from a Goodreads review element using multiple possible selectors
  */
@@ -99,7 +99,7 @@ function parseBookRow($, elem) {
  */
 async function getPageItems(baseURL, pageNumber) {
     return (0, timing_1.withTiming)(`getPageItems-page-${pageNumber}`, async () => {
-        var _a;
+        let _a;
         try {
             const pageURL = baseURL + `&page=${pageNumber}`;
             // Fetch HTML with retry logic
@@ -180,4 +180,4 @@ async function getAllPages(originalURL) {
         }
     }); // Type assertion to fix return type
 }
-//# sourceMappingURL=data.js.map
+// # sourceMappingURL=data.js.map

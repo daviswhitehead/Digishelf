@@ -1,5 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+'use strict';
+Object.defineProperty(exports, '__esModule', { value: true });
 exports.withTiming = withTiming;
 /**
  * A utility function to time async operations and ensure proper cleanup
@@ -19,4 +19,4 @@ async function withTiming(label, operation) {
         throw error;
     }
 }
-//# sourceMappingURL=timing.js.map
+// # sourceMappingURL=timing.js.map

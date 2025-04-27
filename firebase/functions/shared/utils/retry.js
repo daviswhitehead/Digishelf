@@ -1,5 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+'use strict';
+Object.defineProperty(exports, '__esModule', { value: true });
 exports.retry = retry;
 /**
  * Retries an async operation with exponential backoff
@@ -27,4 +27,4 @@ async function retry(operation, { retries = 3, minTimeout = 1000, factor = 2, on
     }
     throw new Error(`Failed after ${retries} attempts: ${lastError.message}`);
 }
-//# sourceMappingURL=retry.js.map
+// # sourceMappingURL=retry.js.map

@@ -1,12 +1,12 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+'use strict';
+Object.defineProperty(exports, '__esModule', { value: true });
 exports.refreshShelf = exports.onIntegrationDelete = exports.onShelfWrite = exports.onIntegrationWrite = void 0;
-const firestore_1 = require("firebase-functions/v2/firestore");
-const app_1 = require("firebase-admin/app");
-const firestore_2 = require("firebase-admin/firestore");
-const https_1 = require("firebase-functions/v2/https");
-const handlers_1 = require("./sources/goodreads/handlers");
-const firestore_3 = require("./shared/utils/firestore");
+const firestore_1 = require('firebase-functions/v2/firestore');
+const app_1 = require('firebase-admin/app');
+const firestore_2 = require('firebase-admin/firestore');
+const https_1 = require('firebase-functions/v2/https');
+const handlers_1 = require('./sources/goodreads/handlers');
+const firestore_3 = require('./shared/utils/firestore');
 (0, app_1.initializeApp)();
 const db = (0, firestore_2.getFirestore)();
 exports.onIntegrationWrite = (0, firestore_1.onDocumentWritten)({
@@ -14,7 +14,7 @@ exports.onIntegrationWrite = (0, firestore_1.onDocumentWritten)({
     memory: '512MiB',
     timeoutSeconds: 60,
 }, async (event) => {
-    var _a, _b;
+    let _a; let _b;
     console.time('onIntegrationWrite');
     const integrationId = event.params.integrationId;
     const after = (_b = (_a = event.data) === null || _a === void 0 ? void 0 : _a.after) === null || _b === void 0 ? void 0 : _b.data();
@@ -46,7 +46,7 @@ exports.onShelfWrite = (0, firestore_1.onDocumentWritten)({
     memory: '1GiB',
     timeoutSeconds: 180,
 }, async (event) => {
-    var _a, _b;
+    let _a; let _b;
     console.time('onShelfWrite');
     const shelfId = event.params.shelfId;
     const after = (_b = (_a = event.data) === null || _a === void 0 ? void 0 : _a.after) === null || _b === void 0 ? void 0 : _b.data();
@@ -127,4 +127,4 @@ exports.refreshShelf = (0, https_1.onCall)(refreshShelfOptions, async (request) 
     }
 });
 1;
-//# sourceMappingURL=index.js.map
+// # sourceMappingURL=index.js.map
