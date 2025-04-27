@@ -1,18 +1,32 @@
-const axios = require('axios');
-const cheerio = require('cheerio');
-// const { getDominantColor } = require("../utils/getColors");
-const pLimit = require('p-limit');
+import axios from 'axios';
+import cheerio from 'cheerio';
+import pLimit from 'p-limit';
+// import { getDominantColor } from '../utils/getColors';
+
+interface GoodreadsBook {
+  title: string;
+  author: string;
+  coverImage: string | null;
+  canonicalURL: string | null;
+  userRating: number | null;
+  userReview: string;
+  primaryColor: string | null;
+}
+
+type RatingMap = {
+  'did not like it': 1;
+  'it was ok': 2;
+  'liked it': 3;
+  'really liked it': 4;
+  'it was amazing': 5;
+};
 
 /**
  * Translates a textual rating into a numerical star rating.
- *
- * @param {string} ratingText - The textual representation of the rating.
- * @return {number|null} The numerical star rating corresponding to the given
- * text, or null if the text does not match any known rating.
  */
-function translateRating(ratingText) {
+function translateRating(ratingText: string | undefined): number | null {
   // Translate "really liked it" to number of stars
-  const ratingMap = {
+  const ratingMap: RatingMap = {
     'did not like it': 1,
     'it was ok': 2,
     'liked it': 3,
@@ -20,48 +34,46 @@ function translateRating(ratingText) {
     'it was amazing': 5,
   };
 
-  return ratingText ? ratingMap[ratingText.toLowerCase()] : null;
+  if (!ratingText) return null;
+  
+  const key = ratingText.toLowerCase() as keyof RatingMap;
+  return ratingMap[key] || null;
 }
 
 /**
  * Removes newlines and extra spaces from a given string.
- *
- * @param {string} s - The string to be cleaned.
- * @return {string} - The cleaned string with newlines
- * and extra spaces removed.
  */
-function cleanNewLines(s) {
+function cleanNewLines(s: string): string {
   // Remove newlines and extra spaces
   return s.replace(/\n\s+/g, ' ');
 }
 
 /**
  * Extracts the total number of pages from the pagination links.
- *
- * @param {object} $ - The jQuery object used to select elements.
- * @return {number} The total number of pages. Defaults to 1 if no numeric link is found.
  */
-function getTotalPages($) {
+function getTotalPages($: cheerio.CheerioAPI): number {
   // #reviewPagination includes links like 1,2,3,...,14,"next »"
   // We want the last numeric link, ignoring rel="next".
-  const lastPageLink = $('#reviewPagination a:not([rel])').last().text().trim();
+  const lastPageLink = $('div#reviewPagination a:not([rel])').last().text().trim();
   // Convert to integer or default to 1 if not found
   const totalPages = parseInt(lastPageLink, 10) || 1;
   return totalPages;
 }
 
+interface PageResult {
+  books: GoodreadsBook[];
+  $: cheerio.CheerioAPI;
+}
+
 /**
  * Scrapes a single Goodreads shelf page (for the given page number).
- *
- * @param {string} baseURL - The page baseURL.
- * @param {number} pageNumber - The page number.
  */
-async function getPageItems(baseURL, pageNumber) {
+async function getPageItems(baseURL: string, pageNumber: number): Promise<PageResult> {
   const label = `getPageItems-page-${pageNumber}`;
   console.time(label); // Use a unique label for each page
   try {
     const pageURL = baseURL + `&page=${pageNumber}`;
-    const { data: html } = await axios.get(pageURL);
+    const { data: html } = await axios.get<string>(pageURL);
     const $ = cheerio.load(html);
 
     const bookRows = $('tr.bookalike.review').toArray();
@@ -71,7 +83,8 @@ async function getPageItems(baseURL, pageNumber) {
     const books = await Promise.all(
       bookRows.map(elem =>
         limit(async () => {
-          let coverImage = $(elem).find('td.field.cover img').attr('src');
+          const $elem = $(elem);
+          let coverImage = $elem.find('td.field.cover img').attr('src') || null;
           const primaryColor = null;
 
           if (coverImage) {
@@ -87,25 +100,24 @@ async function getPageItems(baseURL, pageNumber) {
           }
 
           // --- Title & Canonical URL ---
-          const titleLink = $(elem).find('td.field.title a');
+          const titleLink = $elem.find('td.field.title a');
           const title = cleanNewLines(titleLink.text().trim());
-          let canonicalURL = titleLink.attr('href');
+          let canonicalURL = titleLink.attr('href') || null;
           if (canonicalURL && !canonicalURL.startsWith('http')) {
             canonicalURL = 'https://www.goodreads.com' + canonicalURL;
           }
 
           // --- Author ---
-          const author = $(elem).find('td.field.author a').first().text().trim();
+          const author = $elem.find('td.field.author a').first().text().trim();
 
           // --- Rating ---
-          const rating =
-            translateRating($(elem).find('td.field.rating span.staticStars').attr('title')) || null;
+          const rating = translateRating($elem.find('td.field.rating span.staticStars').attr('title'));
 
           // --- Review ---
           // Goodreads shows a preview in a span with an id starting "freeTextContainer"
-          let review = $(elem).find('td.field.review span[id^=\'freeTextreview\']').text().trim();
+          let review = $elem.find('td.field.review span[id^=\'freeTextreview\']').text().trim();
           if (!review) {
-            review = $(elem).find('td.field.review span[id^=\'freeTextContainer\']').text().trim();
+            review = $elem.find('td.field.review span[id^=\'freeTextContainer\']').text().trim();
           }
 
           return {
@@ -131,11 +143,8 @@ async function getPageItems(baseURL, pageNumber) {
 
 /**
  * Gets all pages of a Goodreads shelf and returns all books.
- *
- * @param {string} originalURL - The URL for a shelf.
- * @return {object} allBooks - An array of books.
  */
-async function getAllPages(originalURL) {
+async function getAllPages(originalURL: string): Promise<GoodreadsBook[] | null> {
   try {
     console.time('getAllPages');
     const { books: booksOnPage1, $ } = await getPageItems(originalURL, 1);
@@ -171,12 +180,14 @@ async function getAllPages(originalURL) {
     console.timeEnd('getAllPages');
     return allBooks;
   } catch (error) {
-    console.error('Error:', error);
+    if (error instanceof Error) {
+      console.error('Error:', error.message);
+    } else {
+      console.error('Unknown error:', error);
+    }
     console.timeEnd('getAllPages');
     return null;
   }
 }
 
-module.exports = {
-  getAllPages,
-};
+export { getAllPages, type GoodreadsBook }; 

@@ -1,5 +1,19 @@
-// __tests__/mocks/goodreadsMock.js
-const mockGoodreadsResponse = books => {
+interface MockBook {
+  title: string;
+  author: string;
+  coverImage?: string;
+  canonicalURL?: string;
+  rating?: string;
+  review?: string;
+  isbn?: string;
+  pageCount?: number;
+  publishedYear?: number;
+  publisher?: string;
+  language?: string;
+  genre?: string[];
+}
+
+const mockGoodreadsResponse = (books: MockBook[]): string => {
   return `
       <html>
         <body>
@@ -38,6 +52,4 @@ const mockGoodreadsResponse = books => {
     `;
 };
 
-module.exports = {
-  mockGoodreadsResponse,
-};
+export { mockGoodreadsResponse, type MockBook }; 

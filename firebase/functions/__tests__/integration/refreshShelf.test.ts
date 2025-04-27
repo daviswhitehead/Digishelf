@@ -1,15 +1,17 @@
-const {
+import {
   createTestUser,
   createTestSource,
   createTestIntegration,
   createTestShelf,
   callFunction,
   createTestItem,
-} = require('../test-utils');
-const { getFirestore } = require('firebase-admin/firestore');
-const MockAdapter = require('axios-mock-adapter');
-const axios = require('axios');
-const { mockGoodreadsResponse } = require('../mocks/goodreadsMock');
+  TestItem,
+} from '../../test/helpers/test-utils';
+import { getFirestore, Timestamp } from 'firebase-admin/firestore';
+import MockAdapter from 'axios-mock-adapter';
+import axios from 'axios';
+import { mockGoodreadsResponse } from '../mocks/goodreadsMock';
+import type { DocumentSnapshot } from 'firebase-admin/firestore';
 
 describe('refreshShelf', () => {
   const TEST_USER_ID = 'test-user-id';
@@ -17,7 +19,7 @@ describe('refreshShelf', () => {
   const TEST_INTEGRATION_ID = 'test-integration-id';
   const TEST_SHELF_ID = 'test-shelf-id';
   const db = getFirestore();
-  let mock;
+  let mock: MockAdapter;
 
   beforeEach(async () => {
     mock = new MockAdapter(axios);
@@ -35,6 +37,8 @@ describe('refreshShelf', () => {
   describe('Basic Shelf Refresh', () => {
     it('should update existing items with most recent data', async () => {
       const now = new Date();
+      const oneDayAgo = Timestamp.fromDate(new Date(now.getTime() - 24 * 60 * 60 * 1000));
+      
       // 1. Set up initial state with more fields
       await createTestItem('test-item-1', TEST_SHELF_ID, TEST_INTEGRATION_ID, {
         title: 'Old Title',
@@ -43,8 +47,8 @@ describe('refreshShelf', () => {
         coverImage: 'https://example.com/old-cover.jpg',
         rating: 'it was ok',
         review: 'Meh',
-        createdAt: new Date(now.getTime() - 24 * 60 * 60 * 1000), // 1 day ago
-        updatedAt: new Date(now.getTime() - 24 * 60 * 60 * 1000),
+        createdAt: oneDayAgo,
+        updatedAt: oneDayAgo,
         userId: TEST_USER_ID,
         sourceId: TEST_SOURCE_ID,
         sourceDisplayName: 'Goodreads',
@@ -71,7 +75,7 @@ describe('refreshShelf', () => {
       mock.onGet().reply(200, mockGoodreadsResponse(mockBooks));
 
       // 3. Call the refresh function
-      const result = await callFunction('refreshShelf', { shelfId: TEST_SHELF_ID });
+      const result = await callFunction<{ success: boolean; message: string }>('refreshShelf', { shelfId: TEST_SHELF_ID });
 
       // 4. Verify the function response
       expect(result).toEqual({
@@ -80,10 +84,24 @@ describe('refreshShelf', () => {
       });
 
       // 5. Verify the item was updated in Firestore with comprehensive checks
-      const updatedItem = await db.collection('items').doc('test-item-1').get();
+      const updatedItem: DocumentSnapshot = await db.collection('items').doc('test-item-1').get();
       expect(updatedItem.exists).toBe(true);
 
-      const itemData = updatedItem.data();
+      const itemData = updatedItem.data() as TestItem & {
+        title: string;
+        author: string;
+        coverImage: string;
+        rating: string;
+        review: string;
+        isbn: string;
+        pageCount: number;
+        publishedYear: number;
+        publisher: string;
+        language: string;
+        genre: string[];
+        sourceDisplayName: string;
+        canonicalURL: string;
+      };
 
       // Check that updated fields match new data
       expect(itemData.title).toBe('New Title');
@@ -107,97 +125,18 @@ describe('refreshShelf', () => {
       expect(itemData.canonicalURL).toBe('https://www.goodreads.com/book/show/123');
 
       // Check timestamps
-      expect(itemData.createdAt.toDate()).toEqual(expect.any(Date));
-      expect(itemData.updatedAt.toDate()).toEqual(expect.any(Date));
-      expect(itemData.createdAt.toDate().getTime()).toBeLessThan(
-        itemData.updatedAt.toDate().getTime()
-      );
+      const createdAtDate = itemData.createdAt.toDate();
+      const updatedAtDate = itemData.updatedAt.toDate();
+      
+      expect(createdAtDate).toBeInstanceOf(Date);
+      expect(updatedAtDate).toBeInstanceOf(Date);
+      expect(createdAtDate.getTime()).toBeLessThan(updatedAtDate.getTime());
 
       // Verify the updatedAt timestamp is recent
       const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000);
-      expect(itemData.updatedAt.toDate()).toBeGreaterThan(fiveMinutesAgo);
+      expect(updatedAtDate.getTime()).toBeGreaterThan(fiveMinutesAgo.getTime());
     });
 
-    it('should update shelf metadata with refresh timestamp', async () => {
-      // TODO: Implement test
-    });
+    // TODO: Implement remaining tests...
   });
-
-  describe('New Items', () => {
-    it('should create new items that exist in source but not in Firestore', async () => {
-      // TODO: Implement test
-    });
-
-    it('should ensure new items have all required fields and relationships', async () => {
-      // TODO: Implement test
-    });
-  });
-
-  describe('Integration Data Usage', () => {
-    it('should use integration data to fetch shelf contents', async () => {
-      // TODO: Implement test
-    });
-
-    it('should handle missing integration data', async () => {
-      // TODO: Implement test
-    });
-
-    it('should handle invalid integration credentials', async () => {
-      // TODO: Implement test
-    });
-  });
-
-  describe('Data Consistency', () => {
-    it('should maintain item relationships (shelfId, integrationId)', async () => {
-      // TODO: Implement test
-    });
-
-    it('should not create duplicate items', async () => {
-      // TODO: Implement test
-    });
-
-    it('should properly associate items with the correct shelf', async () => {
-      // TODO: Implement test
-    });
-  });
-
-  describe('Error Cases', () => {
-    it('should handle invalid shelfId', async () => {
-      // TODO: Implement test
-    });
-
-    it('should handle missing integration data', async () => {
-      // TODO: Implement test
-    });
-
-    it('should handle invalid integration credentials', async () => {
-      // TODO: Implement test
-    });
-
-    it('should handle network errors when fetching data', async () => {
-      // TODO: Implement test
-    });
-
-    it('should handle malformed data from the source', async () => {
-      // TODO: Implement test
-    });
-  });
-
-  describe('Edge Cases', () => {
-    it('should handle empty shelf refresh', async () => {
-      // TODO: Implement test
-    });
-
-    it('should handle previously deleted shelf', async () => {
-      // TODO: Implement test
-    });
-
-    it('should handle shelf with large number of items', async () => {
-      // TODO: Implement test
-    });
-
-    it('should handle shelf with no changes since last refresh', async () => {
-      // TODO: Implement test
-    });
-  });
-});
+}); 

@@ -1,32 +1,33 @@
-const admin = require('firebase-admin');
-const { FieldValue } = require('firebase-admin/firestore');
-const { getAllPages } = require('../data/goodreadsData');
+import { getFirestore, FieldValue } from 'firebase-admin/firestore';
+import { getAllPages } from '../data/goodreadsData';
+import type { GoodreadsIntegration, GoodreadsShelf } from '../shared/types';
 
 const shelfSlugMap = {
   All: 'all',
   Read: 'read',
   'Currently Reading': 'currently-reading',
   'Want to Read': 'to-read',
-};
+} as const;
+
+type ShelfName = keyof typeof shelfSlugMap;
 
 /**
  * Creates or updates shelves for a Goodreads integration
- * @param {string} integrationId
- * @param {object} integration
  */
-async function writeGoodreadsShelves(integrationId, integration) {
-  const userId = integration.userId;
-  const sourceId = integration.sourceId;
-  const shelves = integration.shelves || [];
-  const baseURL = integration.myBooksURL || '';
+export async function writeGoodreadsShelves(
+  integrationId: string,
+  integration: GoodreadsIntegration
+): Promise<void> {
+  const { userId, sourceId, shelves, myBooksURL: baseURL } = integration;
 
-  if (!userId || !sourceId || !shelves.length || !baseURL.length) {
+  if (!userId || !sourceId || !shelves.length || !baseURL) {
     console.error(`🐛 Missing required integration data: ${integrationId}`);
     return;
   }
 
   const now = FieldValue.serverTimestamp();
-  const batch = admin.firestore().batch(); // Initialize a Firestore batch
+  const db = getFirestore();
+  const batch = db.batch();
 
   for (const shelf of shelves) {
     // // TEMP
@@ -36,8 +37,7 @@ async function writeGoodreadsShelves(integrationId, integration) {
     // }
 
     // Find or create a shelf with this userId + integrationId + displayName
-    const existing = await admin
-      .firestore()
+    const existing = await db
       .collection('shelves')
       .where('userId', '==', userId)
       .where('integrationId', '==', integrationId)
@@ -51,7 +51,7 @@ async function writeGoodreadsShelves(integrationId, integration) {
     if (!existing.empty) {
       shelfRef = existing.docs[0].ref;
     } else {
-      shelfRef = admin.firestore().collection('shelves').doc(); // auto-generated ID
+      shelfRef = db.collection('shelves').doc(); // auto-generated ID
       isNew = true;
     }
 
@@ -62,11 +62,13 @@ async function writeGoodreadsShelves(integrationId, integration) {
       integrationId,
       sourceDisplayName: integration.displayName,
       displayName: shelf,
-      originalURL: `${baseURL}?shelf=${encodeURIComponent(shelfSlugMap[shelf])}`,
+      originalURL: `${baseURL}?shelf=${encodeURIComponent(shelfSlugMap[shelf as ShelfName])}`,
       updatedAt: now,
     };
 
-    if (isNew) shelfData.createdAt = now;
+    if (isNew) {
+      (shelfData as typeof shelfData & { createdAt: typeof now }).createdAt = now;
+    }
 
     batch.set(shelfRef, shelfData, { merge: true });
     console.info(
@@ -80,27 +82,29 @@ async function writeGoodreadsShelves(integrationId, integration) {
 }
 
 /**
- * Creates or updates shelves for a Goodreads integration
- * @param {string} shelfId - The shelf ID
- * @param {object} shelf - The shelf object containing details about the shelf
+ * Creates or updates items for a Goodreads shelf
  */
-async function writeGoodreadsItems(shelfId, shelf) {
+export async function writeGoodreadsItems(shelfId: string, shelf: GoodreadsShelf): Promise<void> {
   console.time(`writeGoodreadsItems-${shelfId}`);
 
   const { integrationId, userId, sourceId, originalURL } = shelf;
   console.info(`📚 Fetching books from: ${originalURL}`);
 
   const allBooks = await getAllPages(originalURL);
+  if (!allBooks) {
+    throw new Error(`Failed to fetch books from ${originalURL}`);
+  }
+
   console.info(`📚 Found ${allBooks.length} books to process`);
 
   const now = FieldValue.serverTimestamp();
-  let batch = admin.firestore().batch();
+  const db = getFirestore();
+  let batch = db.batch();
   let operationCount = 0;
   let totalProcessed = 0;
 
   for (const book of allBooks) {
-    const existing = await admin
-      .firestore()
+    const existing = await db
       .collection('items')
       .where('shelfId', '==', shelfId)
       .where('canonicalURL', '==', book.canonicalURL)
@@ -113,7 +117,7 @@ async function writeGoodreadsItems(shelfId, shelf) {
     if (!existing.empty) {
       itemRef = existing.docs[0].ref;
     } else {
-      itemRef = admin.firestore().collection('items').doc();
+      itemRef = db.collection('items').doc();
       isNew = true;
     }
 
@@ -123,11 +127,19 @@ async function writeGoodreadsItems(shelfId, shelf) {
       integrationId,
       userId,
       sourceId,
-      ...book,
+      title: book.title,
+      author: book.author,
+      coverImage: book.coverImage,
+      canonicalURL: book.canonicalURL,
+      rating: book.userRating,
+      review: book.userReview,
+      primaryColor: book.primaryColor,
       updatedAt: now,
     };
 
-    if (isNew) itemData.createdAt = now;
+    if (isNew) {
+      (itemData as typeof itemData & { createdAt: typeof now }).createdAt = now;
+    }
 
     batch.set(itemRef, itemData, { merge: true });
     operationCount++;
@@ -139,7 +151,7 @@ async function writeGoodreadsItems(shelfId, shelf) {
       console.info(
         `✅ Committed batch of 500 items for shelf: ${shelfId} (${totalProcessed}/${allBooks.length} total)`
       );
-      batch = admin.firestore().batch(); // Start a new batch
+      batch = db.batch(); // Start a new batch
       operationCount = 0;
     }
   }
@@ -157,18 +169,18 @@ async function writeGoodreadsItems(shelfId, shelf) {
 
 /**
  * Refreshes a Goodreads shelf by fetching the latest data and updating Firestore.
- * @param {string} shelfId - The shelf ID.
  */
-async function refreshGoodreadsShelf(shelfId) {
+export async function refreshGoodreadsShelf(shelfId: string): Promise<void> {
   console.time(`refreshGoodreadsShelf-${shelfId}`);
 
-  const shelfDoc = await admin.firestore().collection('shelves').doc(shelfId).get();
+  const db = getFirestore();
+  const shelfDoc = await db.collection('shelves').doc(shelfId).get();
 
   if (!shelfDoc.exists) {
     throw new Error(`Shelf not found: ${shelfId}`);
   }
 
-  const shelf = shelfDoc.data();
+  const shelf = shelfDoc.data() as GoodreadsShelf;
   const { originalURL } = shelf;
 
   if (!originalURL) {
@@ -187,10 +199,4 @@ async function refreshGoodreadsShelf(shelfId) {
   } finally {
     console.timeEnd(`refreshGoodreadsShelf-${shelfId}`);
   }
-}
-
-module.exports = {
-  writeGoodreadsShelves,
-  writeGoodreadsItems,
-  refreshGoodreadsShelf,
-};
+} 
