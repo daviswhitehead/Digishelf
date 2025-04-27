@@ -3,9 +3,6 @@ import { getAuth, connectAuthEmulator, GoogleAuthProvider } from 'firebase/auth'
 import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
 import { getFunctions, connectFunctionsEmulator } from 'firebase/functions';
 import { getStorage, connectStorageEmulator } from 'firebase/storage';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 // Firebase configuration object from environment variables
 const firebaseConfig = {
