@@ -1,6 +1,6 @@
 import * as cheerio from 'cheerio';
 import type { Element } from 'domhandler';
-import { extractReviewText } from '../data';
+import { extractReviewText } from '../../data';
 
 describe('extractReviewText', () => {
   it('extracts review text from freeTextreview span', () => {

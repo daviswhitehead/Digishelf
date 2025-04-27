@@ -1,7 +1,8 @@
 /* global jest, afterEach */
 
-const { initializeApp } = require('firebase-admin/app');
-const { getFirestore } = require('firebase-admin/firestore');
+import { initializeApp } from 'firebase-admin/app';
+import { getFirestore } from 'firebase-admin/firestore';
+import type { DocumentData } from 'firebase-admin/firestore';
 
 // Set emulator environment variables
 process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8081';
@@ -13,7 +14,7 @@ const app = initializeApp({
 });
 
 // Initialize Firestore
-const db = getFirestore(app);
+export const db = getFirestore(app);
 
 // Global test timeout
 jest.setTimeout(30000);
@@ -25,7 +26,7 @@ afterEach(async () => {
   for (const collection of collections) {
     const snapshot = await db.collection(collection).get();
     const batch = db.batch();
-    snapshot.docs.forEach(doc => {
+    snapshot.docs.forEach((doc: DocumentData) => {
       batch.delete(doc.ref);
     });
     await batch.commit();

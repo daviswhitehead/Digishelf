@@ -1,7 +1,7 @@
-import { getPageItems } from '../data';
+import { getPageItems } from '../../data';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
-import { loadFixture } from './__fixtures__/loadFixture';
+import { loadFixture } from '../__fixtures__/loadFixture';
 
 describe('getPageItems', () => {
   let mock: MockAdapter;

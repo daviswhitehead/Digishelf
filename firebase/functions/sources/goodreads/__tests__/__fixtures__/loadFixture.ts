@@ -1,21 +1,7 @@
-import { readFileSync } from 'fs';
-import { join } from 'path';
+import * as fs from 'fs';
+import * as path from 'path';
 
-/**
- * Loads a fixture file from the __fixtures__ directory
- */
-export function loadFixture(relativePath: string): string {
-  const fixturesDir = join(__dirname);
-  const fullPath = join(fixturesDir, relativePath);
-  return readFileSync(fullPath, 'utf8');
+export function loadFixture(fixturePath: string): string {
+  const fixtureFullPath = path.join(__dirname, fixturePath);
+  return fs.readFileSync(fixtureFullPath, 'utf8');
 }
-
-/**
- * Known fixture paths
- */
-export const FIXTURES = {
-  SINGLE_PAGE: 'responses/single_page.html',
-  MULTI_PAGE: 'responses/multi_page.html',
-  EMPTY_SHELF: 'responses/empty_shelf.html',
-  SUBSEQUENT_PAGE: 'responses/subsequent_page.html',
-} as const;

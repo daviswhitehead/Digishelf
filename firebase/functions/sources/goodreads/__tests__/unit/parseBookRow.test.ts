@@ -1,7 +1,7 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import * as cheerio from 'cheerio';
-import { parseBookRow } from '../data';
+import { parseBookRow } from '../../data';
 
 function getElement(html: string) {
   const $ = cheerio.load(html);
@@ -14,7 +14,7 @@ function getElement(html: string) {
 
 function getBookRowFromFixture() {
   const html = readFileSync(
-    join(__dirname, '__fixtures__/responses/currently_reading.html'),
+    join(__dirname, '..', '__fixtures__/responses/currently_reading.html'),
     'utf8'
   );
   return getElement(html);
@@ -39,18 +39,20 @@ describe('parseBookRow', () => {
 
   it('handles missing fields', () => {
     const html = `
-      <tr class="review">
-        <td class="field title">
-          <div class="value">
-            <a href="/book/show/123">Test Book</a>
-          </div>
-        </td>
-        <td class="field author">
-          <div class="value">
-            <a href="/author/show/123">Unknown Author</a>
-          </div>
-        </td>
-      </tr>
+      <table>
+        <tr class="review">
+          <td class="field title">
+            <div class="value">
+              <a href="/book/show/123">Test Book</a>
+            </div>
+          </td>
+          <td class="field author">
+            <div class="value">
+              <a href="/author/show/123">Unknown Author</a>
+            </div>
+          </td>
+        </tr>
+      </table>
     `;
     const { $, elem } = getElement(html);
     const result = parseBookRow($, elem);
