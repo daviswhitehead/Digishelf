@@ -3,7 +3,6 @@
   "private": true,
   "workspaces": [
     "app",
-    "firebase",
     "firebase/functions"
   ],
   "scripts": {

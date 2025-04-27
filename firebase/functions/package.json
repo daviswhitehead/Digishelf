@@ -2,7 +2,7 @@
   "name": "@digishelf/functions",
   "description": "Cloud Functions for Firebase",
   "scripts": {
-    "prepare": "cd ../.. && husky",
+    "prepare": "[ -n \"$CI\" ] || cd ../.. && husky",
     "lint": "eslint .",
     "build": "tsc",
     "build:watch": "tsc --watch",
