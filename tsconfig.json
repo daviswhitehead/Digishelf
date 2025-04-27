@@ -9,7 +9,7 @@
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "esModuleInterop": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
@@ -17,15 +17,31 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["app/*"],
-      "@firebase/*": ["firebase/*"]
+      "@firebase/*": ["firebase/*"],
+      "firebase/*": ["node_modules/firebase/*"]
     },
+    "types": ["node", "jest"],
     "typeRoots": ["./node_modules/@types", "./app/types", "./firebase/functions/types"]
   },
   "include": [
     "app/**/*.ts",
     "app/**/*.tsx",
     "firebase/functions/**/*.ts",
-    "firebase/functions/**/*.tsx"
+    "firebase/functions/**/*.tsx",
+    "app/types/**/*.d.ts"
   ],
-  "exclude": ["node_modules", "**/node_modules", ".next", "out", "dist", "lib"]
+  "exclude": [
+    "node_modules",
+    "**/node_modules",
+    ".next",
+    "out",
+    "dist",
+    "lib",
+    "**/build",
+    "coverage",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx"
+  ]
 }

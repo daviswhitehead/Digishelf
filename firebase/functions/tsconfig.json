@@ -11,13 +11,15 @@
     "target": "es2017",
     "composite": true,
     "declaration": true,
-    "noEmit": false,
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./*"],
-      "@shared/*": ["./shared/*"]
-    }
+    "noEmit": false
   },
-  "include": ["./**/*"],
-  "exclude": ["node_modules", "lib", "**/*.test.ts", "**/*.spec.ts"]
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": [
+    "node_modules",
+    "lib",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx"
+  ]
 }
