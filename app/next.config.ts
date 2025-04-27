@@ -1,15 +1,13 @@
 import type { NextConfig } from 'next';
 import type { Configuration as WebpackConfig } from 'webpack';
-import withTM from 'next-transpile-modules';
-
-const withTranspileModules = withTM([
-  'react-native-web',
-  '@mindinventory/react-native-stagger-view',
-  'react-native-paper',
-  'react-native-vector-icons',
-]);
 
 const config: NextConfig = {
+  transpilePackages: [
+    'react-native-web',
+    '@mindinventory/react-native-stagger-view',
+    'react-native-paper',
+    'react-native-vector-icons',
+  ],
   webpack: (config: WebpackConfig) => {
     // Initialize resolve if it doesn't exist
     config.resolve = config.resolve || {};
@@ -43,4 +41,4 @@ const config: NextConfig = {
   },
 };
 
-export default withTranspileModules(config);
+export default config;

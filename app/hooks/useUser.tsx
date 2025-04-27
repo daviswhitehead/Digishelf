@@ -1,5 +1,6 @@
 import React, { useEffect, useState, createContext, useContext, ReactNode } from 'react';
 import { doc, onSnapshot } from 'firebase/firestore';
+import { User } from 'firebase/auth';
 import { auth, db } from '../firebase/clientApp';
 import { UserData } from '../types/models';
 
@@ -30,7 +31,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     let unsubscribeFirestore: (() => void) | undefined;
 
-    const unsubscribeAuth = auth.onAuthStateChanged(async authUser => {
+    const unsubscribeAuth = auth.onAuthStateChanged(async (authUser: User | null) => {
       try {
         if (authUser) {
           // Set up real-time listener for user data in Firestore
