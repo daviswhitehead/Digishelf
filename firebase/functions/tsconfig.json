@@ -4,7 +4,7 @@
     "outDir": "lib",
     "rootDir": ".",
     "baseUrl": ".",
-    "lib": ["es2017"],
+    "lib": ["es2017", "dom"],
     "types": ["node", "jest"],
     "sourceMap": true,
     "sourceRoot": "",
@@ -16,8 +16,9 @@
     "noEmit": true,
     "paths": {
       "*": ["node_modules/*", "node_modules/@types/*"]
-    }
+    },
+    "typeRoots": ["./node_modules/@types", "../../node_modules/@types"]
   },
-  "include": ["**/*.ts", "**/*.js"],
-  "exclude": ["node_modules", "lib", "coverage"]
+  "include": ["**/*.ts", "**/*.js", "**/*.tsx", "**/*.jsx"],
+  "exclude": ["node_modules", "lib", "coverage", ".next", "jest.config.ts"]
 }
