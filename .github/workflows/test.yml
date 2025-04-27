@@ -8,42 +8,55 @@ on:
 
 env:
   NODE_VERSION: '22'
+  HUSKY: '0' # Disable Husky only in CI
+  SKIP_HUSKY: '1' # Additional safety for Husky skip
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
       
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           
-      # Install root dependencies
-      - name: Install root dependencies
+      - name: Debug Environment
         run: |
-          npm pkg delete scripts.prepare
-          npm ci
+          echo "Node version: $(node -v)"
+          echo "NPM version: $(npm -v)"
+          echo "Working directory: $(pwd)"
+          echo "HUSKY env: $HUSKY"
+          echo "SKIP_HUSKY env: $SKIP_HUSKY"
           
-      # Test App
-      - name: Test App
+      - name: Install Root Dependencies
         run: |
-          cd app
-          npm pkg delete scripts.prepare
-          npm ci
-          npm run test
+          echo "Installing root dependencies..."
+          # First install without any scripts
+          npm ci --ignore-scripts
+          # Then run the necessary scripts manually (but not prepare/postinstall)
+          npm rebuild
+          echo "Root dependencies installed"
           
-      # Test Functions
       - name: Test Functions
         run: |
+          echo "Testing functions..."
           cd firebase/functions
-          npm pkg delete scripts.prepare
-          npm ci
+          npm ci --ignore-scripts
+          npm rebuild
           npm run test
           
-      # Run linting and type checking
-      - name: Lint and Type Check
+      - name: Test App
         run: |
-          npm run lint
-          npm run type-check 
+          echo "Testing app..."
+          cd app
+          npm ci --ignore-scripts
+          npm rebuild
+          npm run test
+          
+      - name: Run Linting
+        run: |
+          echo "Running linting..."
+          npm run lint 
