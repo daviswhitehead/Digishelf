@@ -1,14 +1,19 @@
-import React from 'react';
-import { render as rtlRender } from '@testing-library/react';
-import { RenderOptions } from '@testing-library/react';
+import React, { ReactElement } from 'react';
+import { render, RenderOptions } from '@testing-library/react';
 
 // Add any providers here
-const AllTheProviders: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  return <React.Fragment>{children}</React.Fragment>;
+const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <React.Fragment>
+      {children}
+    </React.Fragment>
+  );
 };
 
-const customRender = (ui: React.ReactElement, options?: Omit<RenderOptions, 'wrapper'>) =>
-  rtlRender(ui, { wrapper: AllTheProviders, ...options });
+const customRender = (
+  ui: ReactElement,
+  options?: Omit<RenderOptions, 'wrapper'>,
+) => render(ui, { wrapper: AllTheProviders, ...options });
 
 // re-export everything
 export * from '@testing-library/react';

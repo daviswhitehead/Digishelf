@@ -165,7 +165,7 @@ export async function getAllPages(originalURL: string): Promise<GoodreadsBook[] 
 
       if (!allBooks.length) {
         console.warn('No books found in shelf');
-        return null;
+        return [];  // Return empty array instead of null
       }
 
       console.info(`Total books collected: ${allBooks.length}`);
@@ -175,7 +175,7 @@ export async function getAllPages(originalURL: string): Promise<GoodreadsBook[] 
         'Fatal error in getAllPages:',
         error instanceof Error ? error.message : 'Unknown error'
       );
-      return null;
+      return null;  // Still return null for actual errors
     }
-  }) as Promise<GoodreadsBook[] | null>; // Type assertion to fix return type
+  }) as Promise<GoodreadsBook[] | null>;
 }

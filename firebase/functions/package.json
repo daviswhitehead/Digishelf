@@ -30,9 +30,6 @@
   },
   "main": "lib/index.js",
   "dependencies": {
-    "axios": "^1.7.9",
-    "cheerio": "^1.0.0",
-    "firebase-admin": "^12.6.0",
     "firebase-functions": "^6.3.2",
     "node-vibrant": "^4.0.3",
     "source-map-support": "^0.5.21"
@@ -43,8 +40,11 @@
     "@types/express": "^5.0.1",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.15.2",
+    "axios": "^1.9.0",
     "axios-mock-adapter": "^2.1.0",
+    "cheerio": "^1.0.0",
     "concurrently": "^9.1.2",
+    "firebase-admin": "^13.3.0",
     "firebase-functions-test": "^3.4.1",
     "jest": "^29.7.0",
     "rimraf": "^5.0.10",

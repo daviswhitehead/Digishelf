@@ -4,12 +4,25 @@ const config: Config.InitialOptions = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   roots: ['<rootDir>/sources', '<rootDir>/handlers', '<rootDir>/shared'],
-  testMatch: [
-    '**/__tests__/unit/**/*.test.ts',
-    '**/__tests__/integration/**/*.integration.test.ts',
-  ],
   setupFilesAfterEnv: ['<rootDir>/test/helpers/jest.setup.ts'],
   moduleFileExtensions: ['ts', 'js', 'json', 'node'],
+  testMatch: [
+    '**/__tests__/unit/**/*.test.ts',
+    '**/__tests__/integration/**/*.test.ts'
+  ],
+  moduleNameMapper: {
+    '^@test/(.*)$': '<rootDir>/test/$1',
+    '^@sources/(.*)$': '<rootDir>/sources/$1',
+    '^@handlers/(.*)$': '<rootDir>/handlers/$1',
+    '^@shared/(.*)$': '<rootDir>/shared/$1',
+  },
+  transform: {
+    '^.+\\.ts$': ['ts-jest', {
+      tsconfig: '<rootDir>/tsconfig.json',
+    }],
+  },
+  verbose: true,
+  testPathIgnorePatterns: ['/node_modules/', '/lib/'],
   collectCoverageFrom: [
     'sources/**/*.ts',
     'handlers/**/*.ts',
@@ -24,14 +37,6 @@ const config: Config.InitialOptions = {
       lines: 80,
       statements: 80,
     },
-  },
-  verbose: true,
-  testPathIgnorePatterns: ['/node_modules/', '/lib/'],
-  moduleNameMapper: {
-    '^@test/(.*)$': '<rootDir>/test/$1',
-    '^@sources/(.*)$': '<rootDir>/sources/$1',
-    '^@handlers/(.*)$': '<rootDir>/handlers/$1',
-    '^@shared/(.*)$': '<rootDir>/shared/$1',
   },
 };
 
