@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { signInWithPopup, GoogleAuthProvider, User } from 'firebase/auth';
+import { signInWithPopup, GoogleAuthProvider, User, Auth } from 'firebase/auth';
 import { auth } from '../firebase/clientApp';
 
 interface LoginProps {
@@ -11,9 +11,14 @@ export const Login: React.FC<LoginProps> = ({ onSuccess }) => {
   const [error, setError] = useState<string | null>(null);
 
   const handleGoogleLogin = async () => {
+    if (!auth) {
+      setError('Authentication is not initialized');
+      return;
+    }
+
     try {
       const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(auth, provider);
+      const result = await signInWithPopup(auth as Auth, provider);
       const user = result.user;
 
       if (onSuccess) {

@@ -21,22 +21,14 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Initialize Firestore
+// Initialize services
 const db = getFirestore(app);
-
-// Initialize Firebase Authentication
 const auth = getAuth(app);
-
-// Initialize Google Auth Provider
+const functions = getFunctions(app);
+const storage = getStorage(app);
 const googleProvider = new GoogleAuthProvider();
 
-// Initialize Firebase Functions
-const functions = getFunctions(app);
-
-// Initialize Firebase Storage
-const storage = getStorage(app);
-
-// If using emulators locally, connect to the emulator
+// Connect to emulators in development
 if (process.env.NODE_ENV === 'development') {
   connectAuthEmulator(auth, 'http://127.0.0.1:9099');
   connectFirestoreEmulator(db, '127.0.0.1', 8080);
@@ -45,3 +37,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 export { app, db, auth, googleProvider, functions, storage };
+export type { FirebaseApp } from 'firebase/app';
+export type { Auth } from 'firebase/auth';
+export type { Firestore } from 'firebase/firestore';
+export type { FirebaseStorage } from 'firebase/storage';

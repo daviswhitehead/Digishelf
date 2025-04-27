@@ -1,231 +1,116 @@
 import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 import { useRouter } from 'next/router';
+import { doc, getDoc, Firestore } from 'firebase/firestore';
 import { db } from '../../../firebase/clientApp';
-import { doc, getDoc, updateDoc, deleteDoc } from 'firebase/firestore';
-import type { Integration } from '../../../types/integration';
-import Sidebar from '../../../components/Sidebar';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import type { Integration } from '../../../types/models';
 
-export default function IntegrationPage() {
+const IntegrationDetails = () => {
   const router = useRouter();
-  const { userId, integrationId } = router.query;
-  const [integrationData, setIntegrationData] = useState<Integration | null>(null);
-  const [myBooksURL, setMyBooksURL] = useState('');
-  const [accountSlug, setAccountSlug] = useState('');
+  const { integrationId } = router.query;
+  const [integration, setIntegration] = useState<Integration | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState('');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!userId || !integrationId || typeof integrationId !== 'string') return;
+    if (!integrationId || typeof integrationId !== 'string') {
+      setError('Invalid integration ID');
+      setLoading(false);
+      return;
+    }
 
     const fetchIntegrationData = async () => {
+      if (!db) {
+        setError('Database is not initialized');
+        setLoading(false);
+        return;
+      }
+
       try {
-        const integrationDocRef = doc(db, 'integrations', integrationId);
+        const integrationDocRef = doc(db as Firestore, 'integrations', integrationId);
         const integrationDoc = await getDoc(integrationDocRef);
 
         if (integrationDoc.exists()) {
-          const data = integrationDoc.data() as Integration;
-          setIntegrationData(data);
-          setMyBooksURL(data.myBooksURL || '');
-          setAccountSlug(data.myBooksURL ? deriveAccountSlug(data.myBooksURL) : '');
+          const data = integrationDoc.data();
+          setIntegration({
+            id: integrationDoc.id,
+            ...data,
+          } as Integration);
         } else {
-          setError('Integration not found.');
+          setError('Integration not found');
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'An error occurred');
+        console.error('Error fetching integration:', err);
+        setError(err instanceof Error ? err.message : 'Failed to fetch integration');
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchIntegrationData();
-  }, [userId, integrationId]);
+  }, [integrationId]);
 
-  const deriveAccountSlug = (url: string): string => {
-    try {
-      const urlParts = new URL(url).pathname.split('/');
-      return urlParts[urlParts.length - 1] || '';
-    } catch {
-      return '';
-    }
-  };
-
-  const handleSave = async () => {
-    if (!integrationId || typeof integrationId !== 'string') return;
-
-    try {
-      const integrationDocRef = doc(db, 'integrations', integrationId);
-      await updateDoc(integrationDocRef, {
-        myBooksURL,
-        updatedAt: new Date(),
-      });
-      setSuccessMessage('Changes saved successfully!');
-      setTimeout(() => setSuccessMessage(''), 3000);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
-    }
-  };
-
-  const handleDelete = async () => {
-    if (!integrationId || typeof integrationId !== 'string' || !userId) return;
-
-    try {
-      const integrationDocRef = doc(db, 'integrations', integrationId);
-      await deleteDoc(integrationDocRef);
-      router.push(`/${userId}/integrations`);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
-    }
-  };
-
-  if (error) {
+  if (loading) {
     return (
       <View style={styles.container}>
-        <Sidebar />
-        <View style={styles.content}>
-          <Text style={styles.errorText}>{error}</Text>
-        </View>
+        <Text>Loading...</Text>
       </View>
     );
   }
 
-  if (!integrationData) {
+  if (error) {
     return (
       <View style={styles.container}>
-        <Sidebar />
-        <View style={styles.content}>
-          <Text style={styles.loadingText}>Loading...</Text>
-        </View>
+        <Text style={styles.error}>{error}</Text>
+      </View>
+    );
+  }
+
+  if (!integration) {
+    return (
+      <View style={styles.container}>
+        <Text>No integration found</Text>
       </View>
     );
   }
 
   return (
     <View style={styles.container}>
-      <Sidebar />
-      <View style={styles.contentWrapper}>
-        <ScrollView contentContainerStyle={styles.content}>
-          <Text style={styles.title}>Your {integrationData.displayName} Integration</Text>
-          <View style={styles.formGroup}>
-            <Text style={styles.label}>My Books URL:</Text>
-            <Text style={styles.helperText}>
-              <a
-                href='https://www.goodreads.com/review/list/'
-                target='_blank'
-                rel='noopener noreferrer'
-                style={styles.link}
-              >
-                Click here
-              </a>
-              , login, then copy and paste the URL here.
-            </Text>
-            <TextInput
-              value={myBooksURL}
-              onChangeText={(text: string) => {
-                setMyBooksURL(text);
-                setAccountSlug(deriveAccountSlug(text));
-              }}
-              style={styles.input}
-            />
-          </View>
-          <View style={styles.formGroup}>
-            <Text style={styles.label}>Account Slug:</Text>
-            <TextInput value={accountSlug} editable={false} style={styles.inputDisabled} />
-          </View>
-          <TouchableOpacity onPress={handleSave} style={styles.saveButton}>
-            <Text style={styles.saveButtonText}>Save</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleDelete} style={styles.deleteButton}>
-            <Text style={styles.deleteButtonText}>Delete</Text>
-          </TouchableOpacity>
-          {successMessage && <Text style={styles.successText}>{successMessage}</Text>}
-        </ScrollView>
-      </View>
+      <Text style={styles.title}>Integration Details</Text>
+      <Text style={styles.text}>ID: {integration.id}</Text>
+      <Text style={styles.text}>Account ID: {integration.accountId}</Text>
+      <Text style={styles.text}>Account Slug: {integration.accountSlug}</Text>
+      <Text style={styles.text}>Status: {integration.status}</Text>
+      <Text style={styles.text}>
+        Last Synced: {integration.lastSyncedAt?.toDate().toLocaleString()}
+      </Text>
+      {integration.error && (
+        <Text style={[styles.text, styles.error]}>Error: {integration.error}</Text>
+      )}
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'row',
-    backgroundColor: '#000',
-  },
-  contentWrapper: {
-    flex: 1,
-    marginLeft: 250,
-  },
-  content: {
     padding: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   title: {
-    color: '#fff',
     fontSize: 24,
+    fontWeight: 'bold',
     marginBottom: 20,
   },
-  formGroup: {
-    marginBottom: 20,
-  },
-  label: {
-    color: '#fff',
-    marginBottom: 5,
-  },
-  helperText: {
-    color: '#aaa',
+  text: {
+    fontSize: 16,
     marginBottom: 10,
   },
-  link: {
-    color: '#4caf50',
-    textDecorationLine: 'underline',
-  },
-  input: {
-    backgroundColor: '#1a1a1a',
-    color: '#fff',
-    padding: 10,
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: '#ccc',
-  },
-  inputDisabled: {
-    backgroundColor: '#333',
-    color: '#aaa',
-    padding: 10,
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: '#ccc',
-  },
-  saveButton: {
-    backgroundColor: '#4caf50',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    marginBottom: 10,
-  },
-  saveButtonText: {
-    color: '#fff',
+  error: {
+    color: 'red',
     fontSize: 16,
-    textAlign: 'center',
-  },
-  deleteButton: {
-    backgroundColor: '#ff4d4d',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-  },
-  deleteButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    textAlign: 'center',
-  },
-  errorText: {
-    color: '#ff4d4d',
-    fontSize: 16,
-  },
-  loadingText: {
-    color: '#fff',
-    fontSize: 16,
-  },
-  successText: {
-    color: '#4caf50',
-    fontSize: 16,
-    marginTop: 10,
   },
 });
+
+export default IntegrationDetails;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { auth } from '../../firebase/clientApp';
-import { signOut } from 'firebase/auth';
+import { signOut, Auth } from 'firebase/auth';
 import { useUser } from '../../hooks/useUser';
 import Sidebar from '../../components/Sidebar';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
@@ -11,12 +11,17 @@ export default function Profile() {
   const { user, loading, error } = useUser();
 
   const handleLogout = async () => {
+    if (!auth) {
+      console.error('Auth is not initialized');
+      return;
+    }
+
     try {
-      await signOut(auth);
+      await signOut(auth as Auth);
       router.push('/login');
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'An error occurred during logout';
-      console.error(errorMessage);
+      console.error('Logout error:', errorMessage);
     }
   };
 
