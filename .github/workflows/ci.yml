@@ -1,0 +1,121 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+        cache: 'npm'
+    
+    - name: Install Root Dependencies
+      run: npm ci
+      
+    - name: Type Check
+      run: npm run type-check
+    
+    - name: Lint
+      run: npm run lint
+
+  test-functions:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+        cache: 'npm'
+        cache-dependency-path: 'firebase/functions/package-lock.json'
+    
+    - name: Install Functions Dependencies
+      working-directory: firebase/functions
+      run: npm ci
+    
+    - name: Test Functions
+      working-directory: firebase/functions
+      run: npm test -- --coverage
+    
+    - name: Upload Functions Coverage
+      uses: actions/upload-artifact@v4
+      with:
+        name: functions-coverage
+        path: firebase/functions/coverage
+        retention-days: 14
+    
+    - name: Post Functions Coverage Comment
+      uses: romeovs/lcov-reporter-action@v0.3.1
+      with:
+        lcov-file: firebase/functions/coverage/lcov.info
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        title: 'Firebase Functions Test Coverage'
+
+  test-app:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+        cache: 'npm'
+        cache-dependency-path: 'app/package-lock.json'
+    
+    - name: Install App Dependencies
+      working-directory: app
+      run: npm ci
+    
+    - name: Test App
+      working-directory: app
+      run: npm test -- --coverage
+    
+    - name: Upload App Coverage
+      uses: actions/upload-artifact@v4
+      with:
+        name: app-coverage
+        path: app/coverage
+        retention-days: 14
+    
+    - name: Post App Coverage Comment
+      uses: romeovs/lcov-reporter-action@v0.3.1
+      with:
+        lcov-file: app/coverage/lcov.info
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        title: 'Next.js App Test Coverage'
+
+  build:
+    needs: [validate, test-functions, test-app]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+        cache: 'npm'
+    
+    - name: Install Dependencies
+      run: |
+        cd app && npm ci
+        cd ../firebase/functions && npm ci
+    
+    - name: Build App
+      working-directory: app
+      run: npm run build
+    
+    - name: Build Functions
+      working-directory: firebase/functions
+      run: npm run build 

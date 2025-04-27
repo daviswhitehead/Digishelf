@@ -11,7 +11,8 @@
     "incremental": true,
     "sourceMap": true,
     "noImplicitReturns": true,
-    "noUnusedLocals": true
+    "noUnusedLocals": true,
+    "jsx": "react"
   },
   "exclude": [
     "node_modules",
