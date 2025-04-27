@@ -1,4 +1,3 @@
-import { User } from 'firebase/auth';
 import { Timestamp } from 'firebase/firestore';
 import { FirebaseError } from 'firebase/app';
 
@@ -65,3 +64,12 @@ export interface UseUserReturn {
   loading: boolean;
   error: FirebaseError | Error | null;
 }
+
+export type _User = {
+  id: string;
+  email: string;
+  name: string;
+  photoURL: string;
+  createdAt: Date;
+  updatedAt: Date;
+};

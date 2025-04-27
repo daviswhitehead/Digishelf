@@ -1,8 +1,10 @@
 module.exports = {
-  extends: ['../.eslintrc.js', 'next', 'next/core-web-vitals'],
-  settings: {
-    next: {
-      rootDir: __dirname,
-    },
+  root: true,
+  extends: ['next/core-web-vitals', 'plugin:@typescript-eslint/recommended', 'prettier'],
+  parser: '@typescript-eslint/parser',
+  plugins: ['@typescript-eslint'],
+  rules: {
+    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+    '@typescript-eslint/no-explicit-any': 'warn',
   },
 };
