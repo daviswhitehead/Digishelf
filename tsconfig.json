@@ -9,19 +9,28 @@
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "incremental": true
+    "incremental": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["app/*"],
+      "@firebase/*": ["firebase/*"]
+    },
+    "typeRoots": ["./node_modules/@types", "./app/types", "./firebase/functions/types"],
+    "types": ["node", "jest"]
   },
   "include": [
     "firebase/functions/**/*.ts",
+    "firebase/functions/**/*.tsx",
     "firebase/functions/**/*.js",
     "app/**/*.ts",
     "app/**/*.tsx",
     "app/**/*.js",
-    "app/**/*.jsx"
+    "app/**/*.jsx",
+    "app/types/*.d.ts"
   ],
   "exclude": [
     "node_modules",
@@ -34,6 +43,6 @@
     "**/*.spec.js",
     ".eslintrc.js",
     "app/jest.setup.js",
-    "firebase/functions/shared/types.js"
+    "firebase/functions/lib/**/*"
   ]
 }

@@ -1,6 +1,6 @@
 import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 import { getAllPages } from '../data/goodreadsData.js';
-import type { GoodreadsIntegration, GoodreadsShelf } from '../shared/types.d.ts';
+import { GoodreadsIntegration, GoodreadsShelf } from '../shared/types';
 
 const shelfSlugMap = {
   All: 'all',

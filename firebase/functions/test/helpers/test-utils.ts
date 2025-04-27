@@ -146,10 +146,7 @@ async function createTestItem(
 /**
  * Calls a Firebase function
  */
-async function callFunction(
-  name: 'refreshShelf',
-  data: RefreshShelfData
-): Promise<RefreshShelfResponse> {
+async function callFunction(data: RefreshShelfData): Promise<RefreshShelfResponse> {
   const mockRequest: CallableRequest<RefreshShelfData> = {
     data,
     auth: undefined,

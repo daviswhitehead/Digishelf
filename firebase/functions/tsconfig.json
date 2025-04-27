@@ -1,18 +1,24 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "module": "commonjs",
     "moduleResolution": "node",
+    "target": "es2022",
     "outDir": "lib",
     "rootDir": ".",
-    "isolatedModules": true,
-    "allowJs": true,
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "target": "es2022",
-    "lib": ["es2022"],
-    "skipLibCheck": true,
+    "sourceMap": true,
     "strict": true,
-    "forceConsistentCasingInFileNames": true
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "jsx": "react",
+    "baseUrl": ".",
+    "paths": {
+      "*": ["node_modules/*", "types/*"]
+    },
+    "typeRoots": ["./node_modules/@types", "./types", "../../node_modules/@types"]
   },
   "include": [
     "src/**/*.ts",
@@ -21,6 +27,7 @@
     "test/**/*.js",
     "__tests__/**/*.ts",
     "__tests__/**/*.js",
+    "__tests__/**/*.tsx",
     "sources/**/*.ts",
     "sources/**/*.js",
     "scripts/**/*.ts",
@@ -28,7 +35,8 @@
     "*.ts",
     "*.js",
     "../shared/**/*.ts",
-    "../shared/**/*.js"
+    "../shared/**/*.js",
+    "types/*.d.ts"
   ],
   "exclude": ["node_modules", "lib", "coverage"]
 }

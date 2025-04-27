@@ -1,4 +1,5 @@
 #!/bin/sh
+. "$(dirname -- "$0")/_/husky.sh"
 
 # Colors
 GREEN='\033[0;32m'
@@ -13,6 +14,9 @@ npx lint-staged || {
   echo "${YELLOW}👉 Commit will proceed, but please fix these issues before pushing${NC}"
   echo "${YELLOW}   Run 'npm run lint:fix' and 'npm run type-check' to fix issues${NC}"
 }
+
+echo "🔍 Running type checks..."
+npm run type-check:staged
 
 # Always exit successfully (non-blocking)
 exit 0

@@ -132,20 +132,6 @@ export const onIntegrationDelete = onDocumentDeleted(
   }
 );
 
-interface _RefreshShelfData {
-  shelfId: string;
-}
-
-interface _RefreshShelfResponse {
-  success: boolean;
-  message: string;
-  error?: {
-    code?: string;
-    message: string;
-    stack?: string;
-  };
-}
-
 const refreshShelfOptions: CallableOptions = {
   timeoutSeconds: 540,
   memory: '1GiB',

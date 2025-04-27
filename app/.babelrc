@@ -1,6 +1,17 @@
 {
-  "presets": ["next/babel"],
+  "presets": [
+    "next/babel",
+    "@babel/preset-flow"
+  ],
   "plugins": [
-    ["react-native-web", { "commonjs": true }]
+    ["react-native-web", {
+      "commonjs": true,
+      "moduleNames": [
+        "react-native",
+        "@react-native",
+        "react-native-svg"
+      ]
+    }],
+    "@babel/plugin-transform-flow-strip-types"
   ]
 }

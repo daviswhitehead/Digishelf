@@ -1,5 +1,5 @@
 import { CallableRequest } from 'firebase-functions/v2/https';
-import { refreshGoodreadsShelf } from '../sources/goodreads/handlers.js';
+import { refreshGoodreadsShelf } from '../sources/goodreads/handlers.jsx';
 import { getFirestore } from 'firebase-admin/firestore';
 
 export interface RefreshShelfData {

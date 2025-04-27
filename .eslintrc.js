@@ -50,11 +50,18 @@ module.exports = {
       },
     },
     {
+      // Special rules for JavaScript files
       files: ['**/*.js'],
+      env: {
+        node: true,
+        es6: true,
+      },
       rules: {
         camelcase: 'off',
         '@typescript-eslint/camelcase': 'off',
         'no-invalid-this': 'off',
+        // Allow require syntax in .js files
+        '@typescript-eslint/no-var-requires': 'off',
       },
     },
   ],
