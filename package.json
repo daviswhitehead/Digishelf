@@ -26,7 +26,7 @@
     "type-check:app": "cd app && tsc --noEmit",
     "type-check:functions": "cd firebase/functions && tsc --noEmit",
     "type-check:staged": "tsc --noEmit --project tsconfig.staged.json",
-    "convert-to-ts": "node scripts/convert-to-ts.js"
+    "lint-staged": "lint-staged"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.0.0",
