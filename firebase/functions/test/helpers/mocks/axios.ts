@@ -2,12 +2,12 @@ import { jest } from '@jest/globals';
 import type { AxiosResponse, AxiosStatic } from 'axios';
 
 // Helper function to create mock responses
-const mockAxiosResponse = <T = any>(data: T): AxiosResponse<T> => ({
+const mockAxiosResponse = <T>(data: T): AxiosResponse<T> => ({
   data,
   status: 200,
   statusText: 'OK',
   headers: {},
-  config: {} as any,
+  config: {} as AxiosResponse['config'],
 });
 
 // Create mock instance with proper types
