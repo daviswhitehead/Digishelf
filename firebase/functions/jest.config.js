@@ -18,5 +18,7 @@ module.exports = {
     },
   },
   coverageReporters: ['text', 'lcov', 'html'],
-  testMatch: ['**/__tests__/**/*.test.ts'],
-};
+  testMatch: [
+    '**/__tests__/**/*.test.ts',
+  ],
+}; 

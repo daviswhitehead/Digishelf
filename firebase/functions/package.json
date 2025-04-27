@@ -12,8 +12,8 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:ci": "jest --ci --coverage --colors",
-    "build": "tsc",
-    "build:watch": "tsc --watch",
+    "build": "tsc --project ../../tsconfig.json",
+    "build:watch": "tsc --project ../../tsconfig.json --watch",
     "clean": "rimraf lib",
     "generate-fixtures": "ts-node scripts/generateGoodreadsFixtures.ts"
   },

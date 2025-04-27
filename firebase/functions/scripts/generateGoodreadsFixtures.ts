@@ -10,7 +10,7 @@ export const SHELF_IDS = {
   TEST: 'digishelf-test',
 } as const;
 
-type ShelfId = (typeof SHELF_IDS)[keyof typeof SHELF_IDS];
+type ShelfId = typeof SHELF_IDS[keyof typeof SHELF_IDS];
 
 interface FixtureMetadata {
   generated: string;
@@ -24,23 +24,21 @@ interface FixtureMetadata {
  * Sanitizes HTML response to remove sensitive data
  */
 function sanitizeResponse(html: string): string {
-  return (
-    html
-      // Remove user IDs
-      .replace(/user-\d+/g, 'user-xxx')
-      // Remove emails
-      .replace(/email=([^&"]+)/g, 'email=xxx@xxx.com')
-      // Remove authentication tokens
-      .replace(/auth_token=([^&"]+)/g, 'auth_token=xxx')
-      // Remove any script tags and their contents
-      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
-      // Remove Google Analytics
-      .replace(/ga\('.*?'\);/g, '')
-      // Remove user profile links
-      .replace(/href="\/user\/show\/\d+/g, 'href="/user/show/xxx')
-      // Remove timestamps
-      .replace(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/g, '2024-01-01T00:00:00')
-  );
+  return html
+    // Remove user IDs
+    .replace(/user-\d+/g, 'user-xxx')
+    // Remove emails
+    .replace(/email=([^&"]+)/g, 'email=xxx@xxx.com')
+    // Remove authentication tokens
+    .replace(/auth_token=([^&"]+)/g, 'auth_token=xxx')
+    // Remove any script tags and their contents
+    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+    // Remove Google Analytics
+    .replace(/ga\('.*?'\);/g, '')
+    // Remove user profile links
+    .replace(/href="\/user\/show\/\d+/g, 'href="/user/show/xxx')
+    // Remove timestamps
+    .replace(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/g, '2024-01-01T00:00:00');
 }
 
 /**
@@ -98,12 +96,12 @@ async function saveFixture(
  */
 async function generateFixtures() {
   const fixturesDir = join(__dirname, '../sources/goodreads/__tests__/__fixtures__/responses');
-
+  
   // Ensure directories exist
   mkdirSync(fixturesDir, { recursive: true });
-
+  
   const now = new Date().toISOString();
-
+  
   try {
     // Success cases
     const fixtures = [
@@ -190,4 +188,4 @@ if (require.main === module) {
   generateFixtures();
 }
 
-export { generateFixtures, sanitizeResponse, addMetadata };
+export { generateFixtures, sanitizeResponse, addMetadata }; 

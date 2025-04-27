@@ -2,70 +2,95 @@ import * as cheerio from 'cheerio';
 import { extractReviewText } from '../data';
 
 describe('extractReviewText', () => {
-  it('should extract review text from freeTextreview span', () => {
+  it('extracts review text from freeTextreview span', () => {
     const html = `
-      <tr class="review">
-        <td class="field review">
-          <span id="freeTextreview123">This is a review</span>
-        </td>
-      </tr>
-    `;
-    const $ = cheerio.load(html);
-    const $elem = $('tr.review');
-    expect(extractReviewText($elem)).toBe('This is a review');
+<html>
+<body>
+  <table>
+    <tr>
+      <td class="field review">
+        <span id="freeTextreview123">This is a review</span>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+    const $ = cheerio.load(html) as cheerio.CheerioAPI;
+    const elem = $('.field.review')[0] as cheerio.Element;
+    expect(extractReviewText($, elem)).toBe('This is a review');
   });
 
-  it('should extract review text from freeText span', () => {
+  it('extracts review text from freeText span', () => {
     const html = `
-      <tr class="review">
-        <td class="field review">
-          <span id="freeText456">Another review</span>
-        </td>
-      </tr>
-    `;
-    const $ = cheerio.load(html);
-    const $elem = $('tr.review');
-    expect(extractReviewText($elem)).toBe('Another review');
+<html>
+<body>
+  <table>
+    <tr>
+      <td class="field review">
+        <span id="freeText456">Another review</span>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+    const $ = cheerio.load(html) as cheerio.CheerioAPI;
+    const elem = $('.field.review')[0] as cheerio.Element;
+    expect(extractReviewText($, elem)).toBe('Another review');
   });
 
-  it('should normalize whitespace in review text', () => {
+  it('trims whitespace from review text', () => {
     const html = `
-      <tr class="review">
-        <td class="field review">
-          <span id="freeTextreview789">Review  with   spaces</span>
-        </td>
-      </tr>
-    `;
-    const $ = cheerio.load(html);
-    const $elem = $('tr.review');
-    expect(extractReviewText($elem)).toBe('Review with spaces');
+<html>
+<body>
+  <table>
+    <tr>
+      <td class="field review">
+        <span id="freeTextreview123">
+          Review with spaces
+        </span>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+    const $ = cheerio.load(html) as cheerio.CheerioAPI;
+    const elem = $('.field.review')[0] as cheerio.Element;
+    expect(extractReviewText($, elem)).toBe('Review with spaces');
   });
 
-  it('should return empty string when no review text is found', () => {
+  it('returns empty string for no review text', () => {
     const html = `
-      <tr class="review">
-        <td class="field review">
-          <span id="other123"></span>
-        </td>
-      </tr>
-    `;
-    const $ = cheerio.load(html);
-    const $elem = $('tr.review');
-    expect(extractReviewText($elem)).toBe('');
+<html>
+<body>
+  <table>
+    <tr>
+      <td class="field review"></td>
+    </tr>
+  </table>
+</body>
+</html>`;
+    const $ = cheerio.load(html) as cheerio.CheerioAPI;
+    const elem = $('.field.review')[0] as cheerio.Element;
+    expect(extractReviewText($, elem)).toBe('');
   });
 
-  it('should extract review text from nested elements', () => {
+  it('handles nested review text correctly', () => {
     const html = `
-      <tr class="review">
-        <td class="field review">
-          <div>
-            <span id="freeTextreview101">Nested review text</span>
-          </div>
-        </td>
-      </tr>
-    `;
-    const $ = cheerio.load(html);
-    const $elem = $('tr.review');
-    expect(extractReviewText($elem)).toBe('Nested review text');
+<html>
+<body>
+  <table>
+    <tr>
+      <td class="field review">
+        <div class="outer">
+          <span id="freeTextreview789">Nested review text</span>
+        </div>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+    const $ = cheerio.load(html) as cheerio.CheerioAPI;
+    const elem = $('.field.review')[0] as cheerio.Element;
+    expect(extractReviewText($, elem)).toBe('Nested review text');
   });
-});
+}); 

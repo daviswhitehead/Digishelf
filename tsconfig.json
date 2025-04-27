@@ -15,21 +15,24 @@
     "moduleResolution": "node",
     "types": ["node", "jest"],
     "paths": {
-      "*": ["node_modules/*", "node_modules/@types/*"]
+      "*": [
+        "node_modules/*",
+        "node_modules/@types/*",
+        "firebase/functions/node_modules/*",
+        "firebase/functions/node_modules/@types/*"
+      ]
     }
   },
   "compileOnSave": true,
   "include": [
-    "sources/**/*",
-    "shared/**/*",
-    "handlers/**/*",
-    "data/**/*",
-    "utils/**/*",
-    "__tests__/**/*",
-    "index.ts"
+    "app/**/*",
+    "firebase/functions/**/*"
   ],
   "exclude": [
     "node_modules",
-    "lib"
+    "**/node_modules",
+    "**/lib",
+    "**/dist",
+    "**/.next"
   ]
 } 

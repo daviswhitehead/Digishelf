@@ -18,26 +18,25 @@ export function cleanNewLines(s: string): string {
 /**
  * Extracts the total number of pages from pagination
  */
-export function getTotalPages($: cheerio.Root): number {
-  const $pagination = $('#reviewPagination');
-  if (!$pagination.length) {
-    return 0;
+export function getTotalPages($: cheerio.CheerioAPI): number {
+  // First check for numeric page links
+  const pageLinks = $('#reviewPagination a')
+    .map((_, el) => $(el).text().trim())
+    .get()
+    .filter(text => /^\d+$/.test(text))
+    .map(Number);
+
+  if (pageLinks.length > 0) {
+    return Math.max(...pageLinks);
   }
 
-  const pageNumbers = $pagination
-    .find('a')
-    .map((_, el) => {
-      const text = $(el).text().trim();
-      const num = parseInt(text, 10);
-      return isNaN(num) ? 0 : num;
-    })
-    .get();
-
-  const maxPage = Math.max(...pageNumbers);
-  if (maxPage > 0) {
-    return maxPage;
+  // Check for next button
+  const hasNextButton = $('a[rel="next"]').length > 0;
+  if (hasNextButton) {
+    return 2;
   }
 
-  // If no numeric pages found but there's a next button, assume we're on page 1
-  return $pagination.find('a[rel="next"]').length ? 2 : 0;
-}
+  // Check for content
+  const hasContent = $('.review').length > 0;
+  return hasContent ? 1 : 0;
+} 

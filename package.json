@@ -16,6 +16,8 @@
     "build:app": "cd app && npm run build"
   },
   "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "@types/node": "^22.15.2",
     "@typescript-eslint/eslint-plugin": "^7.0.0",
     "@typescript-eslint/parser": "^7.0.0",
     "eslint": "^8.15.0",
@@ -34,5 +36,8 @@
     "**/*.{json,md}": [
       "prettier --write"
     ]
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0"
   }
 }

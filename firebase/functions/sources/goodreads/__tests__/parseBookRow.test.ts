@@ -1,76 +1,67 @@
+import { readFileSync } from 'fs';
+import { join } from 'path';
 import * as cheerio from 'cheerio';
 import { parseBookRow } from '../data';
 
+function getElement(html: string) {
+  const $ = cheerio.load(html);
+  const elem = $('tr.review').first().get(0);
+  if (!elem) {
+    throw new Error('No review element found');
+  }
+  return { $, elem };
+}
+
+function getBookRowFromFixture() {
+  const html = readFileSync(
+    join(__dirname, '__fixtures__/responses/currently_reading.html'),
+    'utf8'
+  );
+  return getElement(html);
+}
+
 describe('parseBookRow', () => {
-  it('should parse a complete book row', () => {
-    const html = `
-      <tr class="review">
-        <td class="field cover">
-          <img src="https://images.gr-assets.com/books/123.jpg" />
-        </td>
-        <td class="field title">
-          <a href="/book/show/123">Test Book</a>
-        </td>
-        <td class="field author">
-          <a href="/author/show/456">Test Author</a>
-        </td>
-        <td class="field isbn">1234567890</td>
-        <td class="field avg_rating">4.5</td>
-        <td class="field date_added">2024-03-20</td>
-        <td class="field rating">
-          <span class="staticStars" title="4.0 stars">★★★★☆</span>
-        </td>
-        <td class="field review">
-          <span id="freeTextreview123">Great book!</span>
-        </td>
-      </tr>
-    `;
-    const $ = cheerio.load(html);
-    const $row = $('tr.review');
-    const result = parseBookRow($, $row);
+  it('parses a complete book row', () => {
+    const { $, elem } = getBookRowFromFixture();
+    const result = parseBookRow($, elem);
 
     expect(result).toEqual({
-      title: 'Test Book',
-      author: 'Test Author',
-      coverImg: 'https://images.gr-assets.com/books/123.jpg',
-      isbn: '1234567890',
-      avgRating: 4.5,
-      dateAdded: '2024-03-20',
-      review: 'Great book!',
-      userRating: 4.0,
+      title: 'Wind and Truth (The Stormlight Archive, #5)',
+      author: 'Sanderson, Brandon',
+      canonicalURL: 'https://www.goodreads.com/book/show/203578847-wind-and-truth',
+      coverImage: 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1724944713l/203578847.jpg',
+      primaryColor: '',
+      userRating: null,
+      userReview: 'review None'
     });
   });
 
-  it('should handle missing fields', () => {
+  it('handles missing fields', () => {
     const html = `
       <tr class="review">
-        <td class="field cover"></td>
         <td class="field title">
-          <a href="/book/show/123">Test Book</a>
+          <div class="value">
+            <a href="/book/show/123">Test Book</a>
+          </div>
         </td>
         <td class="field author">
-          <a href="/author/show/456">Test Author</a>
+          <div class="value">
+            <a href="/author/show/123">Unknown Author</a>
+          </div>
         </td>
-        <td class="field isbn"></td>
-        <td class="field avg_rating"></td>
-        <td class="field date_added"></td>
-        <td class="field rating"></td>
-        <td class="field review"></td>
       </tr>
     `;
-    const $ = cheerio.load(html);
-    const $row = $('tr.review');
-    const result = parseBookRow($, $row);
+    const { $, elem } = getElement(html);
+    const result = parseBookRow($, elem);
 
     expect(result).toEqual({
       title: 'Test Book',
-      author: 'Test Author',
-      coverImg: '',
-      isbn: '',
-      avgRating: 0,
-      dateAdded: '',
-      review: '',
-      userRating: 0,
+      author: 'Unknown Author',
+      canonicalURL: 'https://www.goodreads.com/book/show/123',
+      coverImage: '',
+      primaryColor: '',
+      userRating: null,
+      userReview: ''
     });
   });
 });

@@ -7,14 +7,12 @@ This document outlines the continuous integration and deployment (CI/CD) pipelin
 Pre-commit hooks ensure code quality before changes enter the repository. These checks are fast and focused.
 
 ### Pre-commit Checks
-
 - **Linting**: ESLint on changed files
 - **Type Checking**: Quick TypeScript validation
 - **Unit Tests**: Tests related to changed files only
 - **Code Formatting**: Prettier, import sorting
 
 ### Configuration
-
 - Located in `.husky/pre-commit`
 - Configured via `lint-staged` in `package.json`
 - Runs only on staged files for speed
@@ -24,16 +22,13 @@ Pre-commit hooks ensure code quality before changes enter the repository. These 
 Comprehensive validation running in the cloud after code is pushed.
 
 ### Pull Request Checks
-
 1. **Full Test Suite**
-
    - All unit tests
    - Integration tests
    - Coverage reporting (minimum 80%)
    - Multi-node version testing
 
 2. **Static Analysis**
-
    - Complete TypeScript compilation
    - Full ESLint check
    - Security scanning
@@ -47,9 +42,7 @@ Comprehensive validation running in the cloud after code is pushed.
    - Asset optimization
 
 ### Pre-deployment Validation
-
 1. **Environment Checks**
-
    - Environment variable validation
    - Firebase config verification
    - API compatibility
@@ -64,25 +57,21 @@ Comprehensive validation running in the cloud after code is pushed.
 ## Deployment Flow
 
 1. **Local Development**
-
    ```
    Make changes → Husky checks → Commit → Push
    ```
 
 2. **Feature Branch**
-
    ```
    GitHub Actions → Full validation → PR creation
    ```
 
 3. **Pull Request**
-
    ```
    Review → All checks pass → Merge
    ```
 
 4. **Main Branch**
-
    ```
    Final validation → Staging deploy → Smoke tests
    ```
@@ -95,7 +84,6 @@ Comprehensive validation running in the cloud after code is pushed.
 ## Coverage Requirements
 
 All code must maintain:
-
 - Statements: 80% minimum
 - Branches: 80% minimum
 - Functions: 80% minimum
@@ -114,4 +102,4 @@ All code must maintain:
 - `.husky/`: Local git hooks
 - `firebase/functions/package.json`: NPM scripts and hooks
 - `jest.config.js`: Test configuration
-- `.eslintrc.js`: Linting rules
+- `.eslintrc.js`: Linting rules 
