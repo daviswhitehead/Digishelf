@@ -1,5 +1,4 @@
-#!/bin/sh
-. "$(dirname -- "$0")/_/husky.sh"
+#!/usr/bin/env sh
 
 # Colors
 GREEN='\033[0;32m'
@@ -13,10 +12,8 @@ npx lint-staged || {
   echo "${YELLOW}⚠️  Issues found in staged files${NC}"
   echo "${YELLOW}👉 Commit will proceed, but please fix these issues before pushing${NC}"
   echo "${YELLOW}   Run 'npm run lint:fix' and 'npm run type-check' to fix issues${NC}"
+  exit 1
 }
 
-echo "🔍 Running type checks..."
-npm run type-check:staged
-
-# Always exit successfully (non-blocking)
-exit 0
+# Exit with the lint-staged result
+exit $?
