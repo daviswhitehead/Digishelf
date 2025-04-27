@@ -1,53 +1,75 @@
 name: Remote CI
 
 on:
-  push: # <- triggers on *any* push, any brancha
-  pull_request: # <- triggers on *any* PR to any branch
-  workflow_dispatch: # <- allows manual trigger
+  push:
+  pull_request:
+  workflow_dispatch:
 
 jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: 'npm'
+          cache-dependency-path: package-lock.json
 
-      - name: 'Install root dependencies'
+      - name: Install root dependencies
         run: npm ci
 
-      - name: 'Lint root'
+      - name: Lint root
         run: npm run lint
 
-      - name: 'Type Check root'
+      - name: Type Check root
         run: npm run type-check
 
-  test:
+  test-app:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        package:
-          - app
-          - firebase/functions
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+
+      # NO setup-node here for now
+      # Let's see if app can work without needing Node.js environment bootstrap
+
+      - name: Debug current directory
+        run: |
+          echo "Running inside: $(pwd)"
+          ls -al
+        working-directory: app
+
+      - name: Install app dependencies
+        run: npm ci --ignore-scripts
+        working-directory: app
+
+      - name: Run app tests
+        run: npm run test
+        working-directory: app
+
+  test-functions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: 'npm'
-          cache-dependency-path: ${{ matrix.package }}/package-lock.json
+          cache-dependency-path: firebase/functions/package-lock.json
 
-      - name: debug
+      - name: Debug current directory
         run: |
           echo "Running inside: $(pwd)"
-        working-directory: ${{ matrix.package }}
+          ls -al
+        working-directory: firebase/functions
 
-      - name: Install dependencies
+      - name: Install functions dependencies
         run: npm ci --ignore-scripts
-        working-directory: ${{ matrix.package }}
+        working-directory: firebase/functions
 
-      - name: Run tests
+      - name: Run functions tests
         run: npm run test
-        working-directory: ${{ matrix.package }}
+        working-directory: firebase/functions
