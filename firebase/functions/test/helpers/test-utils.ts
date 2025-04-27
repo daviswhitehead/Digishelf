@@ -1,7 +1,7 @@
 import * as admin from 'firebase-admin';
-import { getFunctions } from 'firebase-admin/functions';
 import { db } from './jest.setup';
 import type { DocumentData } from 'firebase-admin/firestore';
+import functionTest from 'firebase-functions-test';
 
 interface TestUser extends DocumentData {
   userId: string;
@@ -47,6 +47,8 @@ interface CleanupCollections {
   shelves?: string[];
   items?: string[];
 }
+
+const test = functionTest();
 
 /**
  * Creates a test user document
@@ -150,10 +152,9 @@ async function createTestItem(
  * Calls a Firebase function
  */
 async function callFunction<T = any>(name: string, data: any): Promise<T> {
-  const functions = getFunctions();
-  const callable = functions.httpsCallable(name);
-  const result = await callable(data);
-  return result.data;
+  const wrapped = test.wrap(require('../lib')[name]);
+  const result = await wrapped(data);
+  return result as T;
 }
 
 /**
