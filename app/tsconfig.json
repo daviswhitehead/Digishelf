@@ -6,10 +6,9 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./*"],
-      "@firebase/*": ["../firebase/*"],
-      "firebase/*": ["../node_modules/firebase/*"]
+      "@firebase/*": ["../firebase/*"]
     },
-    "typeRoots": ["../node_modules/@types", "./types"]
+    "typeRoots": ["../node_modules/@types", "./types", "./node_modules/@types"]
   },
   "include": ["**/*.ts", "**/*.tsx", "types/**/*.d.ts"]
 }
