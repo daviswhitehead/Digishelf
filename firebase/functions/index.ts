@@ -8,9 +8,10 @@ import {
   Change,
   FirestoreEvent,
   QueryDocumentSnapshot,
+  DocumentSnapshot,
   DocumentOptions,
 } from 'firebase-functions/v2/firestore';
-import { getFirestore, Firestore, DocumentData, WriteBatch } from 'firebase-admin/firestore';
+import { getFirestore, Firestore, WriteBatch } from 'firebase-admin/firestore';
 import { writeGoodreadsShelves, writeGoodreadsItems } from './sources/goodreads/handlers.js';
 import type { GoodreadsIntegration, GoodreadsShelf } from './shared/types/index.js';
 import { processBatch } from './shared/utils/firestore.js';
@@ -19,15 +20,14 @@ import { handleRefreshShelf } from './handlers/refreshShelf.js';
 initializeApp();
 const db: Firestore = getFirestore();
 
-type ShelfEvent = FirestoreEvent<Change<DocumentData> | undefined>;
-
-/** @type {import('firebase-functions/v2/firestore').CloudFunction<FirestoreEvent<Change<QueryDocumentSnapshot>>>} */
 export const onGoodreadsIntegrationUpdate = onDocumentUpdated(
   {
     document: 'goodreadsIntegrations/{integrationId}',
     region: 'us-central1',
-  },
-  async event => {
+  } as DocumentOptions<'goodreadsIntegrations/{integrationId}'>,
+  async (
+    event: FirestoreEvent<Change<DocumentSnapshot> | undefined, { integrationId: string }>
+  ) => {
     const integrationId = event.params.integrationId;
     const data = event.data?.after?.data();
 
@@ -64,8 +64,10 @@ export const onShelfWrite = onDocumentWritten(
     document: 'shelves/{shelfId}',
     memory: '1GiB',
     timeoutSeconds: 180,
-  },
-  async (event: ShelfEvent): Promise<null> => {
+  } as DocumentOptions<'shelves/{shelfId}'>,
+  async (
+    event: FirestoreEvent<Change<DocumentSnapshot> | undefined, { shelfId: string }>
+  ): Promise<null> => {
     console.time('onShelfWrite');
 
     const shelfId = event.params.shelfId;
@@ -104,7 +106,9 @@ export const onIntegrationDelete = onDocumentDeleted(
     memory: '512MiB',
     timeoutSeconds: 60,
   } as DocumentOptions<'integrations/{integrationId}'>,
-  async (event: FirestoreEvent<QueryDocumentSnapshot | undefined>): Promise<void> => {
+  async (
+    event: FirestoreEvent<DocumentSnapshot | undefined, { integrationId: string }>
+  ): Promise<void> => {
     const { integrationId } = event.params;
 
     try {

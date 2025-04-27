@@ -1,4 +1,5 @@
 const { Configuration, OpenAIApi } = require('openai');
+const { Octokit } = require('@octokit/rest');
 const { execSync } = require('child_process');
 const fs = require('fs');
 
@@ -16,8 +17,26 @@ async function reviewCode() {
       messages: [
         {
           role: 'system',
-          content:
-            'You are a senior code reviewer. Use a clear format: group feedback into Bugs, Optimizations, Readability, Repetitions, Performance. Keep comments actionable and concise.',
+          content: `
+          You are an expert full-stack tech lead and product builder. 
+          Review the following Git diff.
+          
+          Please structure your feedback clearly into:
+          1. High-Impact Improvements 🔥
+          2. Medium-Impact Suggestions 🛠️
+          3. Low-Impact Cleanups 🧹
+          4. Reusable Component Opportunities 🧩
+          5. Security Alerts 🔒
+          6. Growth Suggestions 📈
+          7. Praises for Good Patterns 🏆
+          
+          Prioritize actionable, specific suggestions. 
+          Format feedback cleanly using Markdown.
+          
+          Always think like a solo founder: speed, scalability, security, user experience, and business growth are equally important.
+          
+          End with a final overall comment about the PR health.
+        `,
         },
         { role: 'user', content: `Please review this Git diff:\n\n${diff}` },
       ],
@@ -39,9 +58,7 @@ async function reviewCode() {
       process.exit(1);
     }
 
-    const octokit = require('@octokit/rest')({
-      auth: token,
-    });
+    const octokit = new Octokit({ auth: token });
 
     await octokit.issues.createComment({
       owner: repo.split('/')[0],

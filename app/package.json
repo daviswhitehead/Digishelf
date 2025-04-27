@@ -18,7 +18,6 @@
   "license": "ISC",
   "dependencies": {
     "@mindinventory/react-native-stagger-view": "^1.2.1",
-    "@types/node": "^18.0.6",
     "@vibrant/color": "^3.2.1-alpha.1",
     "colorthief": "^2.6.0",
     "dotenv": "^16.4.7",
@@ -64,6 +63,7 @@
     "@testing-library/jest-dom": "^6.4.2",
     "@testing-library/react": "^14.2.1",
     "@types/jest": "^29.5.14",
+    "@types/node": "^22.15.2",
     "@types/react": "^18.3.20",
     "@types/react-dom": "^18.2.22",
     "@types/testing-library__react": "^10.0.1",

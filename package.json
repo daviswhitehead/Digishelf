@@ -24,6 +24,7 @@
   "devDependencies": {
     "@commitlint/cli": "^19.0.0",
     "@commitlint/config-conventional": "^19.0.0",
+    "@types/firebase": "^2.4.32",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.15.2",
     "@typescript-eslint/eslint-plugin": "^7.0.0",

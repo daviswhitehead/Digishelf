@@ -7,22 +7,26 @@ on:
 jobs:
   ai_review:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout PR branch
         uses: actions/checkout@v4
 
+      - name: Fetch full git history
+        run: git fetch --unshallow || true
+
       - name: Get PR Diff
-        id: get_diff
         run: |
-          echo "##[set-output name=diff;]$(git diff origin/main...HEAD)" 
+          git diff origin/main...HEAD > diff.txt
 
       - name: Install Node Dependencies
         run: |
-          npm install openai
+          npm install openai @octokit/rest
 
       - name: AI Code Review
         run: |
-          node .github/scripts/ai-review.js "${{ steps.get_diff.outputs.diff }}"
+          node .github/scripts/ai-review.js "$(cat diff.txt)"
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_EVENT_PATH: ${{ github.event_path }}

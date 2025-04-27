@@ -1,7 +1,8 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
-import { getAuth, GoogleAuthProvider } from 'firebase/auth';
-import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
+import { getAuth, connectAuthEmulator, GoogleAuthProvider } from 'firebase/auth';
+import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
+import { getFunctions, connectFunctionsEmulator } from 'firebase/functions';
+import { getStorage, connectStorageEmulator } from 'firebase/storage';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -32,9 +33,15 @@ const googleProvider = new GoogleAuthProvider();
 // Initialize Firebase Functions
 const functions = getFunctions(app);
 
+// Initialize Firebase Storage
+const storage = getStorage(app);
+
 // If using emulators locally, connect to the emulator
 if (process.env.NODE_ENV === 'development') {
-  connectFunctionsEmulator(functions, 'localhost', 5001);
+  connectAuthEmulator(auth, 'http://127.0.0.1:9099');
+  connectFirestoreEmulator(db, '127.0.0.1', 8080);
+  connectFunctionsEmulator(functions, '127.0.0.1', 5001);
+  connectStorageEmulator(storage, '127.0.0.1', 9199);
 }
 
-export { app, db, auth, googleProvider, functions };
+export { app, db, auth, googleProvider, functions, storage };

@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "target": "es2022",
+    "module": "esnext",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -8,8 +9,7 @@
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
@@ -19,30 +19,13 @@
       "@/*": ["app/*"],
       "@firebase/*": ["firebase/*"]
     },
-    "typeRoots": ["./node_modules/@types", "./app/types", "./firebase/functions/types"],
-    "types": ["node", "jest"]
+    "typeRoots": ["./node_modules/@types", "./app/types", "./firebase/functions/types"]
   },
   "include": [
-    "firebase/functions/**/*.ts",
-    "firebase/functions/**/*.tsx",
-    "firebase/functions/**/*.js",
     "app/**/*.ts",
     "app/**/*.tsx",
-    "app/**/*.js",
-    "app/**/*.jsx",
-    "app/types/*.d.ts"
+    "firebase/functions/**/*.ts",
+    "firebase/functions/**/*.tsx"
   ],
-  "exclude": [
-    "node_modules",
-    ".next",
-    "out",
-    "coverage",
-    "**/*.test.ts",
-    "**/*.test.js",
-    "**/*.spec.ts",
-    "**/*.spec.js",
-    ".eslintrc.js",
-    "app/jest.setup.js",
-    "firebase/functions/lib/**/*"
-  ]
+  "exclude": ["node_modules", "**/node_modules", ".next", "out", "dist", "lib"]
 }

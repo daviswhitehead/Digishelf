@@ -1,42 +1,21 @@
 {
+  "extends": "./tsconfig.json",
   "compilerOptions": {
-    "target": "es2022",
-    "module": "esnext",
-    "allowJs": true,
-    "checkJs": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "bundler",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "preserve",
     "noEmit": true,
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["app/*"],
-      "@firebase/*": ["firebase/*"]
-    },
-    "types": ["node", "jest"],
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "strict": true,
-    "noImplicitAny": true,
-    "typeRoots": ["./node_modules/@types", "./app/types", "./firebase/functions/types"]
+    "incremental": false
   },
-  "include": [
-    "app/**/*.js",
-    "app/**/*.ts",
-    "app/**/*.tsx",
-    "firebase/functions/**/*.js",
-    "firebase/functions/**/*.ts",
-    "app/types/**/*.d.ts"
-  ],
   "exclude": [
     "node_modules",
     "**/node_modules",
     "dist",
     ".next",
     "coverage",
-    "firebase/functions/lib/**/*"
+    "**/lib",
+    "**/build",
+    "**/dist",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx"
   ]
 }

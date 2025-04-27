@@ -2,8 +2,8 @@ import { Query, WriteBatch, QueryDocumentSnapshot, getFirestore } from 'firebase
 
 export async function processBatch(
   query: Query,
-  processFn: (batch: WriteBatch, doc: QueryDocumentSnapshot) => void,
-  description: string
+  processDoc: (batch: WriteBatch, doc: QueryDocumentSnapshot) => void,
+  operation: string
 ): Promise<void> {
   const db = getFirestore();
   const snapshot = await query.get();
@@ -12,10 +12,10 @@ export async function processBatch(
   let currentBatch = db.batch();
   let operationCount = 0;
 
-  console.log(`${description}: Processing ${snapshot.size} documents`);
+  console.log(`${operation}: Processing ${snapshot.size} documents`);
 
   for (const doc of snapshot.docs) {
-    processFn(currentBatch, doc);
+    processDoc(currentBatch, doc);
     operationCount++;
 
     if (operationCount === batchSize) {
@@ -29,8 +29,8 @@ export async function processBatch(
     batches.push(currentBatch);
   }
 
-  console.log(`${description}: Committing ${batches.length} batches`);
+  console.log(`${operation}: Committing ${batches.length} batches`);
 
   await Promise.all(batches.map(batch => batch.commit()));
-  console.log(`${description}: Completed successfully`);
+  console.log(`${operation}: Completed successfully`);
 }
