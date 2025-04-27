@@ -55,6 +55,7 @@
   "dependencies": {
     "@octokit/rest": "^21.1.1",
     "cheerio": "^1.0.0",
+    "firebase": "^11.6.1",
     "openai": "^4.96.0",
     "react-native-svg": "^15.11.2"
   },
