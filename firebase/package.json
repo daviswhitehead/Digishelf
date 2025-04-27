@@ -1,5 +1,5 @@
 {
-  "name": "digishelf-app-firebase",
+  "name": "@digishelf/firebase",
   "scripts": {
     "emulators:start": "firebase emulators:start",
     "seed:production": "node scripts/seedFirestore.js",

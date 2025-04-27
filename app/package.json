@@ -1,5 +1,5 @@
 {
-  "name": "digishelf-app",
+  "name": "@digishelf/app",
   "version": "1.0.0",
   "description": "Digishelf Next.js Web Application",
   "main": "index.js",
@@ -23,8 +23,8 @@
     "colorthief": "^2.6.0",
     "dotenv": "^16.5.0",
     "firebase": "^11.6.1",
-    "firebase-admin": "^13.0.2",
-    "firebase-functions": "^6.3.0",
+    "firebase-admin": "^13.3.0",
+    "firebase-functions": "^6.3.2",
     "next": "^15.0.3",
     "node-vibrant": "^4.0.3",
     "qrcode.react": "^4.2.0",
@@ -41,7 +41,11 @@
     "react-native-web": "^0.19.13",
     "webpack": "^5.96.1",
     "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^5.1.0"
+    "webpack-dev-server": "^5.1.0",
+    "@firebase/app-types": "^0.9.3",
+    "@firebase/auth-types": "^0.13.0",
+    "@firebase/firestore-types": "^3.0.3",
+    "@firebase/storage-types": "^0.8.3"
   },
   "devDependencies": {
     "@babel/cli": "^7.25.9",
@@ -59,11 +63,6 @@
     "@babel/preset-react": "^7.26.3",
     "@babel/preset-typescript": "^7.26.3",
     "@babel/runtime": "^7.26.0",
-    "@firebase/app-types": "^0.9.3",
-    "@firebase/auth-types": "^0.13.0",
-    "@firebase/firestore-types": "^3.0.3",
-    "@firebase/storage-types": "^0.8.3",
-    "@svgr/webpack": "^8.1.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^14.3.1",
     "@testing-library/user-event": "^14.6.1",
@@ -98,6 +97,6 @@
     "url-loader": "^4.1.1"
   },
   "engines": {
-    "node": ">=18.18.0"
+    "node": ">=22"
   }
 }
