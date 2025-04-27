@@ -7,24 +7,41 @@ on:
     branches: [ main ]
 
 jobs:
-  test:
+  validate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+          cache: 'npm'
+      
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run type-check
 
-      # Functions Tests
-      - name: Test Functions
-        run: |
-          cd firebase/functions
-          npm ci --ignore-scripts
-          npx jest --config jest.config.ts
+  test-functions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+        
+      - run: cd firebase/functions
+      - run: npm ci
+      - run: npm run test
+        
+  test-app:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+        - uses: actions/setup-node@v4
+          with:
+            node-version: '22'
+            cache: 'npm'
 
-      # App Tests
-      - name: Test App
-        run: |
-          cd app
-          npm ci --ignore-scripts
-          npx jest --passWithNoTests 
+        - run: cd app
+        - run: npm ci
+        - run: npm run test

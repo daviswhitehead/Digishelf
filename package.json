@@ -6,7 +6,7 @@
     "firebase/functions"
   ],
   "scripts": {
-    "prepare": "node -e \"if(process.env.HUSKY !== '0') require('husky').install()\"",
+    "prepare": "husky",
     "lint": "eslint .",
     "format": "prettier --write \"**/*.{js,ts,tsx,json,md}\"",
     "format:check": "prettier --check \"**/*.{js,ts,tsx,json,md}\"",
