@@ -64,11 +64,13 @@ jobs:
         retention-days: 14
     
     - name: Post Functions Coverage Comment
-      uses: romeovs/lcov-reporter-action@v0.3.1
+      uses: codecov/codecov-action@v4
       with:
-        lcov-file: firebase/functions/coverage/lcov.info
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        title: 'Firebase Functions Test Coverage'
+        file: firebase/functions/coverage/lcov.info
+        flags: functions
+        name: Firebase Functions Coverage
+        token: ${{ secrets.CODECOV_TOKEN }}
+        fail_ci_if_error: false
 
   test-app:
     runs-on: ubuntu-latest
@@ -98,11 +100,13 @@ jobs:
         retention-days: 14
     
     - name: Post App Coverage Comment
-      uses: romeovs/lcov-reporter-action@v0.3.1
+      uses: codecov/codecov-action@v4
       with:
-        lcov-file: app/coverage/lcov.info
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        title: 'Next.js App Test Coverage'
+        file: app/coverage/lcov.info
+        flags: app
+        name: Next.js App Coverage
+        token: ${{ secrets.CODECOV_TOKEN }}
+        fail_ci_if_error: false
 
   build:
     needs: [validate, test-functions, test-app]
