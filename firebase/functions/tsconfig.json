@@ -1,42 +1,25 @@
 {
-  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "module": "commonjs",
-    "moduleResolution": "node",
-    "target": "es2022",
-    "outDir": "lib",
-    "rootDir": ".",
-    "sourceMap": true,
-    "strict": true,
     "noImplicitReturns": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "esModuleInterop": true,
+    "outDir": "lib",
+    "sourceMap": true,
+    "strict": true,
+    "target": "es2017",
     "skipLibCheck": true,
-    "jsx": "react",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "composite": true,
+    "declaration": true,
+    "noImplicitAny": true,
+    "moduleResolution": "node",
     "baseUrl": ".",
     "paths": {
-      "*": ["node_modules/*", "types/*"]
-    },
-    "typeRoots": ["./node_modules/@types", "./types", "../../node_modules/@types"]
+      "@/*": ["./*"]
+    }
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.js",
-    "test/**/*.ts",
-    "test/**/*.js",
-    "__tests__/**/*.ts",
-    "__tests__/**/*.js",
-    "__tests__/**/*.tsx",
-    "sources/**/*.ts",
-    "sources/**/*.js",
-    "scripts/**/*.ts",
-    "scripts/**/*.js",
-    "*.ts",
-    "*.js",
-    "../shared/**/*.ts",
-    "../shared/**/*.js",
-    "types/*.d.ts"
-  ],
-  "exclude": ["node_modules", "lib", "coverage"]
+  "compileOnSave": true,
+  "include": ["src/**/*", "../shared/**/*", "types/*.d.ts", "sources/**/*.ts", "sources/**/*.tsx"],
+  "exclude": ["node_modules", "lib"]
 }

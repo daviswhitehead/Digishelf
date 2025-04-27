@@ -1,7 +1,6 @@
 {
   "name": "digishelf-app-firebase-functions",
   "description": "Cloud Functions for Firebase",
-  "type": "module",
   "scripts": {
     "serve": "npm run build:dev && firebase emulators:start --only functions",
     "shell": "npm run build:dev && firebase functions:shell",
@@ -32,6 +31,8 @@
   "main": "lib/index.js",
   "dependencies": {
     "cheerio": "^1.0.0",
+    "firebase-admin": "^13.3.0",
+    "firebase-functions": "^6.3.2",
     "node-vibrant": "^4.0.3",
     "source-map-support": "^0.5.21"
   },
@@ -49,8 +50,6 @@
     "axios": "^1.9.0",
     "axios-mock-adapter": "^2.1.0",
     "concurrently": "^9.1.2",
-    "firebase-admin": "^13.3.0",
-    "firebase-functions": "^6.3.2",
     "firebase-functions-test": "^3.4.0",
     "jest": "^29.7.0",
     "rimraf": "^5.0.10",
