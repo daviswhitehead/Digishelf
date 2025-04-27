@@ -13,13 +13,17 @@
     "test:app": "cd app && npm run test",
     "build": "npm run build:functions && npm run build:app",
     "build:functions": "cd firebase/functions && npm run build",
-    "build:app": "cd app && npm run build"
+    "build:app": "cd app && npm run build",
+    "dev": "concurrently \"cd app && npm run dev\" \"cd firebase/functions && npm run dev\" --names \"app,functions\" --prefix-colors \"blue,green\"",
+    "dev:app": "cd app && npm run dev",
+    "dev:functions": "cd firebase/functions && npm run dev"
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",
     "@types/node": "^22.15.2",
     "@typescript-eslint/eslint-plugin": "^7.0.0",
     "@typescript-eslint/parser": "^7.0.0",
+    "concurrently": "^9.1.2",
     "eslint": "^8.15.0",
     "eslint-config-google": "^0.14.0",
     "eslint-config-prettier": "^9.1.0",

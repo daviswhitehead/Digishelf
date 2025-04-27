@@ -2,41 +2,17 @@
   "compilerOptions": {
     "target": "es2017",
     "module": "commonjs",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "noEmit": false,
     "esModuleInterop": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "preserve",
     "incremental": true,
-    "baseUrl": ".",
-    "outDir": "lib",
     "sourceMap": true,
     "noImplicitReturns": true,
-    "noUnusedLocals": true,
-    "types": ["node", "jest"],
-    "paths": {
-      "*": [
-        "node_modules/*",
-        "node_modules/@types/*",
-        "firebase/functions/node_modules/*",
-        "firebase/functions/node_modules/@types/*"
-      ]
-    }
+    "noUnusedLocals": true
   },
-  "include": [
-    "app/**/*.ts",
-    "app/**/*.tsx",
-    "app/**/*.js",
-    "app/**/*.jsx",
-    "firebase/functions/**/*.ts",
-    "firebase/functions/**/*.js"
-  ],
   "exclude": [
     "node_modules",
     "**/node_modules",

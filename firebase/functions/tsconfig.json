@@ -1,0 +1,30 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "lib",
+    "rootDir": ".",
+    "baseUrl": ".",
+    "lib": ["es2017"],
+    "types": ["node", "jest"],
+    "sourceMap": true,
+    "sourceRoot": "",
+    "inlineSources": true,
+    "declaration": true,
+    "declarationMap": true,
+    "paths": {
+      "*": [
+        "node_modules/*",
+        "node_modules/@types/*"
+      ]
+    }
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.js"
+  ],
+  "exclude": [
+    "node_modules",
+    "lib",
+    "coverage"
+  ]
+} 
