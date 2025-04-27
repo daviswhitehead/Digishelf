@@ -1,4 +1,5 @@
 #!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
 
 # Colors
 GREEN='\033[0;32m'
@@ -8,7 +9,7 @@ NC='\033[0m' # No Color
 echo "${GREEN}🔍 Running pre-commit checks...${NC}"
 
 # Run lint-staged (includes prettier and eslint)
-npx lint-staged || {
+npm run lint-staged || {
   echo "${YELLOW}⚠️  Issues found in staged files${NC}"
   echo "${YELLOW}👉 Please fix these issues before committing${NC}"
   exit 1

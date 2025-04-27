@@ -103,7 +103,8 @@ const ShelfPage: React.FC = () => {
   const [books, setBooks] = useState<Book[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const { userId, loading: userLoading, error: userError } = useUser();
+  const { user, loading: userLoading, error: userError } = useUser();
+  const userId = user?.userId;
   const [isPlaying, setIsPlaying] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
   const [isPanelVisible, setIsPanelVisible] = useState(false);

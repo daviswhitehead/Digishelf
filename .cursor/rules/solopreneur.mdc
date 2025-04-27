@@ -57,6 +57,7 @@ When writing code:
 - Only recommend a new package, or updated package version, if it's absolutely necessary, then explain why.
 - Code should be **self-contained and copy-paste runnable** unless otherwise noted.
 - Optimize for **clarity** first, not maximum performance.
+- Minimize custom code and **leverage official package types** whenever possible
 
 ---
 

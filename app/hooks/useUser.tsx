@@ -1,20 +1,20 @@
 import React, { useEffect, useState, createContext, useContext, ReactNode } from 'react';
-import { doc, onSnapshot, Firestore } from 'firebase/firestore';
+import { doc, onSnapshot, Firestore, DocumentData } from 'firebase/firestore';
 import { User, Auth } from 'firebase/auth';
+import { FirebaseError } from 'firebase/app';
 import { auth, db } from '../firebase/clientApp';
 import { UserData } from '../types/models';
 
 export interface UseUserReturn {
   user: UserData | null;
   loading: boolean;
-  error: Error | null;
-  userId: string | null;
+  error: FirebaseError | Error | null;
 }
 
 interface UserContextType {
   user: UserData | null;
   loading: boolean;
-  error: Error | null;
+  error: FirebaseError | Error | null;
 }
 
 const UserContext = createContext<UserContextType>({
@@ -26,7 +26,7 @@ const UserContext = createContext<UserContextType>({
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<FirebaseError | Error | null>(null);
   const [isClient, setIsClient] = useState(false);
 
   // Set isClient to true on mount
@@ -34,9 +34,9 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     setIsClient(true);
   }, []);
 
-  useEffect(() => {
+  useEffect((): (() => void) => {
     // Only run auth listener on client side
-    if (!isClient) return;
+    if (!isClient) return () => {};
 
     let unsubscribeFirestore: (() => void) | undefined;
 
@@ -49,14 +49,20 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
               doc(db as Firestore, 'users', authUser.uid),
               doc => {
                 if (doc.exists()) {
+                  const data = doc.data() as DocumentData & Partial<UserData>;
+                  if (!data.createdAt || !data.updatedAt) {
+                    throw new Error('Invalid user data: missing timestamps');
+                  }
                   const userData: UserData = {
-                    uid: authUser.uid,
-                    email: authUser.email ?? '',
-                    displayName: authUser.displayName ?? '',
-                    photoURL: authUser.photoURL ?? undefined,
-                    createdAt: doc.data().createdAt,
-                    updatedAt: doc.data().updatedAt,
-                    ...doc.data(),
+                    userId: authUser.uid,
+                    email: authUser.email ?? null,
+                    displayName: authUser.displayName ?? null,
+                    photoURL: authUser.photoURL ?? null,
+                    firstName: data.firstName ?? null,
+                    lastName: data.lastName ?? null,
+                    createdAt: data.createdAt,
+                    updatedAt: data.updatedAt,
+                    ...data,
                   };
                   setUser(userData);
                 } else {
@@ -64,7 +70,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
                 }
                 setLoading(false);
               },
-              error => {
+              (error: FirebaseError) => {
                 console.error('Firestore listener error:', error);
                 setError(error);
                 setLoading(false);
@@ -111,8 +117,5 @@ export const useUser = (): UseUserReturn => {
   if (context === undefined) {
     throw new Error('useUser must be used within a UserProvider');
   }
-  return {
-    ...context,
-    userId: context.user?.uid || null,
-  };
+  return context;
 };

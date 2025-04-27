@@ -1,11 +1,13 @@
-import { ReactElement } from 'react';
-import { render, RenderResult } from '@testing-library/react';
+import React from 'react';
+import { render as rtlRender } from '@testing-library/react';
 import type { RenderOptions } from '@testing-library/react';
+import { UserProvider } from '../../hooks/useUser';
 
-const renderWithProviders = (
-  ui: ReactElement,
-  options?: Omit<RenderOptions, 'queries'>
-): RenderResult => render(ui, { ...options });
+function render(ui: React.ReactNode, options: Omit<RenderOptions, 'wrapper'> = {}) {
+  return rtlRender(<UserProvider>{ui}</UserProvider>, {
+    ...options,
+  });
+}
 
 export * from '@testing-library/react';
-export { renderWithProviders as render };
+export { render };

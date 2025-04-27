@@ -1,11 +1,14 @@
 import { User } from 'firebase/auth';
 import { Timestamp } from 'firebase/firestore';
+import { FirebaseError } from 'firebase/app';
 
 export interface UserData {
-  uid: string;
-  email: string;
-  displayName: string;
-  photoURL?: string;
+  userId: string;
+  email: string | null;
+  displayName: string | null;
+  photoURL: string | null;
+  firstName: string | null;
+  lastName: string | null;
   createdAt: Timestamp;
   updatedAt: Timestamp;
 }
@@ -58,8 +61,7 @@ export interface Integration {
 }
 
 export interface UseUserReturn {
-  user: User | null;
-  userData: UserData | null;
+  user: UserData | null;
   loading: boolean;
-  error: Error | null;
+  error: FirebaseError | Error | null;
 }

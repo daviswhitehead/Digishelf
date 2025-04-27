@@ -1,13 +1,15 @@
+'use client';
+
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 import { QRCodeSVG } from 'qrcode.react';
 
-interface QRCodeComponentProps {
+interface QRCodeProps {
   url: string;
   size?: number;
 }
 
-const QRCodeComponent: React.FC<QRCodeComponentProps> = ({ url, size = 100 }) => {
+const QRCode: React.FC<QRCodeProps> = ({ url, size = 100 }) => {
   return (
     <View style={styles.container}>
       <View style={styles.qrContainer}>
@@ -24,20 +26,20 @@ const QRCodeComponent: React.FC<QRCodeComponentProps> = ({ url, size = 100 }) =>
   );
 };
 
-const styles = StyleSheet.create({
+const styles = {
   container: {
-    position: 'fixed',
+    position: 'absolute',
     top: 20,
     right: 20,
     zIndex: 1000,
-    height: 'auto',
     backgroundColor: 'white',
   },
   qrContainer: {
     padding: 10,
+    display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
   },
-});
+} as const;
 
-export default QRCodeComponent;
+export default QRCode;

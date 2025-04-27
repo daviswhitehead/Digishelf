@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
-import { View, Text, StyleSheet, Pressable, Animated } from 'react-native';
+import { View, Text, StyleSheet, Pressable, Animated } from 'react-native-web';
 import { getAuth, signOut } from 'firebase/auth';
 import { useUser } from '../utils/useUser';
 
@@ -22,7 +22,7 @@ export const SidePanel: React.FC<Props> = ({
   shelfId,
 }) => {
   const router = useRouter();
-  const { userData, loading, error } = useUser();
+  const { user, loading, error } = useUser();
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const slideAnim = React.useRef(new Animated.Value(isVisible ? 0 : 300)).current;
@@ -32,7 +32,7 @@ export const SidePanel: React.FC<Props> = ({
       toValue: isVisible ? 0 : 300,
       useNativeDriver: true,
     }).start();
-  }, [isVisible]);
+  }, [isVisible, slideAnim]);
 
   const _handleLogout = async () => {
     try {
@@ -79,9 +79,9 @@ export const SidePanel: React.FC<Props> = ({
         <View style={styles.content}>
           {loading && <Text>Loading...</Text>}
           {error && <Text style={styles.error}>{error.message}</Text>}
-          {!loading && !error && userData && (
+          {!loading && !error && user && (
             <View>
-              <Text>User: {userData.displayName}</Text>
+              <Text>User: {user.displayName}</Text>
               {/* Add more panel content here */}
             </View>
           )}

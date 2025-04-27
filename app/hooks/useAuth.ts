@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
+import { Timestamp } from 'firebase/firestore';
 import type { UserData } from '../types/auth';
 
 interface AuthState {
@@ -22,12 +23,13 @@ export const useAuth = () => {
         // Convert Firebase User to UserData
         const userData: UserData = {
           userId: user.uid,
-          displayName: user.displayName || '',
-          email: user.email || '',
-          photoURL: user.photoURL || '',
-          firstName: '',
-          lastName: '',
-          updatedAt: new Date(),
+          displayName: user.displayName,
+          email: user.email,
+          photoURL: user.photoURL,
+          firstName: null,
+          lastName: null,
+          createdAt: Timestamp.now(),
+          updatedAt: Timestamp.now(),
         };
         setState({ user, userData, loading: false });
       } else {

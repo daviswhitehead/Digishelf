@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { useRouter } from 'next/router';
 import { db } from '../../../firebase/clientApp';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { useUser } from '../../../hooks/useUser';
 import Sidebar from '../../../components/Sidebar';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { Shelf } from '../../../types/shelf';
 
 export default function Shelves() {
   const router = useRouter();
-  const { userId, loading: userLoading, error: userError } = useUser();
+  const { user, loading: userLoading, error: userError } = useUser();
+  const userId = user?.userId;
   const [shelves, setShelves] = useState<Shelf[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -42,7 +43,7 @@ export default function Shelves() {
     fetchShelves();
   }, [userId, userLoading]);
 
-  const handleShelfClick = (shelfId: string) => {
+  const handleShelfPress = (shelfId: string) => {
     if (!userId) return;
     router.push(`/${userId}/shelves/${shelfId}`);
   };
@@ -63,7 +64,9 @@ export default function Shelves() {
       <View style={styles.container}>
         <Sidebar />
         <View style={styles.contentWrapper}>
-          <Text style={styles.errorText}>{userError.message || 'Authentication error'}</Text>
+          <Text style={styles.errorText}>
+            {userError instanceof Error ? userError.message : 'Authentication error'}
+          </Text>
         </View>
       </View>
     );
@@ -95,7 +98,7 @@ export default function Shelves() {
                 <TouchableOpacity
                   key={shelf.id}
                   style={styles.card}
-                  onPress={() => handleShelfClick(shelf.id)}
+                  onPress={() => handleShelfPress(shelf.id)}
                 >
                   <Text style={styles.cardTitle}>{shelf.displayName}</Text>
                   <Text style={styles.cardSubtitle}>{shelf.sourceDisplayName}</Text>
@@ -125,6 +128,7 @@ const styles = StyleSheet.create({
   title: {
     color: '#fff',
     fontSize: 24,
+    fontWeight: 'bold',
     marginBottom: 20,
   },
   loadingText: {
@@ -134,7 +138,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   errorText: {
-    color: 'red',
+    color: '#ff4444',
     fontSize: 16,
     marginBottom: 20,
   },
@@ -145,24 +149,25 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   cardContainer: {
-    display: 'flex',
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 20,
   },
   card: {
     backgroundColor: '#1a1a1a',
-    color: '#fff',
     padding: 15,
     borderRadius: 8,
-    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
     width: 250,
-    cursor: 'pointer',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
   },
   cardTitle: {
-    marginBottom: 5,
     fontSize: 18,
     color: '#fff',
+    marginBottom: 5,
   },
   cardSubtitle: {
     fontSize: 14,

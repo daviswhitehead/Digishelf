@@ -1,51 +1,60 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  reactStrictMode: true,
+  transpilePackages: [
+    'react-native',
+    'react-native-web',
+    '@react-native',
+    'react-native-vector-icons',
+    'react-native-svg',
+    '@mindinventory/react-native-stagger-view',
+  ],
+  experimental: {
+    esmExternals: 'loose',
+  },
+  compiler: {
+    styledComponents: false,
+    emotion: false,
+    reactRemoveProperties: true,
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
+  // Disable static optimization and exports
+  output: 'standalone',
   webpack: config => {
-    // Modify the module rules
-    config.module.rules.push(
-      // Handle asset imports
-      {
-        test: /\.(ttf|woff|woff2|eot)$/,
-        use: {
-          loader: 'file-loader',
-          options: {
-            name: '[name].[ext]',
-            publicPath: '/_next/static/fonts/',
-            outputPath: 'static/fonts/',
-          },
-        },
-      },
-      // Handle React Native Web
-      {
-        test: /\.js$/,
-        include: [/node_modules\/react-native-/, /node_modules\/@react-native/],
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-env', '@babel/preset-react'],
-            plugins: ['@babel/plugin-proposal-class-properties'],
-          },
-        },
-      }
-    );
+    // Handle SVG files
+    config.module.rules.push({
+      test: /\.svg$/,
+      use: ['@svgr/webpack'],
+    });
+
+    // Add loader for react-native-vector-icons
+    config.module.rules.push({
+      test: /\.(woff|woff2|eot|ttf|otf)$/,
+      use: ['url-loader'],
+    });
 
     // Alias react-native to react-native-web
     config.resolve.alias = {
       ...(config.resolve.alias || {}),
       'react-native$': 'react-native-web',
-      'react-native-svg': 'react-native-svg-web',
     };
+
+    // Ensure modules can resolve correctly
+    config.resolve.extensions = [
+      '.web.js',
+      '.web.jsx',
+      '.web.ts',
+      '.web.tsx',
+      ...config.resolve.extensions,
+    ];
 
     return config;
   },
-  transpilePackages: [
-    'react-native',
-    'react-native-web',
-    'react-native-svg',
-    'react-native-svg-web',
-    '@react-native/assets-registry',
-    '@react-native-community/art',
-  ],
+  // Enable responsive image optimization
+  images: {
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    disableStaticImages: true,
+  },
 };
 
 module.exports = nextConfig;

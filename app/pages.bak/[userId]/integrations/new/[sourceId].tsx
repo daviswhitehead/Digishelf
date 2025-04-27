@@ -1,4 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+  Linking,
+} from 'react-native';
 import { useRouter } from 'next/router';
 import { db } from '../../../../firebase/clientApp';
 import {
@@ -11,7 +20,6 @@ import {
   runTransaction,
 } from 'firebase/firestore';
 import Sidebar from '../../../../components/Sidebar';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 
 interface SourceData {
   displayName: string;
@@ -104,7 +112,7 @@ export default function NewIntegration() {
     return (
       <View style={styles.container}>
         <Sidebar />
-        <View style={styles.content}>
+        <View style={styles.contentWrapper}>
           <Text style={styles.errorText}>{error}</Text>
         </View>
       </View>
@@ -115,7 +123,7 @@ export default function NewIntegration() {
     return (
       <View style={styles.container}>
         <Sidebar />
-        <View style={styles.content}>
+        <View style={styles.contentWrapper}>
           <Text style={styles.loadingText}>Loading...</Text>
         </View>
       </View>
@@ -130,17 +138,17 @@ export default function NewIntegration() {
           <Text style={styles.title}>Create a new {sourceData.displayName} Integration</Text>
           <View style={styles.formGroup}>
             <Text style={styles.label}>My Books URL:</Text>
-            <Text style={styles.helperText}>
-              <a
-                href='https://www.goodreads.com/review/list/'
-                target='_blank'
-                rel='noopener noreferrer'
-                style={styles.link}
-              >
-                Click here
-              </a>
-              , login, then copy and paste the URL here.
-            </Text>
+            <View style={styles.helperTextContainer}>
+              <Text style={styles.helperText}>
+                <Text
+                  style={styles.link}
+                  onPress={() => Linking.openURL('https://www.goodreads.com/review/list/')}
+                >
+                  Click here
+                </Text>
+                , login, then copy and paste the URL here.
+              </Text>
+            </View>
             <TextInput
               value={myBooksURL}
               onChangeText={(text: string) => {
@@ -148,6 +156,7 @@ export default function NewIntegration() {
                 setAccountSlug(deriveAccountSlug(text));
               }}
               style={styles.input}
+              placeholderTextColor='#666'
             />
           </View>
           <View style={styles.formGroup}>
@@ -167,12 +176,12 @@ export default function NewIntegration() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'row', // Align sidebar and content side by side
+    flexDirection: 'row',
     backgroundColor: '#000',
   },
   contentWrapper: {
-    flex: 1, // Allow the content to take up the remaining space
-    marginLeft: 250, // Match the width of the sidebar
+    flex: 1,
+    marginLeft: 250,
   },
   content: {
     padding: 20,
@@ -180,6 +189,7 @@ const styles = StyleSheet.create({
   title: {
     color: '#fff',
     fontSize: 24,
+    fontWeight: 'bold',
     marginBottom: 20,
   },
   formGroup: {
@@ -189,6 +199,13 @@ const styles = StyleSheet.create({
     color: '#fff',
     marginBottom: 5,
   },
+  helperTextContainer: {
+    marginBottom: 10,
+  },
+  helperText: {
+    color: '#ccc',
+    fontSize: 14,
+  },
   input: {
     backgroundColor: '#1a1a1a',
     color: '#fff',
@@ -196,28 +213,34 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderWidth: 1,
     borderColor: '#ccc',
+    width: '100%',
+    maxWidth: 500,
   },
   inputDisabled: {
-    backgroundColor: '#333',
-    color: '#aaa',
+    backgroundColor: '#1a1a1a',
+    color: '#999',
     padding: 10,
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#666',
+    width: '100%',
+    maxWidth: 500,
   },
   saveButton: {
-    backgroundColor: '#4caf50',
-    paddingVertical: 10,
+    backgroundColor: '#4A90E2',
+    padding: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
+    marginTop: 20,
   },
   saveButtonText: {
     color: '#fff',
     fontSize: 16,
+    fontWeight: 'bold',
     textAlign: 'center',
   },
   errorText: {
-    color: 'red',
+    color: '#ff4444',
     fontSize: 16,
   },
   loadingText: {
@@ -225,17 +248,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   successText: {
-    color: 'green',
+    color: '#4CAF50',
     fontSize: 16,
     marginTop: 10,
   },
-  helperText: {
-    color: '#aaa',
-    fontSize: 14,
-    marginBottom: 5,
-  },
   link: {
-    color: '#4caf50',
+    color: '#4A90E2',
     textDecorationLine: 'underline',
   },
 });

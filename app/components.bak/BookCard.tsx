@@ -40,7 +40,12 @@ export const BookCard: React.FC<BookCardProps> = ({ book, width, onPress }) => {
     <Pressable onPress={onPress}>
       <View style={styles.container}>
         {book.coverImage ? (
-          <Image source={{ uri: book.coverImage }} style={styles.coverImage} resizeMode='cover' />
+          <Image
+            source={{ uri: book.coverImage }}
+            style={styles.coverImage}
+            resizeMode='cover'
+            alt={`Cover of ${book.title} by ${book.author}`}
+          />
         ) : (
           <View style={styles.coverImage} />
         )}

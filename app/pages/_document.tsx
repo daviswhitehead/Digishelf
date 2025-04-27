@@ -1,16 +1,48 @@
-import Document, { Html, Head, Main, NextScript } from 'next/document';
+import Document, {
+  Html,
+  Head,
+  Main,
+  NextScript,
+  DocumentContext,
+  DocumentInitialProps,
+} from 'next/document';
+import { AppRegistry } from 'react-native-web';
 
 export default class MyDocument extends Document {
+  static async getInitialProps(ctx: DocumentContext): Promise<DocumentInitialProps> {
+    // Register main app for RNW
+    AppRegistry.registerComponent('Main', () => Main);
+
+    const originalRenderPage = ctx.renderPage;
+
+    let reactNativeStyles;
+    ctx.renderPage = () =>
+      originalRenderPage({
+        enhanceApp: App => props => {
+          const { getStyleElement } = AppRegistry.getApplication('Main');
+          reactNativeStyles = getStyleElement();
+          return <App {...props} />;
+        },
+      });
+
+    const initialProps = await Document.getInitialProps(ctx);
+
+    return {
+      ...initialProps,
+      styles: (
+        <>
+          {initialProps.styles}
+          {reactNativeStyles}
+        </>
+      ),
+    };
+  }
+
   render() {
     return (
-      <Html>
+      <Html lang='en'>
         <Head>
-          {/* Add the favicon */}
-          <link rel='icon' href='/digishelf_favicon.ico' />
-          <link
-            href='https://unpkg.com/ionicons@5.5.2/dist/css/ionicons.min.css'
-            rel='stylesheet'
-          />
+          <meta name='viewport' content='width=device-width,initial-scale=1.0' />
         </Head>
         <body>
           <Main />

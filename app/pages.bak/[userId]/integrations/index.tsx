@@ -19,7 +19,8 @@ import type { Integration, Source } from '../../../types/integration';
 
 export default function Integrations(): JSX.Element {
   const router = useRouter();
-  const { userId, loading, error: userError } = useUser();
+  const { user, loading, error: userError } = useUser();
+  const userId = user?.userId;
   const [enabledIntegrations, setEnabledIntegrations] = useState<Integration[]>([]);
   const [availableIntegrations, setAvailableIntegrations] = useState<Source[]>([]);
   const [error, setError] = useState<string | null>(null);

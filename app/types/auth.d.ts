@@ -1,14 +1,15 @@
 import { User } from 'firebase/auth';
+import { Timestamp } from 'firebase/firestore';
 
 export interface UserData {
   userId: string;
-  displayName: string | null;
   email: string | null;
+  displayName: string | null;
   photoURL: string | null;
   firstName: string | null;
   lastName: string | null;
-  updatedAt: Date;
-  createdAt?: Date;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
 }
 
 export interface AuthError {
@@ -19,5 +20,5 @@ export interface UserState {
   user: User | null;
   userData: UserData | null;
   loading: boolean;
-  error: Error | null;
+  error: AuthError | null;
 }
