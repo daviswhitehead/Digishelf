@@ -4,6 +4,9 @@ import { initializeApp } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 import type { DocumentData } from 'firebase-admin/firestore';
 
+// Import custom matchers
+import './matchers/firestore';
+
 // Set emulator environment variables
 process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8081';
 process.env.FIREBASE_FUNCTIONS_EMULATOR_HOST = 'localhost:5001';
