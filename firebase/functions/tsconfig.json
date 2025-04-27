@@ -14,9 +14,10 @@
     "noEmit": false,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@shared/*": ["./shared/*"]
     }
   },
-  "include": [".", "../shared/**/*"],
+  "include": ["./**/*"],
   "exclude": ["node_modules", "lib", "**/*.test.ts", "**/*.spec.ts"]
 }
