@@ -45,7 +45,7 @@ jobs:
         working-directory: ${{ matrix.package }}
 
       - name: Install dependencies
-        run: cd app && npm ci
+        run: npm ci
         working-directory: ${{ matrix.package }}
 
       - name: Run tests

@@ -1,11 +1,11 @@
 name: AI Code Review
 
 on:
-  push: # <- triggers on *any* push, any branch
-  pull_request: # <- triggers on *any* PR to any branch
-  workflow_dispatch: # <- allows manual trigger
-  # pull_request:
-  #   types: [opened, synchronize]
+  # push: # <- triggers on *any* push, any branch
+  # pull_request: # <- triggers on *any* PR to any branch
+  # workflow_dispatch: # <- allows manual trigger
+  pull_request:
+    types: [opened, synchronize]
 
 jobs:
   ai_review:
