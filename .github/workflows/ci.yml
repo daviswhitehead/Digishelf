@@ -3,9 +3,11 @@ name: CI
 # Continuous Integration workflow for Digishelf
 on:
   push:
-    branches: [ main ]
+    branches:
+      - '**'  # matches every branch
   pull_request:
-    branches: [ main ]
+    branches:
+      - '**'  # matches every branch
   workflow_dispatch:
     inputs:
       reason:
