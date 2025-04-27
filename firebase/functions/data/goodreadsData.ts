@@ -21,7 +21,7 @@ async function getPageItems(baseURL: string, pageNumber: number): Promise<PageRe
     const limit = pLimit(CONCURRENCY.BOOK_PROCESSING);
 
     const books = await Promise.all(
-      bookRows.map((elem) =>
+      bookRows.map(elem =>
         limit(async () => {
           const $elem = $(elem);
           let coverImage = $elem.find('td.field.cover img').attr('src') || null;
@@ -39,11 +39,13 @@ async function getPageItems(baseURL: string, pageNumber: number): Promise<PageRe
           }
 
           const author = $elem.find('td.field.author a').first().text().trim();
-          const userRating = translateRating($elem.find('td.field.rating span.staticStars').attr('title'));
+          const userRating = translateRating(
+            $elem.find('td.field.rating span.staticStars').attr('title')
+          );
 
-          let review = $elem.find('td.field.review span[id^=\'freeTextreview\']').text().trim();
+          let review = $elem.find("td.field.review span[id^='freeTextreview']").text().trim();
           if (!review) {
-            review = $elem.find('td.field.review span[id^=\'freeTextContainer\']').text().trim();
+            review = $elem.find("td.field.review span[id^='freeTextContainer']").text().trim();
           }
 
           return {
@@ -116,4 +118,4 @@ async function getAllPages(originalURL: string): Promise<GoodreadsBook[] | null>
   }
 }
 
-export { getAllPages, type GoodreadsBook }; 
+export { getAllPages, type GoodreadsBook };

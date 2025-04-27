@@ -1,20 +1,19 @@
 /* global afterEach, afterAll */
 
-import { jest } from '@jest/globals';
 import * as admin from 'firebase-admin';
 import { getFirestore, Timestamp } from 'firebase-admin/firestore';
-import type { 
-  DocumentData, 
-  Firestore, 
-  CollectionReference, 
-  DocumentReference, 
-  QuerySnapshot, 
+import type {
+  DocumentData,
+  Firestore,
+  CollectionReference,
+  DocumentReference,
+  QuerySnapshot,
   WriteResult,
-  DocumentSnapshot
+  DocumentSnapshot,
 } from 'firebase-admin/firestore';
 
 // Import custom matchers
-import './matchers/firestore.js';
+import './matchers/firestore';
 
 // Mock environment variables
 process.env = {
@@ -23,7 +22,7 @@ process.env = {
   FIREBASE_FUNCTIONS_EMULATOR_HOST: 'localhost:5001',
   FIREBASE_PROJECT_ID: 'demo-test',
   NODE_ENV: 'test',
-};
+} as NodeJS.ProcessEnv;
 
 // Initialize Firebase Admin with a mock app
 const app = admin.initializeApp({
@@ -31,7 +30,7 @@ const app = admin.initializeApp({
 });
 
 // Initialize Firestore
-export const db = getFirestore(app);
+const db = getFirestore(app);
 
 // Global test timeout
 jest.setTimeout(30000);
@@ -41,14 +40,14 @@ const mockWriteResult: WriteResult = {
   writeTime: Timestamp.now(),
 } as WriteResult;
 
-const mockDocSnapshot = {
+const mockDocSnapshot: DocumentSnapshot = {
   exists: true,
   id: 'test-doc-id',
   data: jest.fn().mockReturnValue({ id: 'test-doc-id' }),
   ref: {} as DocumentReference,
 } as unknown as DocumentSnapshot;
 
-const mockQuerySnapshot = {
+const mockQuerySnapshot: QuerySnapshot<DocumentData> = {
   docs: [mockDocSnapshot],
   empty: false,
   size: 1,
@@ -56,27 +55,34 @@ const mockQuerySnapshot = {
 } as unknown as QuerySnapshot<DocumentData>;
 
 // Create mock document and collection references
-const mockGet = jest.fn<() => Promise<DocumentSnapshot<DocumentData>>>().mockResolvedValue(mockDocSnapshot);
-const mockSet = jest.fn<(data: DocumentData) => Promise<WriteResult>>().mockResolvedValue(mockWriteResult);
-const mockUpdate = jest.fn<(data: Partial<DocumentData>) => Promise<WriteResult>>().mockResolvedValue(mockWriteResult);
-const mockDelete = jest.fn<() => Promise<WriteResult>>().mockResolvedValue(mockWriteResult);
+const mockGet = jest.fn().mockImplementation(() => Promise.resolve(mockDocSnapshot));
+const mockSet = jest
+  .fn()
+  .mockImplementation((_data: DocumentData) => Promise.resolve(mockWriteResult));
+const mockUpdate = jest
+  .fn()
+  .mockImplementation((_data: Partial<DocumentData>) => Promise.resolve(mockWriteResult));
+const mockDelete = jest.fn().mockImplementation(() => Promise.resolve(mockWriteResult));
 const mockCollection = jest.fn();
 
-const mockDocRef = {
+const mockDocRef: DocumentReference<DocumentData> = {
   collection: mockCollection,
   get: mockGet,
-  set: mockSet,
+  set: mockSet as unknown as jest.Mock,
   update: mockUpdate,
   delete: mockDelete,
 } as unknown as DocumentReference<DocumentData>;
 
-const mockCollRef = {
+const mockCollRef: CollectionReference<DocumentData> = {
   doc: jest.fn().mockReturnValue(mockDocRef),
-  get: jest.fn().mockImplementation(() => Promise.resolve(mockQuerySnapshot))
+  get: jest.fn().mockImplementation(() => Promise.resolve(mockQuerySnapshot)),
+  where: jest.fn(() => mockCollRef),
+  orderBy: jest.fn(() => mockCollRef),
+  limit: jest.fn(() => mockCollRef),
 } as unknown as CollectionReference<DocumentData>;
 
 // Mock Firestore with proper types
-const mockFirestore = {
+const mockFirestore: Firestore = {
   collection: jest.fn().mockReturnValue(mockCollRef),
   doc: jest.fn().mockReturnValue(mockDocRef),
 } as unknown as Firestore;
@@ -97,8 +103,8 @@ afterEach(async () => {
   for (const collection of collections) {
     const snapshot = await db.collection(collection).get();
     const batch = db.batch();
-    snapshot.docs.forEach((doc: DocumentData) => {
-      batch.delete(doc.ref);
+    snapshot.docs.forEach(_doc => {
+      batch.delete(_doc.ref);
     });
     await batch.commit();
   }
@@ -109,3 +115,13 @@ afterEach(async () => {
 afterAll(async () => {
   await app.delete();
 });
+
+export {
+  db,
+  mockDocRef,
+  mockCollRef,
+  mockFirestore,
+  mockDocSnapshot,
+  mockQuerySnapshot,
+  mockWriteResult,
+};

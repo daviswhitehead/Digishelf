@@ -35,4 +35,4 @@ Object.defineProperty(window, 'IntersectionObserver', {
 
 // Suppress console errors during tests
 global.console.error = jest.fn();
-global.console.warn = jest.fn(); 
+global.console.warn = jest.fn();

@@ -19,4 +19,4 @@ export type RatingMap = {
 export interface PageResult {
   books: GoodreadsBook[];
   $: ReturnType<typeof import('cheerio').load>;
-} 
+}

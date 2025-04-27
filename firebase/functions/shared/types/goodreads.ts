@@ -22,4 +22,4 @@ export type RatingMap = {
   'liked it': 3;
   'really liked it': 4;
   'it was amazing': 5;
-}; 
+};

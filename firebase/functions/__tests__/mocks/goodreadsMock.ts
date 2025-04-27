@@ -52,4 +52,4 @@ const mockGoodreadsResponse = (books: MockBook[]): string => {
     `;
 };
 
-export { mockGoodreadsResponse, type MockBook }; 
+export { mockGoodreadsResponse, type MockBook };

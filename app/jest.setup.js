@@ -1,2 +1,2 @@
 // Add any custom Jest setup here
-import '@testing-library/jest-dom'; 
+import '@testing-library/jest-dom';

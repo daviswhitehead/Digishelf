@@ -21,8 +21,7 @@ expect.extend({
     const pass = received instanceof admin.firestore.Timestamp;
     return {
       pass,
-      message: () =>
-        `expected ${received} to${pass ? ' not' : ''} be a Firestore Timestamp`,
+      message: () => `expected ${received} to${pass ? ' not' : ''} be a Firestore Timestamp`,
     };
   },
 
@@ -30,11 +29,10 @@ expect.extend({
     const expectedDate = expected instanceof Date ? expected : expected.toDate();
     const receivedDate = received.toDate();
     const pass = receivedDate.getTime() === expectedDate.getTime();
-    
+
     return {
       pass,
-      message: () =>
-        `expected ${receivedDate} to${pass ? ' not' : ''} match ${expectedDate}`,
+      message: () => `expected ${receivedDate} to${pass ? ' not' : ''} match ${expectedDate}`,
     };
   },
 
@@ -51,8 +49,7 @@ expect.extend({
     const pass = received.path === path;
     return {
       pass,
-      message: () =>
-        `expected document reference to${pass ? ' not' : ''} have path ${path}`,
+      message: () => `expected document reference to${pass ? ' not' : ''} have path ${path}`,
     };
   },
-}); 
+});

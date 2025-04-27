@@ -40,7 +40,7 @@ describe('getPageItems', () => {
     // Verify another book (Old Man's War)
     const secondBook = result.books[1];
     expect(secondBook).toMatchObject({
-      title: 'Old Man\'s War (Old Man\'s War, #1)',
+      title: "Old Man's War (Old Man's War, #1)",
       author: 'Scalzi, John',
       canonicalURL: expect.stringContaining('/book/show/36510196-old-man-s-war'),
       userRating: null, // Not rated yet

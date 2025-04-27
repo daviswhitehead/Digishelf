@@ -1,4 +1,4 @@
 export const CONCURRENCY = {
   PAGE_REQUESTS: 5,
   BOOK_PROCESSING: 5,
-}; 
+};

@@ -97,9 +97,7 @@ export function generateTestDataSet(count: number = 1) {
     generateTestShelf(user.userId, source.sourceId, integration.integrationId)
   );
   const items = shelves.flatMap(shelf =>
-    Array.from({ length: count }, () =>
-      generateTestItem(shelf.shelfId, integration.integrationId)
-    )
+    Array.from({ length: count }, () => generateTestItem(shelf.shelfId, integration.integrationId))
   );
 
   return {
@@ -109,4 +107,4 @@ export function generateTestDataSet(count: number = 1) {
     shelves,
     items,
   };
-} 
+}

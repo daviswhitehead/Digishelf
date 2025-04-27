@@ -1,4 +1,4 @@
-import type { GoodreadsIntegration, GoodreadsShelf } from '../../shared/types.d.ts';
+import type { GoodreadsIntegration, GoodreadsShelf } from '../../shared/types.js';
 
 export async function writeGoodreadsShelves(
   integrationId: string,
@@ -16,4 +16,4 @@ export async function writeGoodreadsItems(shelfId: string, _shelf: GoodreadsShel
 export async function refreshGoodreadsShelf(shelfId: string): Promise<void> {
   // Implementation will be added later
   console.log(`Refreshing Goodreads shelf: ${shelfId}`);
-} 
+}

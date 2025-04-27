@@ -21,4 +21,4 @@ export async function getDominantColor(imageUrl: string): Promise<string | null>
     }
     return null;
   }
-} 
+}

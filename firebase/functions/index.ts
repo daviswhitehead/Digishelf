@@ -16,7 +16,7 @@ import {
   writeGoodreadsItems,
   refreshGoodreadsShelf,
 } from './sources/goodreads/handlers.js';
-import type { GoodreadsIntegration, GoodreadsShelf } from './shared/types.d.ts';
+import type { GoodreadsIntegration, GoodreadsShelf } from './shared/types.js';
 import { processBatch } from './shared/utils/firestore.js';
 
 initializeApp();
@@ -25,40 +25,43 @@ const db: Firestore = getFirestore();
 type ShelfEvent = FirestoreEvent<Change<DocumentData> | undefined>;
 
 /** @type {import('firebase-functions/v2/firestore').CloudFunction<FirestoreEvent<Change<QueryDocumentSnapshot>>>} */
-export const onGoodreadsIntegrationUpdate = onDocumentUpdated({
-  document: 'goodreadsIntegrations/{integrationId}',
-  region: 'us-central1',
-}, async (event) => {
-  const integrationId = event.params.integrationId;
-  const data = event.data?.after?.data();
-  
-  if (!data) {
-    console.info(`No data found for integration ${integrationId}`);
-    return;
-  }
+export const onGoodreadsIntegrationUpdate = onDocumentUpdated(
+  {
+    document: 'goodreadsIntegrations/{integrationId}',
+    region: 'us-central1',
+  },
+  async event => {
+    const integrationId = event.params.integrationId;
+    const data = event.data?.after?.data();
 
-  const after: GoodreadsIntegration = {
-    userId: data.userId,
-    displayName: data.displayName,
-    profileUrl: data.profileUrl,
-    sourceId: data.sourceId,
-    myBooksURL: data.myBooksURL,
-    shelves: data.shelves,
-    active: data.active,
-    createdAt: data.createdAt,
-    updatedAt: data.updatedAt,
-  };
+    if (!data) {
+      console.info(`No data found for integration ${integrationId}`);
+      return;
+    }
 
-  try {
-    console.time('writeGoodreadsShelves');
-    await writeGoodreadsShelves(integrationId, after);
-    console.timeEnd('writeGoodreadsShelves');
-    console.info(`✅ Finished processing Goodreads integration: ${integrationId}`);
-  } catch (error: unknown) {
-    console.error('❌ Error processing Goodreads integration:', error);
-    throw error;
+    const after: GoodreadsIntegration = {
+      userId: data.userId,
+      displayName: data.displayName,
+      profileUrl: data.profileUrl,
+      sourceId: data.sourceId,
+      myBooksURL: data.myBooksURL,
+      shelves: data.shelves,
+      active: data.active,
+      createdAt: data.createdAt,
+      updatedAt: data.updatedAt,
+    };
+
+    try {
+      console.time('writeGoodreadsShelves');
+      await writeGoodreadsShelves(integrationId, after);
+      console.timeEnd('writeGoodreadsShelves');
+      console.info(`✅ Finished processing Goodreads integration: ${integrationId}`);
+    } catch (error: unknown) {
+      console.error('❌ Error processing Goodreads integration:', error);
+      throw error;
+    }
   }
-});
+);
 
 export const onShelfWrite = onDocumentWritten(
   {

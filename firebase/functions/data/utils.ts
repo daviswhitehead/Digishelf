@@ -15,7 +15,7 @@ export function translateRating(ratingText: string | undefined): number | null {
   };
 
   if (!ratingText) return null;
-  
+
   const key = ratingText.toLowerCase() as keyof RatingMap;
   return ratingMap[key] || null;
 }
@@ -38,4 +38,4 @@ export function getTotalPages($: CheerioAPI): number {
   // Convert to integer or default to 1 if not found
   const totalPages = parseInt(lastPageLink, 10) || 1;
   return totalPages;
-} 
+}

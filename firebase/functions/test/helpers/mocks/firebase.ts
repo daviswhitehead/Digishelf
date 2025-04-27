@@ -61,4 +61,4 @@ export function createCollectionRef(path: string): admin.firestore.CollectionRef
  */
 export function convertToPlainObject(data: admin.firestore.DocumentData): object {
   return JSON.parse(JSON.stringify(data));
-} 
+}

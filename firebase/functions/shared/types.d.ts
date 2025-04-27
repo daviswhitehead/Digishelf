@@ -25,4 +25,4 @@ export interface GoodreadsShelf extends Timestamps {
   originalURL: string;
   bookCount: number;
   lastSynced?: Timestamp;
-} 
+}

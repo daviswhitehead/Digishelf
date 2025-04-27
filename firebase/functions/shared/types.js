@@ -63,4 +63,4 @@ export const Types = {
 };
 
 // Make this file a module
-export {}; 
+export {};

@@ -12,9 +12,16 @@ module.exports = {
       jsx: true,
     },
   },
-  extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'google', 'prettier'],
-  plugins: ['@typescript-eslint'],
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'google',
+    'plugin:prettier/recommended',
+    'prettier',
+  ],
+  plugins: ['@typescript-eslint', 'prettier'],
   rules: {
+    'prettier/prettier': 'error',
     'no-restricted-globals': 'off',
     'prefer-arrow-callback': 'error',
     '@typescript-eslint/explicit-function-return-type': 'off',
@@ -22,7 +29,6 @@ module.exports = {
     'require-jsdoc': 'off',
     'valid-jsdoc': 'off',
     '@typescript-eslint/no-var-requires': 'off',
-    quotes: ['error', 'single'],
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': [
       'error',
@@ -46,9 +52,9 @@ module.exports = {
     {
       files: ['**/*.js'],
       rules: {
-        'camelcase': 'off',
+        camelcase: 'off',
         '@typescript-eslint/camelcase': 'off',
-        'no-invalid-this': 'off'
+        'no-invalid-this': 'off',
       },
     },
   ],

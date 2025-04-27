@@ -6,11 +6,7 @@
       "request": "launch",
       "name": "Debug Current Test File",
       "program": "${workspaceFolder}/node_modules/jest/bin/jest",
-      "args": [
-        "--runInBand",
-        "--config=${workspaceFolder}/jest.config.ts",
-        "${fileBasename}"
-      ],
+      "args": ["--runInBand", "--config=${workspaceFolder}/jest.config.ts", "${fileBasename}"],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "disableOptimisticBPs": true
@@ -20,13 +16,10 @@
       "request": "launch",
       "name": "Debug All Tests",
       "program": "${workspaceFolder}/node_modules/jest/bin/jest",
-      "args": [
-        "--runInBand",
-        "--config=${workspaceFolder}/jest.config.ts"
-      ],
+      "args": ["--runInBand", "--config=${workspaceFolder}/jest.config.ts"],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "disableOptimisticBPs": true
     }
   ]
-} 
+}

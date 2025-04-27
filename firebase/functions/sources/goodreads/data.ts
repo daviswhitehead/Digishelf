@@ -1,6 +1,5 @@
 import * as cheerio from 'cheerio';
 import axios, { AxiosError } from 'axios';
-import type { Element } from 'domhandler';
 import { withTiming } from '../../shared/utils/timing.js';
 import { retry } from '../../shared/utils/retry.js';
 import { GoodreadsBook } from './types.js';
@@ -11,7 +10,7 @@ import { CONCURRENCY } from './constants.js';
 /**
  * Extracts review text from a Goodreads review element using multiple possible selectors
  */
-export function extractReviewText($: cheerio.CheerioAPI, elem: Element): string {
+export function extractReviewText($: cheerio.CheerioAPI, elem: any): string {
   // Try to find the review text in various possible locations
   const reviewSelectors = ['span[id^="freeTextreview"]', 'span[id^="freeText"]', '.field.review'];
 
@@ -30,7 +29,7 @@ export function extractReviewText($: cheerio.CheerioAPI, elem: Element): string 
 /**
  * Parses a single book row from Goodreads HTML
  */
-export function parseBookRow($: cheerio.CheerioAPI, elem: Element): GoodreadsBook {
+export function parseBookRow($: cheerio.CheerioAPI, elem: any): GoodreadsBook {
   // Cover Image
   let coverImage = $(elem).find('td.field.cover img').attr('src') || '';
   if (coverImage) {
@@ -100,7 +99,7 @@ export async function getPageItems(baseURL: string, pageNumber: number): Promise
 
       const limit = pLimit(CONCURRENCY.PAGE_REQUESTS);
       const books = await Promise.all(
-        bookRows.map(elem => limit(async () => parseBookRow($, elem as Element)))
+        bookRows.map(elem => limit(async () => parseBookRow($, elem)))
       );
 
       return { books, $ };
@@ -165,7 +164,7 @@ export async function getAllPages(originalURL: string): Promise<GoodreadsBook[] 
 
       if (!allBooks.length) {
         console.warn('No books found in shelf');
-        return [];  // Return empty array instead of null
+        return []; // Return empty array instead of null
       }
 
       console.info(`Total books collected: ${allBooks.length}`);
@@ -175,7 +174,7 @@ export async function getAllPages(originalURL: string): Promise<GoodreadsBook[] 
         'Fatal error in getAllPages:',
         error instanceof Error ? error.message : 'Unknown error'
       );
-      return null;  // Still return null for actual errors
+      return null; // Still return null for actual errors
     }
   }) as Promise<GoodreadsBook[] | null>;
 }

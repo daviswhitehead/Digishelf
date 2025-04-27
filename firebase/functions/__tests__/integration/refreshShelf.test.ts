@@ -38,7 +38,7 @@ describe('refreshShelf', () => {
     it('should update existing items with most recent data', async () => {
       const now = new Date();
       const oneDayAgo = Timestamp.fromDate(new Date(now.getTime() - 24 * 60 * 60 * 1000));
-      
+
       // 1. Set up initial state with more fields
       await createTestItem('test-item-1', TEST_SHELF_ID, TEST_INTEGRATION_ID, {
         title: 'Old Title',
@@ -75,7 +75,9 @@ describe('refreshShelf', () => {
       mock.onGet().reply(200, mockGoodreadsResponse(mockBooks));
 
       // 3. Call the refresh function
-      const result = await callFunction<{ success: boolean; message: string }>('refreshShelf', { shelfId: TEST_SHELF_ID });
+      const result = await callFunction<{ success: boolean; message: string }>('refreshShelf', {
+        shelfId: TEST_SHELF_ID,
+      });
 
       // 4. Verify the function response
       expect(result).toEqual({
@@ -127,7 +129,7 @@ describe('refreshShelf', () => {
       // Check timestamps
       const createdAtDate = itemData.createdAt.toDate();
       const updatedAtDate = itemData.updatedAt.toDate();
-      
+
       expect(createdAtDate).toBeInstanceOf(Date);
       expect(updatedAtDate).toBeInstanceOf(Date);
       expect(createdAtDate.getTime()).toBeLessThan(updatedAtDate.getTime());
@@ -139,4 +141,4 @@ describe('refreshShelf', () => {
 
     // TODO: Implement remaining tests...
   });
-}); 
+});
