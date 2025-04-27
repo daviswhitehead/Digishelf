@@ -1,16 +1,39 @@
 {
   "compilerOptions": {
     "target": "es2022",
-    "module": "esnext",
-    "moduleResolution": "node",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
     "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
     "resolveJsonModule": true,
-    "incremental": true,
-    "jsx": "preserve"
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true
   },
-  "include": ["firebase/functions/**/*.ts", "firebase/functions/**/*.tsx"],
-  "exclude": ["node_modules", "**/node_modules", "**/lib", "**/dist", "**/.next", "**/coverage"]
+  "include": [
+    "firebase/functions/**/*.ts",
+    "firebase/functions/**/*.js",
+    "app/**/*.ts",
+    "app/**/*.tsx",
+    "app/**/*.js",
+    "app/**/*.jsx"
+  ],
+  "exclude": [
+    "node_modules",
+    ".next",
+    "out",
+    "coverage",
+    "**/*.test.ts",
+    "**/*.test.js",
+    "**/*.spec.ts",
+    "**/*.spec.js",
+    ".eslintrc.js",
+    "app/jest.setup.js",
+    "firebase/functions/shared/types.js"
+  ]
 }

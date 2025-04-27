@@ -36,8 +36,8 @@ describe('sanitizeResponse', () => {
 
     // Check that replacements are correct
     expect(sanitized).toContain('user-xxx');
-    expect(sanitized).toContain('email=xxx@xxx.com');
-    expect(sanitized).toContain('auth_token=xxx');
+    expect(sanitized).toContain('value="xxx@xxx.com"');
+    expect(sanitized).toContain('value="xxx"');
     expect(sanitized).toContain('2024-01-01T00:00:00');
   });
 

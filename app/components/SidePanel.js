@@ -91,7 +91,11 @@ const SidePanel = ({ isVisible, onClose, title, subtitle, scrollPosition, userId
         <Pressable style={styles.profileSection} onPress={handleProfileClick}>
           <View style={styles.profileContainer}>
             {userData?.photoURL ? (
-              <Image source={{ uri: userData.photoURL }} style={styles.profileImage} />
+              <Image
+                source={{ uri: userData.photoURL }}
+                style={styles.profileImage}
+                alt={`${userData.displayName || 'User'}'s profile picture`}
+              />
             ) : (
               <View style={styles.profileImagePlaceholder}>
                 <Icon name='person' size={40} color='#FFFFFF' />
@@ -211,7 +215,11 @@ const SidePanel = ({ isVisible, onClose, title, subtitle, scrollPosition, userId
         >
           <View style={styles.profileContainer}>
             {currentUser?.photoURL ? (
-              <Image source={{ uri: currentUser.photoURL }} style={styles.profileImage} />
+              <Image
+                source={{ uri: currentUser.photoURL }}
+                style={styles.profileImage}
+                alt={`${currentUser.displayName || 'Current user'}'s profile picture`}
+              />
             ) : (
               <View style={styles.profileImagePlaceholder}>
                 <Icon name='person' size={40} color='#FFFFFF' />

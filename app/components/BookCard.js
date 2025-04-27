@@ -68,6 +68,7 @@ const BookCard = ({ book, cardWidth, margin }) => {
             source={{ uri: book.coverImage }}
             style={[styles.coverImage, { height: imageHeight }]}
             resizeMode='cover'
+            alt={`Cover of ${book.title || 'book'}`}
           />
         )}
       </View>

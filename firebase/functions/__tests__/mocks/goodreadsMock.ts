@@ -42,6 +42,24 @@ const mockGoodreadsResponse = (books: MockBook[]): string => {
                 <td class="field review">
                   <span id="freeTextreview123">${book.review || ''}</span>
                 </td>
+                <td class="field isbn">
+                  <span>${book.isbn || ''}</span>
+                </td>
+                <td class="field pageCount">
+                  <span>${book.pageCount || ''}</span>
+                </td>
+                <td class="field publishedYear">
+                  <span>${book.publishedYear || ''}</span>
+                </td>
+                <td class="field publisher">
+                  <span>${book.publisher || ''}</span>
+                </td>
+                <td class="field language">
+                  <span>${book.language || ''}</span>
+                </td>
+                <td class="field genre">
+                  <span>${(book.genre || []).join(', ')}</span>
+                </td>
               </tr>
             `
               )

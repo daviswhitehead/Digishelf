@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase-admin/app';
-import { onCall, CallableRequest } from 'firebase-functions/v2/https';
+import { onCall } from 'firebase-functions/v2/https';
 import type { CallableOptions } from 'firebase-functions/v2/https';
 import {
   onDocumentUpdated,
@@ -11,13 +11,10 @@ import {
   DocumentOptions,
 } from 'firebase-functions/v2/firestore';
 import { getFirestore, Firestore, DocumentData, WriteBatch } from 'firebase-admin/firestore';
-import {
-  writeGoodreadsShelves,
-  writeGoodreadsItems,
-  refreshGoodreadsShelf,
-} from './sources/goodreads/handlers.js';
-import type { GoodreadsIntegration, GoodreadsShelf } from './shared/types.js';
+import { writeGoodreadsShelves, writeGoodreadsItems } from './sources/goodreads/handlers.js';
+import type { GoodreadsIntegration, GoodreadsShelf } from './shared/types/index.js';
 import { processBatch } from './shared/utils/firestore.js';
+import { handleRefreshShelf } from './handlers/refreshShelf.js';
 
 initializeApp();
 const db: Firestore = getFirestore();
@@ -40,13 +37,12 @@ export const onGoodreadsIntegrationUpdate = onDocumentUpdated(
     }
 
     const after: GoodreadsIntegration = {
+      integrationId: integrationId,
       userId: data.userId,
-      displayName: data.displayName,
-      profileUrl: data.profileUrl,
       sourceId: data.sourceId,
+      displayName: data.displayName,
       myBooksURL: data.myBooksURL,
       shelves: data.shelves,
-      active: data.active,
       createdAt: data.createdAt,
       updatedAt: data.updatedAt,
     };
@@ -136,11 +132,11 @@ export const onIntegrationDelete = onDocumentDeleted(
   }
 );
 
-interface RefreshShelfData {
+interface _RefreshShelfData {
   shelfId: string;
 }
 
-interface RefreshShelfResponse {
+interface _RefreshShelfResponse {
   success: boolean;
   message: string;
   error?: {
@@ -156,35 +152,4 @@ const refreshShelfOptions: CallableOptions = {
   region: 'us-central1',
 };
 
-export const refreshShelf = onCall(
-  refreshShelfOptions,
-  async (request: CallableRequest<RefreshShelfData>): Promise<RefreshShelfResponse> => {
-    const data = request.data;
-    const shelfId = data.shelfId;
-
-    if (!shelfId) {
-      return {
-        success: false,
-        message: 'Shelf ID is required',
-      };
-    }
-
-    try {
-      console.info(`🔄 Refresh request received for shelfId: ${shelfId}`);
-      await refreshGoodreadsShelf(shelfId);
-      return { success: true, message: 'Shelf refreshed successfully.' };
-    } catch (error: unknown) {
-      console.error(`❌ Error refreshing shelf: ${shelfId}`, error);
-      const err = error as Error & { code?: string };
-      return {
-        success: false,
-        message: err.message || 'Failed to refresh shelf',
-        error: {
-          code: err.code,
-          message: err.message,
-          stack: err.stack,
-        },
-      };
-    }
-  }
-);
+export const refreshShelf = onCall(refreshShelfOptions, handleRefreshShelf);

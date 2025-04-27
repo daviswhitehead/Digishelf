@@ -15,25 +15,25 @@ export async function retry<T>(
   operation: () => Promise<T>,
   { retries = 3, minTimeout = 1000, factor = 2, onRetry = () => {} }: RetryOptions = {}
 ): Promise<T> {
-  let lastError: Error;
+  let lastError: Error | unknown;
   let attempt = 0;
 
   while (attempt < retries) {
     try {
       return await operation();
     } catch (error) {
-      lastError = error instanceof Error ? error : new Error(String(error));
+      lastError = error;
       attempt++;
 
       if (attempt === retries) {
-        throw new Error(`Failed after ${retries} attempts: ${lastError.message}`);
+        throw lastError;
       }
 
       const timeout = minTimeout * Math.pow(factor, attempt - 1);
-      onRetry(lastError);
+      onRetry(error instanceof Error ? error : new Error(String(error)));
       await new Promise(resolve => setTimeout(resolve, timeout));
     }
   }
 
-  throw new Error(`Failed after ${retries} attempts: ${lastError!.message}`);
+  throw lastError;
 }

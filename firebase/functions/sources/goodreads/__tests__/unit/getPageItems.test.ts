@@ -1,19 +1,18 @@
 import { getPageItems } from '../../data.js';
-import { loadFixture } from '../__fixtures__/loadFixture.js';
+import { loadFixture } from '../helpers/loadFixture.js';
 import axios from 'axios';
-import MockAdapter from 'axios-mock-adapter';
+
+jest.mock('axios');
+const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 describe('getPageItems', () => {
-  let mock: MockAdapter;
-
   beforeEach(() => {
-    mock = new MockAdapter(axios);
+    jest.resetAllMocks();
     jest.spyOn(console, 'warn').mockImplementation(() => {});
     jest.spyOn(console, 'error').mockImplementation(() => {});
   });
 
   afterEach(() => {
-    mock.reset();
     jest.clearAllMocks();
   });
 
@@ -21,7 +20,7 @@ describe('getPageItems', () => {
     const mockHTML = loadFixture('responses/currently_reading.html');
     const baseURL = 'https://www.goodreads.com/review/list/123';
     const pageNumber = 1;
-    mock.onGet(`${baseURL}&page=${pageNumber}`).reply(200, mockHTML);
+    mockedAxios.get.mockResolvedValue({ data: mockHTML });
 
     const result = await getPageItems(baseURL, pageNumber);
 
@@ -51,7 +50,7 @@ describe('getPageItems', () => {
     const mockHTML = loadFixture('responses/read_shelf.html');
     const baseURL = 'https://www.goodreads.com/review/list/123';
     const pageNumber = 1;
-    mock.onGet(`${baseURL}&page=${pageNumber}`).reply(200, mockHTML);
+    mockedAxios.get.mockResolvedValue({ data: mockHTML });
 
     const result = await getPageItems(baseURL, pageNumber);
 
@@ -70,7 +69,7 @@ describe('getPageItems', () => {
     const mockHTML = loadFixture('responses/test_shelf.html');
     const baseURL = 'https://www.goodreads.com/review/list/123';
     const pageNumber = 1;
-    mock.onGet(`${baseURL}&page=${pageNumber}`).reply(200, mockHTML);
+    mockedAxios.get.mockResolvedValue({ data: mockHTML });
 
     const result = await getPageItems(baseURL, pageNumber);
 

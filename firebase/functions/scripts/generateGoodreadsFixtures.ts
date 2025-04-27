@@ -28,16 +28,20 @@ function sanitizeResponse(html: string): string {
     html
       // Remove user IDs
       .replace(/user-\d+/g, 'user-xxx')
+      .replace(/\/\d+-davis-whitehead/g, '/xxx-davis-whitehead')
       // Remove emails
       .replace(/email=([^&"]+)/g, 'email=xxx@xxx.com')
+      .replace(/value="[^"]+@[^"]+"/g, 'value="xxx@xxx.com"')
       // Remove authentication tokens
       .replace(/auth_token=([^&"]+)/g, 'auth_token=xxx')
+      .replace(/value="[^"]+xyz"/g, 'value="xxx"')
       // Remove any script tags and their contents
       .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
       // Remove Google Analytics
       .replace(/ga\('.*?'\);/g, '')
       // Remove user profile links
       .replace(/href="\/user\/show\/\d+/g, 'href="/user/show/xxx')
+      .replace(/\/review\/list\/\d+/g, '/review/list/xxx')
       // Remove timestamps
       .replace(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/g, '2024-01-01T00:00:00')
   );

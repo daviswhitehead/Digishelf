@@ -2,36 +2,43 @@ import * as cheerio from 'cheerio';
 import { getTotalPages } from '../../utils.js';
 
 describe('getTotalPages', () => {
-  it('returns the highest numeric page when multiple page links exist', () => {
+  it('returns the highest page number from pagination links', () => {
     const html = `
-      <div id="reviewPagination">
-        <a>1</a>
-        <a>2</a>
-        <a>3</a>
-        <a rel="next">next</a>
-      </div>
-    `;
+<html>
+<body>
+  <div id="reviewPagination">
+    <a href="#">1</a>
+    <a href="#">2</a>
+    <a href="#">3</a>
+  </div>
+</body>
+</html>`;
     const $ = cheerio.load(html);
     expect(getTotalPages($)).toBe(3);
   });
 
-  it('returns 0 when no content exists', () => {
+  it('returns 0 when no content is present', () => {
     const html = `
-      <div id="reviewPagination"></div>
-    `;
+<html>
+<body>
+  <div id="reviewPagination"></div>
+</body>
+</html>`;
     const $ = cheerio.load(html);
     expect(getTotalPages($)).toBe(0);
   });
 
-  it('handles non-numeric links correctly', () => {
+  it('returns 2 when next button is present', () => {
     const html = `
-      <div id="reviewPagination">
-        <a>1</a>
-        <a>2</a>
-        <a>next</a>
-        <a>last</a>
-      </div>
-    `;
+<html>
+<body>
+  <div id="reviewPagination">
+    <a href="#">1</a>
+    <a href="#" rel="next">Next</a>
+  </div>
+  <div class="review">Content</div>
+</body>
+</html>`;
     const $ = cheerio.load(html);
     expect(getTotalPages($)).toBe(2);
   });

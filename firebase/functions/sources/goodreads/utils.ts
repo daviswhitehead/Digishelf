@@ -18,7 +18,7 @@ export function cleanNewLines(s: string): string {
 /**
  * Extracts the total number of pages from pagination
  */
-export function getTotalPages($: cheerio.CheerioAPI): number {
+export function getTotalPages($: ReturnType<typeof cheerio.load>): number {
   // First check for numeric page links
   const pageLinks = $('#reviewPagination a')
     .map((_, el) => $(el).text().trim())
@@ -26,17 +26,26 @@ export function getTotalPages($: cheerio.CheerioAPI): number {
     .filter(text => /^\d+$/.test(text))
     .map(Number);
 
+  // Check for next button
+  const hasNextButton = $('#reviewPagination a[rel="next"]').length > 0;
+
   if (pageLinks.length > 0) {
-    return Math.max(...pageLinks);
+    const maxNumericPage = Math.max(...pageLinks);
+    // If there's also a next button, there are more pages after the last numeric link
+    return hasNextButton ? maxNumericPage + 1 : maxNumericPage;
   }
 
-  // Check for next button
-  const hasNextButton = $('a[rel="next"]').length > 0;
+  // If there's a next button but no numeric links, there must be at least 2 pages
   if (hasNextButton) {
     return 2;
   }
 
   // Check for content
   const hasContent = $('.review').length > 0;
-  return hasContent ? 1 : 0;
+  if (!hasContent) {
+    return 0;
+  }
+
+  // If there's content but no pagination or next button, it's a single page
+  return 1;
 }
