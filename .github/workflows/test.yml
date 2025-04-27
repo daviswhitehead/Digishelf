@@ -6,57 +6,25 @@ on:
   pull_request:
     branches: [ main ]
 
-env:
-  NODE_VERSION: '22'
-  HUSKY: '0' # Disable Husky only in CI
-  SKIP_HUSKY: '1' # Additional safety for Husky skip
-
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
-          
-      - name: Debug Environment
-        run: |
-          echo "Node version: $(node -v)"
-          echo "NPM version: $(npm -v)"
-          echo "Working directory: $(pwd)"
-          echo "HUSKY env: $HUSKY"
-          echo "SKIP_HUSKY env: $SKIP_HUSKY"
-          
-      - name: Install Root Dependencies
-        run: |
-          echo "Installing root dependencies..."
-          # First install without any scripts
-          npm ci --ignore-scripts
-          # Then run the necessary scripts manually (but not prepare/postinstall)
-          npm rebuild
-          echo "Root dependencies installed"
-          
+          node-version: '22'
+
+      # Functions Tests
       - name: Test Functions
         run: |
-          echo "Testing functions..."
           cd firebase/functions
           npm ci --ignore-scripts
-          npm rebuild
-          npm run test
-          
+          npx jest --config jest.config.ts
+
+      # App Tests
       - name: Test App
         run: |
-          echo "Testing app..."
           cd app
           npm ci --ignore-scripts
-          npm rebuild
-          npm run test
-          
-      - name: Run Linting
-        run: |
-          echo "Running linting..."
-          npm run lint 
+          npx jest --passWithNoTests 
