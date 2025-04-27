@@ -1,26 +1,11 @@
-import React from 'react';
-import { render as rtlRender, RenderOptions } from '@testing-library/react';
+import { ReactElement } from 'react';
+import { render, RenderResult } from '@testing-library/react';
+import type { RenderOptions } from '@testing-library/react';
 
-interface WrapperProps {
-  children: React.ReactNode;
-}
+const renderWithProviders = (
+  ui: ReactElement,
+  options?: Omit<RenderOptions, 'queries'>
+): RenderResult => render(ui, { ...options });
 
-const AllTheProviders: React.FC<WrapperProps> = ({ children }) => {
-  return <>{children}</>;
-};
-
-const customRender = (
-  ui: Parameters<typeof rtlRender>[0],
-  options?: Omit<RenderOptions, 'wrapper'>
-) => {
-  return rtlRender(ui, {
-    wrapper: AllTheProviders,
-    ...options,
-  } as RenderOptions);
-};
-
-// re-export everything
 export * from '@testing-library/react';
-
-// override render method
-export { customRender as render };
+export { renderWithProviders as render };

@@ -14,11 +14,11 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 
 // Initialize services
-const db = getFirestore(app);
 const auth = getAuth(app);
+const db = getFirestore(app);
 const functions = getFunctions(app);
 const storage = getStorage(app);
 
@@ -30,4 +30,4 @@ if (process.env.NODE_ENV === 'development') {
   connectStorageEmulator(storage, 'localhost', 9199);
 }
 
-export { app, db, auth, functions, storage };
+export { app, auth, db, functions, storage };
