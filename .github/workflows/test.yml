@@ -36,12 +36,12 @@ jobs:
           cache-dependency-path: 'firebase/functions/package-lock.json'
       
       - name: Install functions dependencies
-        run: npm ci
         working-directory: firebase/functions
+        run: npm ci
   
       - name: Test functions
-        run: npm run test
         working-directory: firebase/functions
+        run: npm run test
         
   test-app:
     runs-on: ubuntu-latest
@@ -53,9 +53,9 @@ jobs:
           cache: 'npm'
 
       - name: Install app dependencies
-        run: npm ci
         working-directory: app
+        run: npm ci
   
       - name: Test app
-        run: npm run test
         working-directory: app
+        run: npm run test
