@@ -1,7 +1,6 @@
-/* global jest, afterEach, afterAll */
+/* global afterEach, afterAll */
 
 import { jest } from '@jest/globals';
-import type { Mock } from 'jest';
 import * as admin from 'firebase-admin';
 import { getFirestore, Timestamp } from 'firebase-admin/firestore';
 import type { 
@@ -73,7 +72,7 @@ const mockDocRef = {
 
 const mockCollRef = {
   doc: jest.fn().mockReturnValue(mockDocRef),
-  get: jest.fn(() => Promise.resolve(mockQuerySnapshot)),
+  get: jest.fn().mockImplementation(() => Promise.resolve(mockQuerySnapshot))
 } as unknown as CollectionReference<DocumentData>;
 
 // Mock Firestore with proper types
@@ -87,7 +86,6 @@ mockGet.mockResolvedValue(mockDocSnapshot);
 mockSet.mockResolvedValue(mockWriteResult);
 mockUpdate.mockResolvedValue(mockWriteResult);
 mockDelete.mockResolvedValue(mockWriteResult);
-mockCollRef.get.mockResolvedValue(mockQuerySnapshot);
 
 // Mock the admin.firestore() call
 jest.spyOn(admin, 'firestore').mockImplementation(() => mockFirestore);
