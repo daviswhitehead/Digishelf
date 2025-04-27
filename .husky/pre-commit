@@ -7,11 +7,10 @@ NC='\033[0m' # No Color
 
 echo "${GREEN}🔍 Running pre-commit checks...${NC}"
 
-# Run lint-staged (includes prettier, eslint, and type checking)
+# Run lint-staged (includes prettier and eslint)
 npx lint-staged || {
   echo "${YELLOW}⚠️  Issues found in staged files${NC}"
-  echo "${YELLOW}👉 Commit will proceed, but please fix these issues before pushing${NC}"
-  echo "${YELLOW}   Run 'npm run lint:fix' and 'npm run type-check' to fix issues${NC}"
+  echo "${YELLOW}👉 Please fix these issues before committing${NC}"
   exit 1
 }
 

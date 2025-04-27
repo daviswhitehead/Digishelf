@@ -1,13 +1,23 @@
-import React, { ReactElement } from 'react';
-import { render, RenderOptions } from '@testing-library/react';
+import React from 'react';
+import { render as rtlRender, RenderOptions } from '@testing-library/react';
 
-// Add any providers here
-function AllTheProviders({ children }: { children: React.ReactNode }): JSX.Element {
-  return <>{children}</>;
+interface WrapperProps {
+  children: React.ReactNode;
 }
 
-const customRender = (ui: ReactElement, options?: Omit<RenderOptions, 'wrapper'>) =>
-  render(ui, { wrapper: AllTheProviders, ...options });
+const AllTheProviders: React.FC<WrapperProps> = ({ children }) => {
+  return <>{children}</>;
+};
+
+const customRender = (
+  ui: Parameters<typeof rtlRender>[0],
+  options?: Omit<RenderOptions, 'wrapper'>
+) => {
+  return rtlRender(ui, {
+    wrapper: AllTheProviders,
+    ...options,
+  } as RenderOptions);
+};
 
 // re-export everything
 export * from '@testing-library/react';
