@@ -10,14 +10,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "test": "jest --passWithNoTests",
+    "test": "jest --passWithNoTests --ci",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
-    "type-check": "tsc --noEmit",
-    "colors": "node ./utils/extractColors.js",
-    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
-    "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,json,md}\""
+    "type-check": "tsc --noEmit"
   },
   "keywords": [],
   "author": "",

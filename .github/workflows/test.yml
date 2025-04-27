@@ -6,40 +6,44 @@ on:
   pull_request:
     branches: [ main ]
 
+env:
+  NODE_VERSION: '22'
+
 jobs:
-  validate:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: '22'
-          cache: 'npm'
-          cache-dependency-path: '**/package-lock.json'
-      - run: npm ci
-      - run: npm run lint
-      - run: npm run type-check
-
-  test-functions:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: 'npm'
-          cache-dependency-path: '**/package-lock.json'
-      - run: npm ci
-      - run: cd firebase/functions && npm ci && npm run test
-
-  test-app:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: 'npm'
-          cache-dependency-path: '**/package-lock.json'
-      - run: npm ci
-      - run: cd app && npm ci && npm run test 
+          node-version: ${{ env.NODE_VERSION }}
+          
+      # Install root dependencies
+      - name: Install root dependencies
+        run: |
+          npm pkg delete scripts.prepare
+          npm ci
+          
+      # Test App
+      - name: Test App
+        run: |
+          cd app
+          npm pkg delete scripts.prepare
+          npm ci
+          npm run test
+          
+      # Test Functions
+      - name: Test Functions
+        run: |
+          cd firebase/functions
+          npm pkg delete scripts.prepare
+          npm ci
+          npm run test
+          
+      # Run linting and type checking
+      - name: Lint and Type Check
+        run: |
+          npm run lint
+          npm run type-check 
