@@ -23,7 +23,8 @@
     "clean": "rimraf lib",
     "generate-fixtures": "ts-node scripts/generateGoodreadsFixtures.ts",
     "lint": "cd ../.. && npm run lint",
-    "format": "cd ../.. && npm run format"
+    "format": "cd ../.. && npm run format",
+    "type-check": "tsc --noEmit"
   },
   "engines": {
     "node": "22"

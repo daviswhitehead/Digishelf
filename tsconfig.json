@@ -21,15 +21,9 @@
       "firebase/*": ["node_modules/firebase/*"]
     },
     "types": ["node", "jest"],
-    "typeRoots": ["./node_modules/@types", "./app/types", "./firebase/functions/types"]
+    "typeRoots": ["./node_modules/@types", "./app/types"]
   },
-  "include": [
-    "app/**/*.ts",
-    "app/**/*.tsx",
-    "firebase/functions/**/*.ts",
-    "firebase/functions/**/*.tsx",
-    "app/types/**/*.d.ts"
-  ],
+  "include": ["app/**/*.ts", "app/**/*.tsx", "app/types/**/*.d.ts"],
   "exclude": [
     "node_modules",
     "**/node_modules",

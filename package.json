@@ -17,7 +17,9 @@
     "dev": "concurrently \"cd app && npm run dev\" \"cd firebase/functions && npm run dev\" --names \"app,functions\" --prefix-colors \"blue,green\"",
     "dev:app": "cd app && npm run dev",
     "dev:functions": "cd firebase/functions && npm run dev",
-    "type-check": "tsc --noEmit",
+    "type-check": "npm run type-check:app && npm run type-check:functions",
+    "type-check:app": "tsc --noEmit",
+    "type-check:functions": "cd firebase/functions && npm run type-check",
     "type-check:staged": "tsc --noEmit --project tsconfig.staged.json",
     "convert-to-ts": "node scripts/convert-to-ts.js"
   },
