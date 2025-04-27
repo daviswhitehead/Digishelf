@@ -6,10 +6,7 @@ const config: Config.InitialOptions = {
   roots: ['<rootDir>'],
   moduleDirectories: ['node_modules', '<rootDir>'],
   setupFilesAfterEnv: ['<rootDir>/test/jest.setup.ts'],
-  testMatch: [
-    '**/__tests__/**/*.test.ts',
-    '**/__tests__/**/*.test.tsx',
-  ],
+  testMatch: ['**/__tests__/**/*.test.ts', '**/__tests__/**/*.test.tsx'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   moduleNameMapper: {
     // Handle module aliases
@@ -21,7 +18,7 @@ const config: Config.InitialOptions = {
     // Handle CSS imports (with CSS modules)
     '\\.module\\.(css|sass|scss)$': 'identity-obj-proxy',
     // Handle image imports
-    '\\.(jpg|jpeg|png|gif|webp|svg)$': '<rootDir>/test/mocks/fileMock.js'
+    '\\.(jpg|jpeg|png|gif|webp|svg)$': '<rootDir>/test/mocks/fileMock.ts',
   },
   collectCoverageFrom: [
     'components/**/*.{ts,tsx}',
@@ -39,12 +36,15 @@ const config: Config.InitialOptions = {
     },
   },
   transform: {
-    '^.+\\.(ts|tsx)$': ['ts-jest', {
-      tsconfig: '<rootDir>/tsconfig.json',
-    }],
+    '^.+\\.(ts|tsx)$': [
+      'ts-jest',
+      {
+        tsconfig: '<rootDir>/tsconfig.json',
+      },
+    ],
   },
   verbose: true,
   testPathIgnorePatterns: ['/node_modules/', '/.next/'],
 };
 
-export default config; 
+export default config;
