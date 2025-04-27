@@ -33,13 +33,16 @@ jobs:
           - app
           - firebase/functions
     steps:
+      - name: debug
+        run: |
+            echo "Running inside: $(pwd)"
+        working-directory: ${{ matrix.package }}
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: 'npm'
-          cache-dependency-path: package-lock.json
-        working-directory: ${{ matrix.package }}
+          cache-dependency-path: ${{ matrix.package }}/package-lock.json
 
       - name: debug
         run: |
