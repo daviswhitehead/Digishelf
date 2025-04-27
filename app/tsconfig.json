@@ -1,11 +1,15 @@
 {
-  "extends": "../tsconfig.json",
+  "extends": "../tsconfig.base.json",
   "compilerOptions": {
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ]
+    "composite": true,
+    "outDir": "./dist",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"],
+      "@firebase/*": ["../firebase/*"],
+      "firebase/*": ["../node_modules/firebase/*"]
+    },
+    "typeRoots": ["../node_modules/@types", "./types"]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"]
+  "include": ["**/*.ts", "**/*.tsx", "types/**/*.d.ts"]
 }

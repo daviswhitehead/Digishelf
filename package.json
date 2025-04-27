@@ -17,9 +17,9 @@
     "dev": "concurrently \"cd app && npm run dev\" \"cd firebase/functions && npm run dev\" --names \"app,functions\" --prefix-colors \"blue,green\"",
     "dev:app": "cd app && npm run dev",
     "dev:functions": "cd firebase/functions && npm run dev",
-    "type-check": "npm run type-check:app && npm run type-check:functions",
-    "type-check:app": "tsc --noEmit",
-    "type-check:functions": "cd firebase/functions && npm run type-check",
+    "type-check": "tsc --build",
+    "type-check:app": "cd app && tsc --noEmit",
+    "type-check:functions": "cd firebase/functions && tsc --noEmit",
     "type-check:staged": "tsc --noEmit --project tsconfig.staged.json",
     "convert-to-ts": "node scripts/convert-to-ts.js"
   },
@@ -44,7 +44,8 @@
   "lint-staged": {
     "**/*.{js,ts,tsx}": [
       "prettier --write",
-      "eslint --fix"
+      "eslint --fix",
+      "npm run type-check"
     ],
     "**/*.{json,md}": [
       "prettier --write"
