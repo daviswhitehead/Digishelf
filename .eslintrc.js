@@ -23,8 +23,9 @@ module.exports = {
     'google',
     'plugin:prettier/recommended',
     'prettier',
+    'plugin:next/core-web-vitals',
   ],
-  plugins: ['@typescript-eslint', 'prettier'],
+  plugins: ['@typescript-eslint', 'prettier', 'next'],
   rules: {
     'prettier/prettier': 'error',
     'no-restricted-globals': 'off',
