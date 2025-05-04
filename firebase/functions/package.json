@@ -15,7 +15,8 @@
     "test:coverage": "jest --coverage",
     "test:ci": "jest --config jest.config.ts --ci --coverage --colors --maxWorkers=2",
     "clean": "rimraf lib",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "dev": "concurrently \"npm run build:watch\" \"npm run serve\""
   },
   "engines": {
     "node": "22"

@@ -16,9 +16,12 @@
     "test": "npm run test:functions && npm run test:app",
     "test:functions": "cd firebase/functions && npm run test",
     "test:app": "cd app && npm run test",
-    "dev": "concurrently \"cd app && npm run dev\" \"cd firebase/functions && npm run dev\" --names \"app,functions\" --prefix-colors \"blue,green\"",
+    "dev:app": "cd app && npm run dev",
+    "dev:functions": "cd firebase/functions && npm run dev",
+    "dev": "concurrently \"npm run dev:app\" \"npm run dev:functions\" --names \"app,functions\" --prefix-colors \"blue,green\"",
     "type-check": "tsc --build",
-    "lint-staged": "lint-staged"
+    "lint-staged": "lint-staged",
+    "checks": "npm run format && npm run lint && npm run test && npm run build && npm run type-check"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.0.0",
