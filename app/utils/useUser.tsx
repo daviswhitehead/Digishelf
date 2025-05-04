@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { onAuthStateChanged, User } from 'firebase/auth';
+import { onAuthStateChanged } from 'firebase/auth';
 import { doc, onSnapshot, Timestamp } from 'firebase/firestore';
 import { auth, db } from '../firebase/clientApp';
-import { UseUserReturn, UserData, _User } from '../types/models';
+import { UseUserReturn, UserData } from '../types/models';
 import { FirebaseError } from 'firebase/app';
 
 const UserContext = createContext<UseUserReturn>({

@@ -1,11 +1,5 @@
 import { Vibrant } from 'node-vibrant/node';
 
-interface _RGB {
-  r: number;
-  g: number;
-  b: number;
-}
-
 export const getDominantColor = async (imageUrl: string, retries = 0): Promise<string | null> => {
   if (retries > 3) return null;
 

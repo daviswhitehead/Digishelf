@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useWindowDimensions as _useWindowDimensions } from 'react-native';
 import type { Breakpoints, ResponsiveState } from '../types/responsive';
 
 export const breakpoints: Breakpoints = {

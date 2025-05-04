@@ -1,8 +1,3 @@
-interface _CardDimensions {
-  width: number;
-  height: number;
-}
-
 interface CardConstraints {
   minWidth: number;
   maxWidth: number;
