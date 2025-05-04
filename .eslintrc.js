@@ -16,6 +16,9 @@ module.exports = {
     next: {
       rootDir: 'app/',
     },
+    'next-on-pages': {
+      rootDir: 'app/',
+    },
   },
   extends: [
     'eslint:recommended',
@@ -24,8 +27,9 @@ module.exports = {
     'plugin:prettier/recommended',
     'prettier',
     'plugin:@next/next/recommended',
+    'plugin:next-on-pages/recommended',
   ],
-  plugins: ['@typescript-eslint', 'prettier', '@next/next'],
+  plugins: ['@typescript-eslint', 'prettier', '@next/next', 'next-on-pages'],
   rules: {
     'prettier/prettier': 'error',
     'no-restricted-globals': 'off',
@@ -43,6 +47,7 @@ module.exports = {
         varsIgnorePattern: '^_',
       },
     ],
+    'next-on-pages/no-html-link-for-pages': ['error', { pagesPath: 'app/pages' }],
   },
   ignorePatterns: ['node_modules/', 'lib/', 'dist/', '.next/', 'coverage/', '*.d.ts'],
   overrides: [
