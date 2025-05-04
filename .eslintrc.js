@@ -14,7 +14,7 @@ module.exports = {
   },
   settings: {
     next: {
-      rootDir: 'app/',
+      rootDir: ['app/'],
     },
   },
   extends: [
@@ -43,6 +43,7 @@ module.exports = {
         varsIgnorePattern: '^_',
       },
     ],
+    '@next/next/no-html-link-for-pages': ['error', 'app/pages/'],
   },
   ignorePatterns: ['node_modules/', 'lib/', 'dist/', '.next/', 'coverage/', '*.d.ts'],
   overrides: [
