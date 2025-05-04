@@ -1,29 +1,36 @@
-import { getFirestore, Firestore } from 'firebase-admin/firestore';
+import type { Firestore } from 'firebase-admin/firestore';
 import type { GoodreadsIntegration, GoodreadsShelf } from '../../shared/types/index.js';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
-
-// Default db instance for production use
-const defaultDb = getFirestore();
+import { db as defaultDb } from '../../utils/firebase';
 
 export async function writeGoodreadsShelves(
   integrationId: string,
-  _integration: GoodreadsIntegration,
-  // TODO: Implement db operations in future
-  _db: Firestore = defaultDb
+  integration: GoodreadsIntegration,
+  db: Firestore = defaultDb
 ): Promise<void> {
   // Implementation will be added later
   console.log(`Writing Goodreads shelves for integration: ${integrationId}`);
+  console.debug('Integration details:', integration);
+  await db.collection('logs').add({
+    type: 'goodreads_shelves_write',
+    integrationId,
+    timestamp: new Date(),
+  });
 }
 
 export async function writeGoodreadsItems(
   shelfId: string,
-  _shelf: GoodreadsShelf,
-  // TODO: Implement db operations in future
-  _db: Firestore = defaultDb
+  shelf: GoodreadsShelf,
+  db: Firestore = defaultDb
 ): Promise<void> {
   // Implementation will be added later
-  console.log(`Writing Goodreads items for shelf: ${shelfId}`);
+  console.log(`Writing Goodreads items for shelf: ${shelfId}`, shelf);
+  await db.collection('logs').add({
+    type: 'goodreads_items_write',
+    shelfId,
+    timestamp: new Date(),
+  });
 }
 
 export async function refreshGoodreadsShelf(

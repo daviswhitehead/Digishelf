@@ -1,6 +1,5 @@
-import { initializeApp } from 'firebase-admin/app';
-import { onCall } from 'firebase-functions/v2/https';
 import type { CallableOptions } from 'firebase-functions/v2/https';
+import { onCall } from 'firebase-functions/v2/https';
 import {
   onDocumentUpdated,
   onDocumentDeleted,
@@ -11,14 +10,12 @@ import {
   DocumentSnapshot,
   DocumentOptions,
 } from 'firebase-functions/v2/firestore';
-import { getFirestore, Firestore, WriteBatch } from 'firebase-admin/firestore';
+import type { WriteBatch } from 'firebase-admin/firestore';
 import { writeGoodreadsShelves, writeGoodreadsItems } from './sources/goodreads/handlers.js';
 import type { GoodreadsIntegration, GoodreadsShelf } from './shared/types/index.js';
 import { processBatch } from './shared/utils/firestore.js';
 import { handleRefreshShelf } from './handlers/refreshShelf.js';
-
-initializeApp();
-const db: Firestore = getFirestore();
+import { db } from './utils/firebase';
 
 export const onGoodreadsIntegrationUpdate = onDocumentUpdated(
   {

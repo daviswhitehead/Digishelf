@@ -2,7 +2,6 @@
   "name": "digishelf",
   "private": true,
   "workspaces": [
-    "app",
     "firebase/functions"
   ],
   "scripts": {
@@ -11,17 +10,18 @@
     "format": "prettier --write \"**/*.{js,ts,tsx,json,md}\"",
     "format:check": "prettier --check \"**/*.{js,ts,tsx,json,md}\"",
     "build": "npm run build:functions && npm run build:app",
-    "build:functions": "cd firebase/functions && npm run build",
+    "build:functions": "npm run build --workspace=@digishelf/functions",
     "build:app": "cd app && npm run build",
     "test": "npm run test:functions && npm run test:app",
-    "test:functions": "cd firebase/functions && npm run test",
+    "test:functions": "npm run test --workspace=@digishelf/functions",
     "test:app": "cd app && npm run test",
     "dev:app": "cd app && npm run dev",
-    "dev:functions": "cd firebase/functions && npm run dev",
+    "dev:functions": "npm run dev --workspace=@digishelf/functions",
     "dev": "concurrently \"npm run dev:app\" \"npm run dev:functions\" --names \"app,functions\" --prefix-colors \"blue,green\"",
     "type-check": "tsc --build",
     "lint-staged": "lint-staged",
-    "checks": "npm run format && npm run lint && npm run test && npm run build && npm run type-check"
+    "checks": "npm run format && npm run lint && npm run test && npm run build && npm run type-check",
+    "postinstall": "cd app && npm install"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.0.0",
@@ -46,15 +46,6 @@
     "lint-staged": "^15.2.2",
     "prettier": "^3.2.5",
     "typescript": "5.3.3"
-  },
-  "lint-staged": {
-    "**/*.{js,ts,tsx}": [
-      "prettier --write",
-      "eslint --fix"
-    ],
-    "**/*.{json,md}": [
-      "prettier --write"
-    ]
   },
   "dependencies": {
     "@octokit/rest": "^21.1.1",

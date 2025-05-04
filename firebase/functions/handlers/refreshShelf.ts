@@ -1,6 +1,6 @@
 import { CallableRequest } from 'firebase-functions/v2/https';
-import { refreshGoodreadsShelf } from '../sources/goodreads/handlers.jsx';
-import { getFirestore } from 'firebase-admin/firestore';
+import { refreshGoodreadsShelf } from '../sources/goodreads/handlers.js';
+import { db } from '../utils/firebase.js';
 
 export interface RefreshShelfData {
   shelfId: string;
@@ -15,9 +15,6 @@ export interface RefreshShelfResponse {
     stack?: string;
   };
 }
-
-// Get the default Firestore instance
-const db = getFirestore();
 
 export async function handleRefreshShelf(
   request: CallableRequest<RefreshShelfData>

@@ -2,45 +2,42 @@ import React from 'react';
 import {
   View as RNView,
   Text as RNText,
-  TouchableOpacity as RNTouchableOpacity,
+  Pressable as RNPressable,
   ViewStyle,
   TextStyle,
-  View as ViewType,
-  Text as TextType,
-  TouchableOpacity as TouchableOpacityType,
+  StyleProp,
 } from 'react-native';
-import type { CSSProperties } from 'react';
 
 // Define SSR-compatible props
-interface SSRViewProps {
-  children: React.ReactNode;
-  style?: ViewStyle | CSSProperties;
-  className?: string;
+interface SSRViewProps extends Omit<React.ComponentProps<typeof RNView>, 'style'> {
+  children?: React.ReactNode;
+  style?: StyleProp<ViewStyle>;
 }
 
-interface SSRTextProps extends SSRViewProps {
-  style?: TextStyle | CSSProperties;
-}
-
-interface SSRTouchableOpacityProps extends SSRViewProps {
+interface SSRPressableProps extends Omit<React.ComponentProps<typeof RNPressable>, 'style'> {
+  children?: React.ReactNode;
   onPress?: () => void;
+  style?: StyleProp<ViewStyle>;
 }
 
-const View = React.forwardRef<typeof ViewType, SSRViewProps>(({ style, ...props }, ref) => (
-  <RNView {...props} style={style as CSSProperties} ref={ref} />
-));
+interface SSRTextProps extends Omit<React.ComponentProps<typeof RNText>, 'style'> {
+  children?: React.ReactNode;
+  style?: StyleProp<TextStyle>;
+}
+
+const View = React.forwardRef<typeof RNView, SSRViewProps>((props, ref) => {
+  return <RNView {...props} ref={ref} />;
+});
 View.displayName = 'View';
 
-const Text = React.forwardRef<typeof TextType, SSRTextProps>(({ style, ...props }, ref) => (
-  <RNText {...props} style={style as CSSProperties} ref={ref} />
-));
+const Pressable = React.forwardRef<typeof RNPressable, SSRPressableProps>((props, ref) => {
+  return <RNPressable {...props} ref={ref} />;
+});
+Pressable.displayName = 'Pressable';
+
+const Text = React.forwardRef<typeof RNText, SSRTextProps>((props, ref) => {
+  return <RNText {...props} ref={ref} />;
+});
 Text.displayName = 'Text';
 
-const TouchableOpacity = React.forwardRef<typeof TouchableOpacityType, SSRTouchableOpacityProps>(
-  ({ style, ...props }, ref) => (
-    <RNTouchableOpacity {...props} style={style as CSSProperties} ref={ref} />
-  )
-);
-TouchableOpacity.displayName = 'TouchableOpacity';
-
-export { View, Text, TouchableOpacity };
+export { View, Text, Pressable };

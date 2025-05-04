@@ -1,6 +1,7 @@
 import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 import { useRouter } from 'next/router';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { Pressable } from '../components/primitives';
 
 export default function Home() {
   const router = useRouter();
@@ -11,46 +12,42 @@ export default function Home() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome to DigiShelf</Text>
-      <Text style={styles.subtitle}>Your digital shelf for managing books, games, and more.</Text>
-      <TouchableOpacity onPress={handleGetStarted} style={styles.button}>
+      <Text style={styles.title}>Welcome to Digishelf</Text>
+      <Text style={styles.subtitle}>Your digital bookshelf management solution</Text>
+      <Pressable onPress={handleGetStarted} style={styles.button}>
         <Text style={styles.buttonText}>Get Started</Text>
-      </TouchableOpacity>
+      </Pressable>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    textAlign: 'center',
-    padding: 50,
-    backgroundColor: '#000',
-    color: '#fff',
-    minHeight: '100vh',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
+    flex: 1,
     alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
   },
   title: {
-    fontSize: 48,
-    marginBottom: 20,
-    color: '#fff',
+    fontSize: 32,
+    fontWeight: 'bold',
+    marginBottom: 10,
   },
   subtitle: {
-    fontSize: 20,
-    marginBottom: 40,
-    color: '#fff',
+    fontSize: 18,
+    color: '#666',
+    marginBottom: 30,
+    textAlign: 'center',
   },
   button: {
-    paddingVertical: 15,
+    backgroundColor: '#007AFF',
     paddingHorizontal: 30,
-    backgroundColor: '#4caf50',
-    borderRadius: 5,
+    paddingVertical: 15,
+    borderRadius: 8,
   },
   buttonText: {
-    fontSize: 16,
-    color: '#fff',
-    textAlign: 'center',
+    color: 'white',
+    fontSize: 18,
+    fontWeight: '600',
   },
 });

@@ -1,31 +1,32 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, StyleProp, ViewStyle } from 'react-native-web';
+import { Text, StyleSheet, StyleProp, ViewStyle } from 'react-native-web';
+import { Pressable } from './primitives';
 
 interface ButtonProps {
-  title: string;
   onPress: () => void;
+  title: string;
   style?: StyleProp<ViewStyle>;
 }
 
-export const Button = ({ title, onPress, style }: ButtonProps) => {
-  return (
-    <TouchableOpacity style={[styles.button, style]} onPress={onPress}>
-      <Text style={styles.text}>{title}</Text>
-    </TouchableOpacity>
-  );
-};
+const Button = ({ onPress, title, style }: ButtonProps) => (
+  <Pressable style={[styles.button, style]} onPress={onPress}>
+    <Text style={styles.text}>{title}</Text>
+  </Pressable>
+);
 
 const styles = StyleSheet.create({
   button: {
     backgroundColor: '#007AFF',
     borderRadius: 8,
-    padding: 12,
-    minWidth: 120,
+    padding: 15,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   text: {
-    color: '#FFFFFF',
+    color: 'white',
     fontSize: 16,
     fontWeight: '600',
   },
 });
+
+export default Button;
