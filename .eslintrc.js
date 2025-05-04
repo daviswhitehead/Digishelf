@@ -42,6 +42,7 @@ module.exports = {
         varsIgnorePattern: '^_',
       },
     ],
+    'no-html-link-for-pages': ['error', { pagePath: 'app/pages' }],
   },
   ignorePatterns: ['node_modules/', 'lib/', 'dist/', '.next/', 'coverage/', '*.d.ts'],
   overrides: [
