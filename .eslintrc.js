@@ -12,6 +12,11 @@ module.exports = {
       jsx: true,
     },
   },
+  settings: {
+    next: {
+      rootDir: 'app/',
+    },
+  },
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
