@@ -38,15 +38,11 @@ const mockLimit = jest.fn().mockName('mockLimit');
 
 // Mock document reference factory function
 function createMockDocRef(path: string): DocumentReference {
-  console.log('Creating doc ref for path:', path);
   const docRef = {
     id: path.split('/').pop() || '',
     path,
     collection: jest
-      .fn(collectionPath => {
-        console.log('Doc collection called with:', collectionPath);
-        return createMockCollRef(`${path}/${collectionPath}`);
-      })
+      .fn(collectionPath => createMockCollRef(`${path}/${collectionPath}`))
       .mockName('docCollection'),
     get: mockGet,
     set: mockSet,
@@ -54,13 +50,11 @@ function createMockDocRef(path: string): DocumentReference {
     delete: mockDelete,
     parent: null,
   } as unknown as DocumentReference;
-  console.log('Created doc ref:', docRef);
   return docRef;
 }
 
 // Mock collection reference factory function
 function createMockCollRef(path: string): CollectionReference {
-  console.log('Creating collection ref for path:', path);
   const collRef = {
     id: path.split('/').pop() || '',
     path,
@@ -69,12 +63,12 @@ function createMockCollRef(path: string): CollectionReference {
     orderBy: mockOrderBy.mockReturnThis(),
     limit: mockLimit.mockReturnThis(),
     parent: null,
+    add: jest.fn().mockResolvedValue({ id: 'mock-doc-id' }),
   } as unknown as CollectionReference;
 
   // Add doc method directly to the collection reference
   collRef.doc = jest
     .fn((docPath?: string) => {
-      console.log('Collection doc called with:', docPath);
       const fullPath = docPath
         ? `${path}/${docPath}`
         : `${path}/${Math.random().toString(36).substring(7)}`;
@@ -82,7 +76,6 @@ function createMockCollRef(path: string): CollectionReference {
     })
     .mockName('collectionDoc');
 
-  console.log('Created collection ref:', collRef);
   return collRef;
 }
 
@@ -118,12 +111,7 @@ mockDelete.mockImplementation(() =>
 );
 
 // Create collection mock with implementation first
-const collectionMock = jest.fn((path: string) => {
-  console.log('Collection mock called with:', path);
-  const collRef = createMockCollRef(path);
-  console.log('Collection mock returning:', collRef);
-  return collRef;
-});
+const collectionMock = jest.fn((path: string) => createMockCollRef(path));
 
 // Create batch mock
 const batchMock = jest.fn(() => ({
@@ -149,19 +137,20 @@ jest.spyOn(admin, 'firestore').mockImplementation(() => mockFirestore);
 // Export the mock Firestore instance
 const db = mockFirestore;
 
-// Verify the setup
-console.log('Collection mock implementation:', collectionMock.getMockImplementation());
-console.log('Initialized db with collection method:', !!db.collection);
-
 // Clean up after each test
 afterEach(() => {
   // Reset all mocks
   jest.clearAllMocks();
+  // Clear any console mocks that might have been set up
+  jest.restoreAllMocks();
 });
 
 // Clean up after all tests
 afterAll(async () => {
-  await app.delete();
+  await Promise.all([
+    app.delete(),
+    // Add any other cleanup promises here
+  ]);
 });
 
 export {
