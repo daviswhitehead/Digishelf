@@ -138,3 +138,6 @@ dist
 
 # firebase
 *servicekey.json
+
+# MacOS
+.DS_Store
