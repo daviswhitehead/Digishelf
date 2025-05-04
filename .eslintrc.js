@@ -43,7 +43,6 @@ module.exports = {
         varsIgnorePattern: '^_',
       },
     ],
-    'no-html-link-for-pages': ['error', { pagePath: 'app/pages' }],
   },
   ignorePatterns: ['node_modules/', 'lib/', 'dist/', '.next/', 'coverage/', '*.d.ts'],
   overrides: [
@@ -57,7 +56,6 @@ module.exports = {
       },
     },
     {
-      // Special rules for JavaScript files
       files: ['**/*.js'],
       env: {
         node: true,
@@ -67,7 +65,6 @@ module.exports = {
         camelcase: 'off',
         '@typescript-eslint/camelcase': 'off',
         'no-invalid-this': 'off',
-        // Allow require syntax in .js files
         '@typescript-eslint/no-var-requires': 'off',
       },
     },

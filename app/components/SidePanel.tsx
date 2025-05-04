@@ -91,6 +91,9 @@ export const SidePanel: React.FC<Props> = ({
           <Pressable style={[styles.button, styles.deleteButton]} onPress={handleDeleteShelf}>
             <Text style={[styles.buttonText, styles.deleteButtonText]}>Delete Shelf</Text>
           </Pressable>
+          <Pressable style={[styles.button, styles.logoutButton]} onPress={_handleLogout}>
+            <Text style={[styles.buttonText, styles.logoutButtonText]}>Logout</Text>
+          </Pressable>
         </View>
         {showToast && (
           <View style={styles.toast}>
@@ -177,6 +180,13 @@ const styles = StyleSheet.create({
   toastText: {
     color: '#fff',
     textAlign: 'center',
+  },
+  logoutButton: {
+    backgroundColor: '#f3f4f6',
+    marginTop: 20,
+  },
+  logoutButtonText: {
+    color: '#4b5563',
   },
 });
 
