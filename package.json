@@ -17,7 +17,7 @@
     "test:app": "cd app && npm run test",
     "dev:app": "cd app && npm run dev",
     "dev:functions": "npm run dev --workspace=@digishelf/functions",
-    "dev:emulators": "firebase emulators:start --config firebase/firebase.json --import=./firebase/dev-data --export-on-exit=./firebase/dev-data",
+    "dev:emulators": "firebase emulators:start --config firebase/firebase.json --import=./firebase/emulator-data --export-on-exit=./firebase/emulator-data",
     "dev": "concurrently \"npm run dev:app\" \"npm run dev:emulators\" --names \"app,firebase\" --prefix-colors \"blue,yellow\"",
     "type-check": "tsc --build",
     "lint-staged": "lint-staged",
