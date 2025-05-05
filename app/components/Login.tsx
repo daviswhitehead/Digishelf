@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { signInWithPopup, GoogleAuthProvider, Auth } from 'firebase/auth';
 import { auth } from '../firebase/clientApp';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
 const Login = () => {
   const router = useRouter();
@@ -33,7 +34,7 @@ const Login = () => {
       const user = result.user;
       console.log('✅ Successfully logged in:', user.email);
 
-      // Redirect to user's profile page
+      // The UserProvider will handle creating/updating the user document in Firestore
       router.push(`/${user.uid}`);
     } catch (err) {
       console.error('❌ Login error:', err);
@@ -59,49 +60,54 @@ const Login = () => {
   };
 
   return (
-    <div
-      style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: '20px',
-      }}
-    >
-      <button
-        onClick={handleGoogleLogin}
+    <View style={styles.container}>
+      <Text style={styles.title}>Welcome to DigiShelf</Text>
+      {error && <Text style={styles.error}>{error}</Text>}
+      <TouchableOpacity
+        style={[styles.button, loading && styles.buttonDisabled]}
+        onPress={handleGoogleLogin}
         disabled={loading}
-        style={{
-          backgroundColor: loading ? '#cccccc' : '#4285f4',
-          padding: '15px',
-          borderRadius: '5px',
-          border: 'none',
-          cursor: loading ? 'not-allowed' : 'pointer',
-          color: '#ffffff',
-          fontSize: '16px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          minWidth: '200px',
-        }}
       >
-        {loading ? 'Signing in...' : 'Sign in with Google'}
-      </button>
-      {error && (
-        <p
-          style={{
-            color: '#dc3545',
-            marginTop: '10px',
-            padding: '10px',
-            backgroundColor: '#f8d7da',
-            borderRadius: '4px',
-            textAlign: 'center',
-          }}
-        >
-          {error}
-        </p>
-      )}
-    </div>
+        <Text style={styles.buttonText}>{loading ? 'Signing in...' : 'Sign in with Google'}</Text>
+      </TouchableOpacity>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 20,
+    alignItems: 'center',
+    backgroundColor: '#1a1a1a',
+    borderRadius: 8,
+    minWidth: 300,
+  },
+  title: {
+    fontSize: 24,
+    color: '#fff',
+    marginBottom: 20,
+    fontWeight: 'bold',
+  },
+  button: {
+    backgroundColor: '#4285f4',
+    padding: 15,
+    borderRadius: 4,
+    width: '100%',
+    alignItems: 'center',
+  },
+  buttonDisabled: {
+    backgroundColor: '#666',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '500',
+  },
+  error: {
+    color: '#ff4444',
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+});
 
 export default Login;

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
-import { doc, onSnapshot, Timestamp } from 'firebase/firestore';
+import { doc, onSnapshot, Timestamp, setDoc } from 'firebase/firestore';
 import { auth, db } from '../firebase/clientApp';
 import { UseUserReturn, UserData } from '../types/models';
 import { FirebaseError } from 'firebase/app';
@@ -27,7 +27,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
           const userDocRef = doc(db, 'users', firebaseUser.uid);
           const unsubDoc = onSnapshot(
             userDocRef,
-            doc => {
+            async doc => {
               if (doc.exists()) {
                 const firestoreData = doc.data();
                 const userData: UserData = {
@@ -53,7 +53,17 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
                   createdAt: Timestamp.now(),
                   updatedAt: Timestamp.now(),
                 };
-                setUser(userData);
+
+                // Create the user document in Firestore
+                try {
+                  await setDoc(userDocRef, userData);
+                  setUser(userData);
+                } catch (err) {
+                  console.error('Error creating user document:', err);
+                  setError(
+                    err instanceof Error ? err : new Error('Failed to create user document')
+                  );
+                }
               }
               setLoading(false);
             },
