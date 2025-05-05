@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
-import { View, Text, StyleSheet, Pressable, Animated } from 'react-native-web';
+import { StyleSheet } from 'react-native-web';
+import type { StyleProp, ViewStyle, TextStyle } from 'react-native';
+import { View, Text, Pressable } from '../components/primitives';
 import { getAuth, signOut } from 'firebase/auth';
 import { useUser } from '../utils/useUser';
 
@@ -25,14 +27,6 @@ export const SidePanel: React.FC<Props> = ({
   const { user, loading, error } = useUser();
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
-  const slideAnim = React.useRef(new Animated.Value(isVisible ? 0 : 300)).current;
-
-  React.useEffect(() => {
-    Animated.spring(slideAnim, {
-      toValue: isVisible ? 0 : 300,
-      useNativeDriver: true,
-    }).start();
-  }, [isVisible, slideAnim]);
 
   const _handleLogout = async () => {
     try {
@@ -64,11 +58,12 @@ export const SidePanel: React.FC<Props> = ({
           <View style={styles.overlayBackground} />
         </Pressable>
       )}
-      <Animated.View
+      <View
         style={[
           styles.panel,
           {
-            transform: [{ translateX: slideAnim }],
+            transform: isVisible ? 'translateX(0)' : 'translateX(300px)',
+            transition: 'transform 0.3s ease-in-out',
           },
         ]}
       >
@@ -100,7 +95,7 @@ export const SidePanel: React.FC<Props> = ({
             <Text style={styles.toastText}>{toastMessage}</Text>
           </View>
         )}
-      </Animated.View>
+      </View>
     </>
   );
 };
@@ -113,7 +108,7 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     zIndex: 100,
-  },
+  } as StyleProp<ViewStyle>,
   overlayBackground: {
     position: 'absolute',
     top: 0,
@@ -121,7 +116,7 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
+  } as StyleProp<ViewStyle>,
   panel: {
     position: 'fixed',
     top: 0,
@@ -133,41 +128,42 @@ const styles = StyleSheet.create({
     padding: 24,
     borderLeftWidth: 1,
     borderLeftColor: '#eee',
-  },
+  } as StyleProp<ViewStyle>,
   header: {
     marginBottom: 24,
-  },
+  } as StyleProp<ViewStyle>,
   title: {
     fontSize: 24,
     fontWeight: '600',
     marginBottom: 4,
-  },
+  } as StyleProp<TextStyle>,
   subtitle: {
     fontSize: 16,
     color: '#666',
-  },
+  } as StyleProp<TextStyle>,
   content: {
+    flexDirection: 'column',
     gap: 12,
-  },
+  } as StyleProp<ViewStyle>,
   button: {
     padding: 12,
     borderRadius: 8,
     backgroundColor: '#f5f5f5',
     alignItems: 'center',
-  },
+  } as StyleProp<ViewStyle>,
   buttonText: {
     fontSize: 16,
     fontWeight: '500',
-  },
+  } as StyleProp<TextStyle>,
   deleteButton: {
     backgroundColor: '#fee2e2',
-  },
+  } as StyleProp<ViewStyle>,
   deleteButtonText: {
     color: '#dc2626',
-  },
+  } as StyleProp<TextStyle>,
   error: {
     color: 'red',
-  },
+  } as StyleProp<TextStyle>,
   toast: {
     position: 'absolute',
     bottom: 20,
@@ -176,18 +172,18 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 0, 0, 0.8)',
     padding: 10,
     borderRadius: 5,
-  },
+  } as StyleProp<ViewStyle>,
   toastText: {
     color: '#fff',
     textAlign: 'center',
-  },
+  } as StyleProp<TextStyle>,
   logoutButton: {
     backgroundColor: '#f3f4f6',
     marginTop: 20,
-  },
+  } as StyleProp<ViewStyle>,
   logoutButtonText: {
     color: '#4b5563',
-  },
+  } as StyleProp<TextStyle>,
 });
 
 export default SidePanel;

@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useRouter } from 'next/router';
 import { signInWithPopup, GoogleAuthProvider, Auth } from 'firebase/auth';
 import { auth } from '../firebase/clientApp';
 
 const Login = () => {
+  const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -30,6 +32,9 @@ const Login = () => {
       const result = await signInWithPopup(auth as Auth, provider);
       const user = result.user;
       console.log('✅ Successfully logged in:', user.email);
+
+      // Redirect to user's profile page
+      router.push(`/${user.uid}`);
     } catch (err) {
       console.error('❌ Login error:', err);
 

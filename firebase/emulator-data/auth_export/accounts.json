@@ -3,12 +3,9 @@
   "users": [
     {
       "localId": "mX4teUHxUi4viQ0ANmQnsPMsx2Rj",
-      "displayName": "Raccoon Chicken",
-      "screenName": "chicken_raccoon",
-      "email": "raccoon.chicken.906@example.com",
-      "emailVerified": true,
       "createdAt": "1746396784416",
-      "lastLoginAt": "1746396791524",
+      "lastLoginAt": "1746407567292",
+      "displayName": "Raccoon Chicken",
       "providerUserInfo": [
         {
           "providerId": "google.com",
@@ -19,7 +16,11 @@
           "screenName": "chicken_raccoon"
         }
       ],
-      "lastRefreshAt": "2025-05-04T22:13:11.525Z"
+      "validSince": "1746407552",
+      "email": "raccoon.chicken.906@example.com",
+      "emailVerified": true,
+      "disabled": false,
+      "lastRefreshAt": "2025-05-05T01:12:47.292Z"
     }
   ]
 }

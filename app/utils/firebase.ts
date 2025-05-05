@@ -27,10 +27,21 @@ const googleProvider = new GoogleAuthProvider();
 
 // Connect to emulators in development
 if (process.env.NODE_ENV === 'development') {
-  connectAuthEmulator(auth, 'http://127.0.0.1:9099');
-  connectFirestoreEmulator(db, '127.0.0.1', 8080);
-  connectFunctionsEmulator(functions, '127.0.0.1', 5001);
-  connectStorageEmulator(storage, '127.0.0.1', 9199);
+  try {
+    // Connect to auth emulator with explicit options
+    connectAuthEmulator(auth, 'http://localhost:9099', {
+      disableWarnings: true,
+    });
+
+    // Connect other emulators
+    connectFirestoreEmulator(db, 'localhost', 8080);
+    connectFunctionsEmulator(functions, 'localhost', 5002);
+    connectStorageEmulator(storage, 'localhost', 9199);
+
+    console.log('🔧 Connected to Firebase emulators');
+  } catch (error) {
+    console.error('❌ Failed to connect to emulators:', error);
+  }
 }
 
 export { app, db, auth, googleProvider, functions, storage };

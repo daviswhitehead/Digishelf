@@ -1,7 +1,6 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import { View, Text, StyleSheet } from 'react-native';
-import { Pressable } from './primitives';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
 const Sidebar = () => {
   const router = useRouter();
@@ -14,72 +13,41 @@ const Sidebar = () => {
   ];
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Digishelf</Text>
-      </View>
-      <View style={styles.content}>
-        <View style={styles.linkContainer}>
-          {links.map(link => (
-            <Pressable
-              key={link.name}
-              onPress={() => router.push(link.path)}
-              style={[styles.link, router.pathname === link.path && styles.activeLink]}
-            >
-              <Text
-                style={[styles.linkText, router.pathname === link.path && styles.activeLinkText]}
-              >
-                {link.name}
-              </Text>
-            </Pressable>
-          ))}
-        </View>
-      </View>
-      <View style={styles.footer}>
-        <Pressable style={styles.logoutButton}>
-          <Text style={styles.logoutText}>Logout</Text>
-        </Pressable>
+    <View style={styles.sidebar}>
+      <Text style={styles.title}>DigiShelf</Text>
+      <View style={styles.linkContainer}>
+        {links.map(link => (
+          <TouchableOpacity
+            key={link.name}
+            onPress={() => router.push(link.path)}
+            style={[styles.link, router.pathname === link.path && styles.activeLink]}
+          >
+            <Text style={[styles.linkText, router.pathname === link.path && styles.activeLinkText]}>
+              {link.name}
+            </Text>
+          </TouchableOpacity>
+        ))}
       </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  sidebar: {
     width: 250,
-    height: '100%',
-    backgroundColor: '#f5f5f5',
-    borderRightWidth: 1,
-    borderRightColor: '#e0e0e0',
-  },
-  header: {
+    backgroundColor: '#1a1a1a',
+    color: '#fff',
+    height: '100vh',
     padding: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    position: 'fixed',
+    top: 0,
+    left: 0,
   },
   title: {
+    marginBottom: 20,
     fontSize: 24,
+    color: '#fff',
     fontWeight: 'bold',
-  },
-  content: {
-    flex: 1,
-    padding: 20,
-  },
-  footer: {
-    padding: 20,
-    borderTopWidth: 1,
-    borderTopColor: '#e0e0e0',
-  },
-  logoutButton: {
-    padding: 10,
-    backgroundColor: '#ff4444',
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  logoutText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: '600',
   },
   linkContainer: {
     marginTop: 10,
