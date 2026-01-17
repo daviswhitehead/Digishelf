@@ -95,7 +95,7 @@ const BookGrid = ({ columns, cardWidth, margin }) => (
 
 export default function Shelf() {
   const router = useRouter();
-  const { shelfId } = router.query;
+  const { shelfId, autoplay } = router.query;
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -109,8 +109,10 @@ export default function Shelf() {
     sourceDisplayName: "",
     userId: "",
   });
+  const hasAutoPlayedRef = useRef(false); // Track if we've already auto-played
 
   const isAutoscrolling = useRef(false); // Track if autoscroll is active
+  const isResettingRef = useRef(false); // Track if we're resetting to top
   const throttledUpdateScrollPosition = useRef(
     throttle(() => {
       const scrollTop = window.scrollY;
@@ -123,28 +125,138 @@ export default function Shelf() {
     }, 1000) // Throttle updates to every 200ms
   ).current;
 
-  // Autoscroll logic using requestAnimationFrame
+  // Autoscroll logic using requestAnimationFrame with bottom detection and reset
   useEffect(() => {
     let animationFrameId;
+    const activeTimeouts = []; // Track all timeouts for cleanup
+
+    const getScrollPositions = () => {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight;
+      const clientHeight = window.innerHeight;
+      return {
+        currentOffset: scrollTop,
+        maxScroll: scrollHeight - clientHeight,
+      };
+    };
+
+    const handleScrollReset = () => {
+      // Cancel any existing animation frame
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = null;
+      }
+
+      isResettingRef.current = true;
+      
+      // Smoothly scroll to the very top (position 0)
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
+
+      let checkCount = 0;
+      const maxChecks = 100; // Maximum number of checks (5 seconds max wait)
+
+      // Poll to check when scroll has reached the top, then wait 1 second before resuming
+      const checkScrollComplete = () => {
+        // Don't continue if isPlaying changed or component unmounted
+        if (!isPlaying) {
+          isResettingRef.current = false;
+          return;
+        }
+
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        
+        // If we're at the top (within 1px threshold for precision)
+        if (scrollTop <= 1) {
+          // Ensure we're exactly at 0 (fallback in case smooth scroll didn't complete perfectly)
+          if (scrollTop > 0) {
+            window.scrollTo(0, 0);
+          }
+          
+          // We've reached the top, now wait 1 second before resuming
+          const resumeTimeout = setTimeout(() => {
+            isResettingRef.current = false;
+            if (isPlaying) {
+              animationFrameId = requestAnimationFrame(autoScroll);
+            }
+          }, 1000); // 1 second pause at the top before resuming
+          activeTimeouts.push(resumeTimeout);
+        } else if (checkCount < maxChecks) {
+          // Still scrolling up, check again in a short interval
+          checkCount++;
+          const nextCheckTimeout = setTimeout(checkScrollComplete, 50);
+          activeTimeouts.push(nextCheckTimeout);
+        } else {
+          // Fallback: if smooth scroll takes too long, force to top and continue
+          window.scrollTo(0, 0);
+          const fallbackTimeout = setTimeout(() => {
+            isResettingRef.current = false;
+            if (isPlaying) {
+              animationFrameId = requestAnimationFrame(autoScroll);
+            }
+          }, 1000);
+          activeTimeouts.push(fallbackTimeout);
+        }
+      };
+
+      // Start checking after a brief delay to allow smooth scroll animation to begin
+      const initialTimeout = setTimeout(checkScrollComplete, 100);
+      activeTimeouts.push(initialTimeout);
+    };
 
     const autoScroll = () => {
-      if (isPlaying) {
-        isAutoscrolling.current = true;
+      // Don't continue if isPlaying changed
+      if (!isPlaying) {
+        isAutoscrolling.current = false;
+        if (animationFrameId) {
+          cancelAnimationFrame(animationFrameId);
+          animationFrameId = null;
+        }
+        return;
+      }
+
+      isAutoscrolling.current = true;
+      const { currentOffset, maxScroll } = getScrollPositions();
+
+      // Check if we've reached the bottom
+      if (currentOffset >= maxScroll && !isResettingRef.current) {
+        handleScrollReset();
+      } else if (!isResettingRef.current) {
+        // Continue scrolling down
         window.scrollBy(0, 2); // Scroll down by 2px per frame
 
         // Throttled update of scrollPosition during autoscroll
         throttledUpdateScrollPosition();
 
         animationFrameId = requestAnimationFrame(autoScroll);
-      } else {
-        isAutoscrolling.current = false;
-        cancelAnimationFrame(animationFrameId);
       }
     };
 
-    autoScroll();
+    // Only start auto-scroll if isPlaying is true
+    if (isPlaying) {
+      autoScroll();
+    } else {
+      // Ensure we're not scrolling if isPlaying is false
+      isAutoscrolling.current = false;
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = null;
+      }
+    }
 
-    return () => cancelAnimationFrame(animationFrameId); // Cleanup on unmount
+    // Cleanup function: cancel all pending operations
+    return () => {
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
+      // Cancel all active timeouts
+      activeTimeouts.forEach(timeout => clearTimeout(timeout));
+      activeTimeouts.length = 0;
+      isAutoscrolling.current = false;
+      isResettingRef.current = false;
+    };
   }, [isPlaying, throttledUpdateScrollPosition]);
 
   // Throttled scroll handler for manual scrolling
@@ -172,6 +284,26 @@ export default function Shelf() {
       };
     }
   }, []);
+
+  // Reset state when shelf changes to prevent state from persisting across navigation
+  useEffect(() => {
+    // Immediately stop any ongoing scroll operations
+    isAutoscrolling.current = false;
+    isResettingRef.current = false;
+    hasAutoPlayedRef.current = false;
+    
+    // Reset playing state when navigating to a new shelf
+    setIsPlaying(false);
+    
+    // Reset scroll position to top when shelf changes
+    if (typeof window !== 'undefined') {
+      // Cancel any smooth scroll animations
+      window.scrollTo({
+        top: 0,
+        behavior: 'auto', // Use 'auto' for instant scroll to prevent smooth scroll conflicts
+      });
+    }
+  }, [shelfId]);
 
   useEffect(() => {
     if (!shelfId) return;
@@ -202,6 +334,42 @@ export default function Shelf() {
 
     fetchShelfDetails();
   }, [shelfId]);
+
+  // Auto-play functionality when autoplay query parameter is present
+  useEffect(() => {
+    // Read autoplay parameter directly from URL to avoid stale router.query values
+    const getAutoplayFromUrl = () => {
+      if (typeof window === 'undefined') return false;
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get('autoplay') === 'true';
+    };
+
+    const shouldAutoplay = getAutoplayFromUrl();
+
+    // Only auto-play if:
+    // 1. autoplay query param is 'true' in the current URL
+    // 2. Books are loaded (not loading and books exist)
+    // 3. We haven't already auto-played for this page load
+    // 4. Currently not playing
+    if (
+      shouldAutoplay &&
+      !loading &&
+      books.length > 0 &&
+      !hasAutoPlayedRef.current &&
+      !isPlaying
+    ) {
+      // Small delay to ensure layout is ready
+      const autoPlayTimer = setTimeout(() => {
+        // Double-check autoplay is still true before starting (in case URL changed)
+        if (getAutoplayFromUrl() && !isPlaying) {
+          setIsPlaying(true);
+          hasAutoPlayedRef.current = true;
+        }
+      }, 500); // 500ms delay to ensure layout is ready
+
+      return () => clearTimeout(autoPlayTimer);
+    }
+  }, [autoplay, loading, books.length, isPlaying, shelfId]);
 
   if (isLoading || loading) return <Text>Loading...</Text>;
   if (error) return <Text>{error}</Text>;

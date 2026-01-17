@@ -74,6 +74,8 @@ web_modules/
 
 # dotenv environment variable files
 .env
+!.env.example
+.env.development
 .env.development.local
 .env.test.local
 .env.production.local
@@ -134,3 +136,10 @@ dist
 
 # firebase
 *servicekey.json
+
+# SpecStory auto-generated documentation
+.specstory/
+
+# macOS
+.DS_Store
+**/.DS_Store
